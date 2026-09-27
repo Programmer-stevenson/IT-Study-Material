@@ -22,7 +22,7 @@ Click a link below to open a study tool directly in your browser.
 - [Open CCNA Troubleshooting: 4 Scenarios](https://programmer-stevenson.github.io/IT-Study-Material/networking/ccna-guided-troubleshooting-lab-04-scenarios.html)
 - [Open CCNA Troubleshooting: 20 Scenarios](https://programmer-stevenson.github.io/IT-Study-Material/networking/ccna-guided-troubleshooting-lab-20-scenarios.html)
 - [Open Cisco IOS Commands & Theory Reference](https://programmer-stevenson.github.io/IT-Study-Material/networking/ccna-cisco-ios-commands-and-theory-reference.html)
-- [Open CCNA Complete Study Guide, Labs & Practice Exams](https://programmer-stevenson.github.io/IT-Study-Material/networking/ccna-complete-study-guide-labs-and-practice-exams.html)
+- [Open CCNA Master Class + Exam](https://programmer-stevenson.github.io/IT-Study-Material/networking/ccna-master-class-and-exam.html)
 
 ## Cloud Architecture
 
