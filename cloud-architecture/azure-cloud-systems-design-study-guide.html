@@ -1,0 +1,695 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Cloud Systems Design — Study Guide</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=IBM+Plex+Mono:wght@400;500;600&family=IBM+Plex+Sans:wght@400;500;600;700&family=IBM+Plex+Serif:ital@0;1&display=swap" rel="stylesheet">
+<style>
+  :root{
+    --paper:#f1f5f9;--card:#ffffff;--ink:#0f1e2a;--ink-soft:#455465;
+    --azure:#0078d4;--azure-deep:#005a9e;--azure-soft:#e6f2fb;
+    --amber:#c9761b;--amber-soft:#fdf3e2;
+    --line:#dae1e8;--line-strong:#b7c2ce;
+    --scenario-bg:#0a1a26;--scenario-ink:#e6eef2;
+  }
+  *{box-sizing:border-box;}
+  html{scroll-behavior:smooth;}
+  body{margin:0;background:var(--paper);color:var(--ink);font-family:'IBM Plex Sans',system-ui,sans-serif;font-size:16px;line-height:1.62;-webkit-font-smoothing:antialiased;}
+
+  header.top{position:sticky;top:0;z-index:50;background:var(--ink);color:#fff;border-bottom:3px solid var(--azure);}
+  .top-inner{max-width:1140px;margin:0 auto;padding:14px 24px;display:flex;align-items:center;gap:20px;flex-wrap:wrap;}
+  .brand{display:flex;flex-direction:column;gap:2px;}
+  .brand .ey{font-family:'IBM Plex Mono',monospace;font-size:11px;letter-spacing:2px;color:#7bb8e8;text-transform:uppercase;}
+  .brand h1{margin:0;font-size:18px;font-weight:600;letter-spacing:-0.2px;}
+  .toc-pills{margin-left:auto;display:flex;gap:6px;flex-wrap:wrap;}
+  .toc-pills a{font-family:'IBM Plex Mono',monospace;font-size:11px;text-decoration:none;color:#a4d0f2;border:1px solid #2a3d4e;padding:5px 10px;border-radius:20px;}
+  .toc-pills a:hover{background:var(--azure);color:#fff;border-color:var(--azure);}
+
+  .shell{max-width:1140px;margin:0 auto;padding:30px 24px 80px;}
+
+  .lede{background:linear-gradient(180deg,#12293a,#0a1a26);color:var(--scenario-ink);border-radius:12px;padding:24px 26px;margin-bottom:26px;border:1px solid #1e3a51;}
+  .lede h2{margin:0 0 8px;font-size:19px;color:#fff;font-weight:600;}
+  .lede p{margin:0 0 10px;font-size:14px;color:#b9cad4;}
+  .lede p:last-child{margin-bottom:0;}
+  .lede .note{font-family:'IBM Plex Mono',monospace;font-size:11px;color:#8fbde5;}
+
+  section.blk{background:var(--card);border:1px solid var(--line);border-radius:12px;padding:26px 30px;margin-bottom:22px;scroll-margin-top:92px;box-shadow:0 1px 2px rgba(15,30,42,.04);}
+  section.blk .refno{font-family:'IBM Plex Mono',monospace;font-size:11px;font-weight:600;letter-spacing:1px;color:#fff;background:var(--azure-deep);padding:5px 9px;border-radius:5px;display:inline-block;margin-bottom:8px;}
+  section.blk h3{margin:0 0 6px;font-size:22px;font-weight:700;letter-spacing:-0.3px;color:var(--ink);border-bottom:2px solid var(--ink);padding-bottom:12px;}
+  section.blk .sub{font-family:'IBM Plex Serif',serif;font-style:italic;color:var(--ink-soft);font-size:14.5px;margin:8px 0 16px;}
+
+  p.body{margin:0 0 12px;font-size:14.8px;}
+  p.body b{color:var(--azure-deep);}
+
+  .subhead{font-family:'IBM Plex Mono',monospace;font-size:11px;letter-spacing:1.5px;text-transform:uppercase;color:var(--amber);font-weight:600;margin:20px 0 10px;display:flex;align-items:center;gap:10px;}
+  .subhead::after{content:"";flex:1;height:1px;background:var(--line);}
+
+  ul.clean,ol.clean{margin:2px 0 10px;padding-left:22px;}
+  ul.clean li,ol.clean li{margin-bottom:8px;font-size:14.4px;}
+  ul.clean li b,ol.clean li b{color:var(--azure-deep);}
+
+  dl.glossary{margin:6px 0;}
+  dl.glossary .term{border-bottom:1px dotted var(--line);padding:10px 0;display:grid;grid-template-columns:180px 1fr;gap:16px;}
+  dl.glossary .term:last-child{border-bottom:none;}
+  dl.glossary dt{font-weight:600;font-size:14.3px;color:var(--azure-deep);}
+  dl.glossary dd{margin:0;font-size:14.3px;}
+
+  .scenario{background:var(--scenario-bg);color:var(--scenario-ink);border-radius:10px;padding:16px 20px;margin:14px 0;border-left:4px solid var(--azure);}
+  .scenario .h{font-family:'IBM Plex Mono',monospace;font-size:10.5px;letter-spacing:1.5px;text-transform:uppercase;color:#7bb8e8;font-weight:600;margin-bottom:7px;}
+  .scenario p{margin:0 0 8px;font-size:13.8px;color:#cfdce3;}
+  .scenario p:last-child{margin-bottom:0;}
+  .scenario b{color:#fff;}
+  .scenario code{background:rgba(255,255,255,.1);color:#f2d9b8;padding:1px 5px;border-radius:3px;font-family:'IBM Plex Mono',monospace;font-size:12.5px;}
+
+  .callout{background:var(--amber-soft);border:1px solid #eed4a8;border-left:4px solid var(--amber);border-radius:0 8px 8px 0;padding:14px 18px;margin:12px 0;}
+  .callout .h{font-family:'IBM Plex Mono',monospace;font-size:10.5px;letter-spacing:1.5px;text-transform:uppercase;color:#8a4e0c;font-weight:600;margin-bottom:5px;}
+  .callout p{margin:0;font-size:13.8px;color:#3d2a10;}
+  .callout p b{color:#111;}
+
+  code{font-family:'IBM Plex Mono',monospace;font-size:12.8px;background:var(--azure-soft);color:var(--azure-deep);padding:1px 5px;border-radius:3px;}
+
+  .grid{display:grid;grid-template-columns:repeat(auto-fit,minmax(260px,1fr));gap:12px;margin:12px 0;}
+  .card{border:1px solid var(--line);border-radius:8px;padding:14px 16px;background:#f8fafc;}
+  .card .t{font-weight:600;color:var(--azure-deep);margin-bottom:5px;font-size:14px;}
+  .card .d{font-size:13.4px;color:var(--ink-soft);}
+  .card .svc{font-family:'IBM Plex Mono',monospace;font-size:11px;color:var(--amber);margin-top:6px;letter-spacing:.3px;}
+
+  table.tbl{width:100%;border-collapse:collapse;margin:8px 0;font-size:13.8px;}
+  table.tbl th{background:var(--azure-soft);text-align:left;padding:9px 12px;font-weight:600;color:var(--azure-deep);border-bottom:2px solid var(--line);font-size:13px;}
+  table.tbl td{padding:9px 12px;border-bottom:1px solid var(--line);vertical-align:top;}
+  table.tbl tr:last-child td{border-bottom:none;}
+
+  .step{display:flex;gap:14px;padding:12px 0;border-bottom:1px dashed var(--line);}
+  .step:last-child{border-bottom:none;}
+  .step .n{flex:none;width:28px;height:28px;border-radius:50%;background:var(--azure-deep);color:#fff;font-family:'IBM Plex Mono',monospace;font-size:12px;font-weight:600;display:flex;align-items:center;justify-content:center;}
+  .step .c{flex:1;}
+  .step .c .h{font-weight:600;color:var(--azure-deep);font-size:14.5px;margin-bottom:3px;}
+  .step .c .d{font-size:14px;color:var(--ink);}
+
+  .pillar{background:#f8fafc;border-left:3px solid var(--azure);padding:12px 16px;margin:8px 0;border-radius:0 6px 6px 0;}
+  .pillar .h{font-weight:600;color:var(--azure-deep);font-size:14px;margin-bottom:3px;}
+  .pillar .d{font-size:13.7px;color:var(--ink);}
+
+  footer{max-width:1140px;margin:0 auto;padding:0 24px 60px;}
+  footer .fr{border-top:1px solid var(--line);padding-top:16px;color:var(--ink-soft);font-family:'IBM Plex Mono',monospace;font-size:12px;}
+
+  @media (max-width:720px){
+    .shell{padding:22px 15px 60px;}
+    section.blk{padding:20px 18px;}
+    dl.glossary .term{grid-template-columns:1fr;gap:2px;}
+    .toc-pills{width:100%;margin-left:0;}
+  }
+</style>
+</head>
+<body>
+
+<header class="top">
+  <div class="top-inner">
+    <div class="brand">
+      <span class="ey">Cloud Systems Design · Study Guide</span>
+      <h1>Beginner → Intermediate</h1>
+    </div>
+    <div class="toc-pills">
+      <a href="#what">01 What it is</a>
+      <a href="#models">02 Models</a>
+      <a href="#process">03 Process</a>
+      <a href="#waf">04 Well-Architected</a>
+      <a href="#build">05 Building blocks</a>
+      <a href="#patterns">06 Patterns</a>
+      <a href="#scale">07 Scale</a>
+      <a href="#reliability">08 Reliability</a>
+      <a href="#security">09 Security</a>
+      <a href="#cost">10 Cost</a>
+      <a href="#practice">11 Practice</a>
+      <a href="#next">12 Next</a>
+    </div>
+  </div>
+</header>
+
+<div class="shell">
+
+  <div class="lede">
+    <h2>Designing for the cloud is a different skill</h2>
+    <p>Cloud systems design uses managed services, elastic scaling, and pay-per-use economics to build things that would take a warehouse of hardware and a team of engineers to do the old way. It also has its own traps — cost sprawl, distributed system complexity, and the illusion that "the cloud will handle it" (it won't).</p>
+    <p>This guide takes you from what cloud design <i>is</i>, through the actual process, the Well-Architected pillars, the building blocks, patterns, and tradeoffs — using Azure as the primary reference (aligned with your AZ-900 → AZ-104 path) with AWS notes where useful.</p>
+    <p class="note">// Azure-centric with AWS equivalents · Beginner to intermediate · Vendor-neutral principles, cloud-native application</p>
+  </div>
+
+  <!-- 01 WHAT IT IS -->
+  <section class="blk" id="what">
+    <span class="refno">01</span>
+    <h3>What cloud systems design actually is</h3>
+    <p class="sub">Not "put my server in the cloud" — designing systems that use cloud primitives natively.</p>
+
+    <p class="body">Cloud systems design is the discipline of building applications and infrastructure using cloud-native services, elastic resources, and consumption-based economics. It's not just "hosting your app somewhere else" — that's called <b>lift-and-shift</b>, and while it's a valid migration step, it's not what makes cloud powerful.</p>
+
+    <p class="body">Real cloud design leans into what only the cloud gives you:</p>
+    <ul class="clean">
+      <li><b>Elasticity</b> — resources appear when you need them, disappear when you don't</li>
+      <li><b>Managed services</b> — the cloud runs the database, the queue, the load balancer — you build on top</li>
+      <li><b>Global reach</b> — deploy in dozens of regions worldwide without owning a single data center</li>
+      <li><b>Pay-per-use</b> — no upfront hardware costs; you pay for what you actually consume</li>
+      <li><b>Higher-level primitives</b> — instead of "install a database on a Linux server," you request a managed database and Azure handles the rest</li>
+    </ul>
+
+    <div class="subhead">The mindset shift from on-prem to cloud</div>
+    <table class="tbl">
+      <tr><th>On-prem thinking</th><th>Cloud-native thinking</th></tr>
+      <tr><td>Buy servers up front</td><td>Provision resources as needed</td></tr>
+      <tr><td>Design for the worst-case peak load</td><td>Design to scale up/down with actual load</td></tr>
+      <tr><td>Install and maintain everything</td><td>Use managed services where possible</td></tr>
+      <tr><td>Single data center</td><td>Multiple regions and availability zones</td></tr>
+      <tr><td>Servers are pets — you know them by name</td><td>Servers are cattle — interchangeable and replaceable</td></tr>
+      <tr><td>Uptime through avoiding failure</td><td>Uptime through embracing and recovering from failure</td></tr>
+      <tr><td>Fixed costs, predictable</td><td>Variable costs, requires active management</td></tr>
+    </table>
+
+    <div class="callout">
+      <div class="h">◈ The most important mindset shift</div>
+      <p>In on-prem, failure is <b>abnormal</b> and something you try to prevent. In cloud, failure is <b>normal</b> — servers die, services blip, regions have bad days — and you design to <i>recover</i> from failure rather than prevent it. This flip is the single biggest thing that separates cloud-native design from lift-and-shift thinking.</p>
+    </div>
+  </section>
+
+  <!-- 02 MODELS -->
+  <section class="blk" id="models">
+    <span class="refno">02</span>
+    <h3>Service models and deployment models</h3>
+    <p class="sub">The vocabulary that every cloud design conversation starts with.</p>
+
+    <div class="subhead">Service models — how much the cloud manages for you</div>
+    <div class="grid">
+      <div class="card">
+        <div class="t">IaaS · Infrastructure as a Service</div>
+        <div class="d">You rent VMs, storage, and networking. You manage the OS and everything above. Most control, most responsibility.</div>
+        <div class="svc">Azure: Virtual Machines · AWS: EC2 · GCP: Compute Engine</div>
+      </div>
+      <div class="card">
+        <div class="t">PaaS · Platform as a Service</div>
+        <div class="d">You deploy code; the cloud manages the OS, runtime, and infrastructure. Less control, less operational burden.</div>
+        <div class="svc">Azure: App Service · AWS: Elastic Beanstalk · GCP: App Engine</div>
+      </div>
+      <div class="card">
+        <div class="t">SaaS · Software as a Service</div>
+        <div class="d">Finished software delivered as a service. You just use it. No infrastructure or code to manage.</div>
+        <div class="svc">Microsoft 365 · Salesforce · Google Workspace</div>
+      </div>
+      <div class="card">
+        <div class="t">FaaS / Serverless</div>
+        <div class="d">You write functions; the cloud runs them per-event. Pay per execution, scale automatically to zero when idle.</div>
+        <div class="svc">Azure: Functions · AWS: Lambda · GCP: Cloud Functions</div>
+      </div>
+      <div class="card">
+        <div class="t">CaaS · Container as a Service</div>
+        <div class="d">You package apps in containers; the cloud runs them with orchestration.</div>
+        <div class="svc">Azure: AKS, Container Instances · AWS: EKS, ECS, Fargate</div>
+      </div>
+      <div class="card">
+        <div class="t">DBaaS · Database as a Service</div>
+        <div class="d">Managed databases — the cloud handles patching, backups, HA. You just use the database.</div>
+        <div class="svc">Azure SQL, Cosmos DB · AWS: RDS, DynamoDB</div>
+      </div>
+    </div>
+
+    <div class="subhead">Deployment models — where the cloud lives</div>
+    <dl class="glossary">
+      <div class="term"><dt>Public cloud</dt><dd>Provider owns and operates infrastructure; multi-tenant; accessed over the internet. Azure, AWS, GCP.</dd></div>
+      <div class="term"><dt>Private cloud</dt><dd>Dedicated to a single organization. On-premises or hosted by a provider. More control, higher cost, less elasticity.</dd></div>
+      <div class="term"><dt>Hybrid cloud</dt><dd>Combination of public + private (or on-prem). Sensitive workloads stay private; scalable workloads use public.</dd></div>
+      <div class="term"><dt>Multi-cloud</dt><dd>Using services from multiple public providers (Azure + AWS + GCP). Avoids vendor lock-in, adds complexity.</dd></div>
+      <div class="term"><dt>Edge computing</dt><dd>Compute close to where data is generated (retail stores, factories, IoT). Reduces latency, offloads central cloud.</dd></div>
+    </dl>
+
+    <div class="callout">
+      <div class="h">◈ The right level of abstraction</div>
+      <p>Junior instinct: go all-IaaS because "I want control." Senior instinct: <b>use the highest level of abstraction that fits the requirements.</b> Managed services (PaaS, DBaaS) mean less code to write, less to maintain, and less to break. Every layer of the stack you don't have to run yourself is a layer that isn't on your pager. IaaS is for when you genuinely need the control — legacy apps, specific compliance needs, or when the managed option doesn't fit.</p>
+    </div>
+  </section>
+
+  <!-- 03 PROCESS -->
+  <section class="blk" id="process">
+    <span class="refno">03</span>
+    <h3>The cloud design process</h3>
+    <p class="sub">How to actually go from "we want to build this" to a working cloud architecture.</p>
+
+    <div class="step"><div class="n">1</div><div class="c">
+      <div class="h">Understand the business need</div>
+      <div class="d">Same as any design — but for cloud you also ask: what growth is expected? Are we replacing on-prem, extending it, or building something new? What's the tolerance for downtime? Are we prioritizing cost, speed, or reliability?</div>
+    </div></div>
+
+    <div class="step"><div class="n">2</div><div class="c">
+      <div class="h">Requirements — functional and cloud-specific</div>
+      <div class="d">Functional (what the app does), non-functional (the "-ilities"), and cloud-specific: which regions, latency targets, compliance zones (data residency), integration with existing on-prem, disaster recovery expectations, and target cost.</div>
+    </div></div>
+
+    <div class="step"><div class="n">3</div><div class="c">
+      <div class="h">Constraints — the invisible walls</div>
+      <div class="d">Cloud budget, existing licenses (Azure Hybrid Benefit for Windows/SQL is real money), team skills (do you know Azure or AWS?), corporate cloud choice, compliance (HIPAA, PCI, GDPR — some govern which regions and which services you can use).</div>
+    </div></div>
+
+    <div class="step"><div class="n">4</div><div class="c">
+      <div class="h">Capacity + cost estimate</div>
+      <div class="d">This is where cloud design differs from on-prem. Use the Azure Pricing Calculator or AWS Calculator to estimate monthly cost <i>before</i> deploying. Cost is a first-class requirement in cloud, not an afterthought. Get it wrong by 5x and the project gets canceled.</div>
+    </div></div>
+
+    <div class="step"><div class="n">5</div><div class="c">
+      <div class="h">Choose the service model</div>
+      <div class="d">IaaS, PaaS, serverless, containers? Start with the highest abstraction that fits (PaaS or serverless) and drop lower only if requirements force it. "We need Kubernetes because it's cool" is a red flag; "we need Kubernetes because we have 50 microservices and complex orchestration" is a real reason.</div>
+    </div></div>
+
+    <div class="step"><div class="n">6</div><div class="c">
+      <div class="h">Sketch the architecture using cloud primitives</div>
+      <div class="d">Draw it with real Azure services labeled: Front Door → App Service → Azure SQL + Cache for Redis + Blob Storage, with Application Insights watching everything. Use the actual product names — it forces you to be concrete.</div>
+    </div></div>
+
+    <div class="step"><div class="n">7</div><div class="c">
+      <div class="h">Design for the Well-Architected pillars</div>
+      <div class="d">Walk through each pillar (next section) and check: is the design reliable? Secure? Performant? Cost-optimized? Operationally sound? This is the checklist that catches gaps before production.</div>
+    </div></div>
+
+    <div class="step"><div class="n">8</div><div class="c">
+      <div class="h">Plan for failure — the "what if" pass</div>
+      <div class="d">What if the primary region fails? What if the database gets corrupted? What if traffic spikes 10x? What if the app has a bug that crashes it? For each: is there a designed recovery path, or a "we'd panic and fix it live" gap?</div>
+    </div></div>
+
+    <div class="step"><div class="n">9</div><div class="c">
+      <div class="h">Iterate, document, and get review</div>
+      <div class="d">Show the design to a peer or architect. Document decisions ("we chose Azure SQL over Cosmos DB because...") — this is invaluable a year later when someone asks "why did we do it this way?"</div>
+    </div></div>
+
+    <div class="callout">
+      <div class="h">◈ Cost is a design constraint, not a bill</div>
+      <p>In on-prem, cost is decided when hardware is bought; the design just uses what's there. In cloud, <b>every design decision has a monthly recurring cost.</b> Choosing a bigger VM tier, a premium storage account, or a global load balancer directly changes the bill. Cost has to sit in the design process — it's not something the finance team resolves later.</p>
+    </div>
+  </section>
+
+  <!-- 04 WAF -->
+  <section class="blk" id="waf">
+    <span class="refno">04</span>
+    <h3>The Well-Architected Framework — cloud design's rubric</h3>
+    <p class="sub">Microsoft and AWS each publish "well-architected" frameworks. They're the checklist every cloud designer should internalize.</p>
+
+    <p class="body">The Azure Well-Architected Framework defines <b>five pillars</b> that every cloud workload should be evaluated against. If your design does well on all five, it's likely a good design. Weakness on any pillar is a real vulnerability.</p>
+
+    <div class="pillar">
+      <div class="h">1. Reliability</div>
+      <div class="d">The workload's ability to recover from failures and continue functioning. Multi-region deployment, availability zones, health checks, retry logic, backup and disaster recovery. Design for failure as normal, not exceptional.</div>
+    </div>
+
+    <div class="pillar">
+      <div class="h">2. Security</div>
+      <div class="d">Protecting data, systems, and assets. Identity as the perimeter (Zero Trust), encryption in transit and at rest, secrets in Key Vault, network segmentation, defense in depth, principle of least privilege. Security is a pillar, not a phase.</div>
+    </div>
+
+    <div class="pillar">
+      <div class="h">3. Cost Optimization</div>
+      <div class="d">Getting the value you need at the lowest reasonable cost. Right-sizing resources, using reserved instances / savings plans for steady workloads, spot instances for interruptible workloads, auto-scaling to avoid over-provisioning, monitoring spend with budgets and alerts.</div>
+    </div>
+
+    <div class="pillar">
+      <div class="h">4. Operational Excellence</div>
+      <div class="d">Running and monitoring systems to deliver value continuously. Infrastructure as code, automated deployments (CI/CD), monitoring and observability (Application Insights, Log Analytics), incident response processes, runbooks for common issues.</div>
+    </div>
+
+    <div class="pillar">
+      <div class="h">5. Performance Efficiency</div>
+      <div class="d">Using resources efficiently to meet demand. Choosing the right service and tier, scaling appropriately, caching hot data, using CDN for static content, optimizing database queries, load testing before production.</div>
+    </div>
+
+    <p class="body">(AWS's Well-Architected Framework has an additional sixth pillar for <b>sustainability</b> — environmental impact of cloud choices. Azure covers this within the other pillars.)</p>
+
+    <div class="callout">
+      <div class="h">◈ How to actually use it</div>
+      <p>For every design you make, walk through the five pillars deliberately. Ask "is this reliable?" (would it survive a region outage?). "Is it secure?" (are secrets in Key Vault, is traffic encrypted, is identity right?). "Is it cost-optimized?" (are we over-provisioned, using the right tier?). "Operationally excellent?" (can we deploy and monitor it?). "Performant?" (does it scale, is it fast?). If any answer is weak, that's the next thing to fix in the design.</p>
+    </div>
+  </section>
+
+  <!-- 05 BUILDING BLOCKS -->
+  <section class="blk" id="build">
+    <span class="refno">05</span>
+    <h3>Cloud building blocks — the services you'll design with</h3>
+    <p class="sub">Azure-focused; AWS/GCP equivalents noted. Focused on what shows up in most designs.</p>
+
+    <div class="subhead">Compute</div>
+    <div class="grid">
+      <div class="card"><div class="t">Virtual Machines</div><div class="d">IaaS. Full control over the OS. Use when you need it or for legacy apps.</div><div class="svc">Azure VMs · AWS EC2</div></div>
+      <div class="card"><div class="t">App Service</div><div class="d">PaaS for web apps and APIs. Deploy code, get a URL. Great for most modern web workloads.</div><div class="svc">Azure App Service · AWS Elastic Beanstalk</div></div>
+      <div class="card"><div class="t">Functions</div><div class="d">Serverless. Event-triggered code, pay per execution, scales to zero.</div><div class="svc">Azure Functions · AWS Lambda</div></div>
+      <div class="card"><div class="t">Container Instances</div><div class="d">Run a single container without cluster management. Simple and fast.</div><div class="svc">Azure Container Instances · AWS Fargate (simplest tier)</div></div>
+      <div class="card"><div class="t">Kubernetes Service</div><div class="d">Managed Kubernetes for container orchestration at scale.</div><div class="svc">Azure Kubernetes Service (AKS) · AWS EKS · GCP GKE</div></div>
+      <div class="card"><div class="t">Batch</div><div class="d">Large-scale parallel and batch processing jobs.</div><div class="svc">Azure Batch · AWS Batch</div></div>
+    </div>
+
+    <div class="subhead">Storage</div>
+    <div class="grid">
+      <div class="card"><div class="t">Object Storage</div><div class="d">Unlimited unstructured data — images, videos, backups, logs. Multiple access tiers by cost/frequency.</div><div class="svc">Azure Blob Storage · AWS S3</div></div>
+      <div class="card"><div class="t">Managed Disks</div><div class="d">Block storage attached to VMs. Standard HDD, Standard SSD, Premium SSD.</div><div class="svc">Azure Managed Disks · AWS EBS</div></div>
+      <div class="card"><div class="t">File Shares</div><div class="d">Shared network file storage. SMB and NFS access.</div><div class="svc">Azure Files · AWS EFS/FSx</div></div>
+      <div class="card"><div class="t">Archive Storage</div><div class="d">Cheapest tier for long-term storage; hours to retrieve.</div><div class="svc">Azure Archive · AWS Glacier</div></div>
+    </div>
+
+    <div class="subhead">Databases</div>
+    <div class="grid">
+      <div class="card"><div class="t">Azure SQL Database</div><div class="d">Managed SQL Server (PaaS). Single DB or elastic pool.</div><div class="svc">Azure SQL · AWS RDS for SQL Server</div></div>
+      <div class="card"><div class="t">Azure SQL Managed Instance</div><div class="d">Near-full SQL Server compatibility for lift-and-shift migrations.</div><div class="svc">Azure SQL MI · AWS RDS Custom</div></div>
+      <div class="card"><div class="t">PostgreSQL / MySQL</div><div class="d">Managed open-source relational databases.</div><div class="svc">Azure Database for PostgreSQL/MySQL · AWS RDS</div></div>
+      <div class="card"><div class="t">Cosmos DB</div><div class="d">Globally-distributed NoSQL. Multi-model (document, key-value, graph, column).</div><div class="svc">Azure Cosmos DB · AWS DynamoDB (rough analog)</div></div>
+      <div class="card"><div class="t">Cache for Redis</div><div class="d">Managed Redis for caching and session state.</div><div class="svc">Azure Cache for Redis · AWS ElastiCache</div></div>
+    </div>
+
+    <div class="subhead">Networking</div>
+    <div class="grid">
+      <div class="card"><div class="t">Virtual Network (VNet)</div><div class="d">Your isolated network in the cloud. Subnets, address spaces, all the fundamentals.</div><div class="svc">Azure VNet · AWS VPC</div></div>
+      <div class="card"><div class="t">Load Balancer</div><div class="d">Layer 4 (TCP/UDP) distribution across backend resources.</div><div class="svc">Azure Load Balancer · AWS Network Load Balancer</div></div>
+      <div class="card"><div class="t">Application Gateway</div><div class="d">Layer 7 (HTTP/HTTPS) load balancing with WAF, SSL termination, path-based routing.</div><div class="svc">Azure Application Gateway · AWS Application Load Balancer</div></div>
+      <div class="card"><div class="t">Front Door / CDN</div><div class="d">Global HTTPS load balancer + CDN + WAF. Routes to nearest healthy region.</div><div class="svc">Azure Front Door · AWS CloudFront + Global Accelerator</div></div>
+      <div class="card"><div class="t">VPN Gateway</div><div class="d">Site-to-site or point-to-site VPN for hybrid connectivity.</div><div class="svc">Azure VPN Gateway · AWS Site-to-Site VPN</div></div>
+      <div class="card"><div class="t">ExpressRoute</div><div class="d">Private dedicated connection to Azure (bypasses internet). AWS equivalent: Direct Connect.</div><div class="svc">Azure ExpressRoute · AWS Direct Connect</div></div>
+    </div>
+
+    <div class="subhead">Identity, security, management</div>
+    <div class="grid">
+      <div class="card"><div class="t">Entra ID (Azure AD)</div><div class="d">Identity provider. Users, groups, SSO to thousands of apps, MFA, Conditional Access.</div><div class="svc">Microsoft Entra ID · AWS IAM Identity Center</div></div>
+      <div class="card"><div class="t">Key Vault</div><div class="d">Secrets, keys, and certificates management with fine-grained access.</div><div class="svc">Azure Key Vault · AWS Secrets Manager / KMS</div></div>
+      <div class="card"><div class="t">Defender for Cloud</div><div class="d">Security posture management and threat protection across resources.</div><div class="svc">Microsoft Defender for Cloud · AWS Security Hub</div></div>
+      <div class="card"><div class="t">Azure Policy</div><div class="d">Governance rules — "no untagged resources," "only allow certain VM sizes."</div><div class="svc">Azure Policy · AWS Config Rules / SCPs</div></div>
+      <div class="card"><div class="t">Monitor / App Insights</div><div class="d">Metrics, logs, alerts, distributed tracing across your workloads.</div><div class="svc">Azure Monitor + App Insights · AWS CloudWatch + X-Ray</div></div>
+      <div class="card"><div class="t">Cost Management</div><div class="d">Track spend, set budgets, get alerts on overages, analyze cost drivers.</div><div class="svc">Azure Cost Management · AWS Cost Explorer + Budgets</div></div>
+    </div>
+
+    <div class="subhead">Messaging and integration</div>
+    <div class="grid">
+      <div class="card"><div class="t">Service Bus</div><div class="d">Enterprise message queuing with FIFO, transactions, sessions.</div><div class="svc">Azure Service Bus · AWS SQS + SNS</div></div>
+      <div class="card"><div class="t">Event Hubs</div><div class="d">High-throughput event ingestion. Streaming data at scale.</div><div class="svc">Azure Event Hubs · AWS Kinesis</div></div>
+      <div class="card"><div class="t">Event Grid</div><div class="d">Event routing between services. Reactive architectures.</div><div class="svc">Azure Event Grid · AWS EventBridge</div></div>
+      <div class="card"><div class="t">API Management</div><div class="d">API gateway with policies, rate limiting, dev portal.</div><div class="svc">Azure API Management · AWS API Gateway</div></div>
+    </div>
+
+    <div class="callout">
+      <div class="h">◈ You don't need to know every service</div>
+      <p>Azure has 200+ services. AWS has more. <b>You'll never know them all, and you don't need to.</b> What you need is (1) the shape of what's available — knowing that "there's a managed service for this" when you need it, and (2) deep familiarity with the ~20-30 services that make up 90% of designs (the ones in this section). Everything else you Google when you need it.</p>
+    </div>
+  </section>
+
+  <!-- 06 PATTERNS -->
+  <section class="blk" id="patterns">
+    <span class="refno">06</span>
+    <h3>Cloud design patterns</h3>
+    <p class="sub">Proven architectures that appear again and again because they solve real problems well.</p>
+
+    <div class="subhead">Basic web application (three-tier)</div>
+    <p class="body">The workhorse pattern. Front Door / CDN → App Service → Azure SQL + Cache for Redis + Blob Storage, with Application Insights and Log Analytics watching everything. Scale App Service and the database independently; add caching for hot data.</p>
+
+    <div class="subhead">Microservices with Kubernetes</div>
+    <p class="body">Multiple independent services in containers, orchestrated by AKS. Behind an API Management gateway. Each service owns its data (own database instance). Service Bus or Event Grid for async communication. Complex — use when the org and workload justify it.</p>
+
+    <div class="subhead">Serverless event-driven</div>
+    <p class="body">Event source (Storage upload, HTTP request, queue message) → Azure Function → outputs to another service. Pay only for executions. Great for spiky, event-driven work. Common example: image upload triggers Function that generates thumbnails and writes them back to storage.</p>
+
+    <div class="subhead">Data pipeline / analytics</div>
+    <p class="body">Data sources → Event Hubs (streaming ingestion) → Stream Analytics or Databricks (processing) → Data Lake Storage + Synapse Analytics (warehouse) → Power BI (visualization). Modern analytics stack.</p>
+
+    <div class="subhead">Hybrid cloud</div>
+    <p class="body">On-prem network connected to Azure via VPN Gateway or ExpressRoute. Common patterns: extending Active Directory to Entra ID for identity, using Azure for burst capacity or DR site, keeping sensitive workloads on-prem while running new services in cloud.</p>
+
+    <div class="subhead">Multi-region for high availability</div>
+    <p class="body">Deploy the workload in two or more Azure regions. Front Door routes users to the nearest healthy region. Data replicated across regions (SQL geo-replication, Cosmos DB multi-region writes). Survives entire region outages — for real HA at 99.99%+ SLA.</p>
+
+    <div class="scenario">
+      <div class="h">◈ Common pattern — modern SaaS web application</div>
+      <p><b>User request flow:</b></p>
+      <p>1. User hits <code>app.example.com</code> — DNS resolves to <b>Azure Front Door</b>.</p>
+      <p>2. Front Door serves static assets from its cache; dynamic requests go to the nearest <b>App Service</b> instance.</p>
+      <p>3. App Service authenticates via <b>Entra ID</b>, then queries <b>Azure SQL Database</b>. Hot reads are served from <b>Cache for Redis</b>.</p>
+      <p>4. User uploads a file → App Service writes to <b>Blob Storage</b> → publishes event to <b>Event Grid</b> → <b>Azure Function</b> processes the file async.</p>
+      <p>5. All of this is monitored by <b>Application Insights</b> and <b>Log Analytics</b>; secrets live in <b>Key Vault</b>; costs tracked via <b>Cost Management</b>.</p>
+      <p>That's a real, production-shaped design — this is what a lot of cloud jobs actually look like.</p>
+    </div>
+  </section>
+
+  <!-- 07 SCALE -->
+  <section class="blk" id="scale">
+    <span class="refno">07</span>
+    <h3>Scaling in the cloud</h3>
+    <p class="sub">Cloud makes horizontal scaling trivial and auto-scaling routine — if you design for it.</p>
+
+    <div class="subhead">Vertical vs horizontal — the cloud takes</div>
+    <p class="body"><b>Vertical (scale up):</b> Move to a bigger tier — B2s → D4s → D8s. Fast and easy in cloud. But it's still one instance; if it dies, everything's down. Good for databases and stateful workloads.</p>
+    <p class="body"><b>Horizontal (scale out):</b> Add more instances behind a load balancer. This is where cloud shines — auto-scale rules can add/remove instances automatically based on CPU, queue length, or custom metrics. Design apps to be stateless so any instance can handle any request.</p>
+
+    <div class="subhead">Auto-scaling patterns</div>
+    <ul class="clean">
+      <li><b>Metric-based:</b> Scale out when CPU &gt; 70% for 5 minutes; scale in when &lt; 30% for 10 minutes</li>
+      <li><b>Schedule-based:</b> Scale up before 9 AM business hours; scale down at night</li>
+      <li><b>Queue-based:</b> Scale workers based on queue length (10 messages per worker)</li>
+      <li><b>Predictive:</b> AI-powered scaling that anticipates load based on history</li>
+    </ul>
+
+    <div class="subhead">Caching — cloud-specific tools</div>
+    <ul class="clean">
+      <li><b>Azure Cache for Redis:</b> In-memory data store for session state, hot data, computed results</li>
+      <li><b>CDN / Front Door:</b> Edge caching of static content globally</li>
+      <li><b>App-level caching:</b> Output caching in App Service, query result caching</li>
+      <li><b>Database read replicas:</b> Azure SQL geo-replicas for read scaling</li>
+    </ul>
+
+    <div class="subhead">Database scaling in cloud</div>
+    <ul class="clean">
+      <li><b>Vertical:</b> Move to a higher DTU or vCore tier. Easy first move.</li>
+      <li><b>Read scaling:</b> Read replicas — reads go to replicas, writes to primary</li>
+      <li><b>Elastic pools:</b> Multiple databases share a resource pool for cost efficiency at scale</li>
+      <li><b>Sharding:</b> Split data across multiple database instances by key. Complex — last resort.</li>
+      <li><b>Cosmos DB / DynamoDB:</b> NoSQL databases designed for horizontal scale from day one</li>
+    </ul>
+
+    <div class="callout">
+      <div class="h">◈ Statelessness is the enabler</div>
+      <p>Auto-scaling only works if your app instances are <b>stateless</b> — meaning any instance can handle any request without needing local state. Store session state in Redis, files in Blob Storage, data in the database. If you have local files or in-memory state on each instance, horizontal scaling breaks. Cloud-native design starts with stateless services.</p>
+    </div>
+  </section>
+
+  <!-- 08 RELIABILITY -->
+  <section class="blk" id="reliability">
+    <span class="refno">08</span>
+    <h3>Reliability in cloud</h3>
+    <p class="sub">Cloud gives you the tools for high availability — but only if you design to use them.</p>
+
+    <div class="subhead">The cloud availability hierarchy</div>
+    <table class="tbl">
+      <tr><th>Protection scope</th><th>Azure mechanism</th><th>What it survives</th></tr>
+      <tr><td>Rack failure</td><td>Availability Sets</td><td>Host / rack failure within a data center</td></tr>
+      <tr><td>Data center failure</td><td>Availability Zones</td><td>Full data center loss within a region</td></tr>
+      <tr><td>Region failure</td><td>Multi-region deployment + paired regions</td><td>Full Azure region outage (rare but real)</td></tr>
+      <tr><td>Provider failure</td><td>Multi-cloud</td><td>Azure itself having a bad day (very rare, extreme complexity)</td></tr>
+    </table>
+
+    <div class="subhead">The 9s and what they cost you</div>
+    <ul class="clean">
+      <li><b>99% (2 nines):</b> ~87 hours/year downtime. Any single service basically.</li>
+      <li><b>99.9% (3 nines):</b> ~8.76 hours/year. Single-instance PaaS services typically.</li>
+      <li><b>99.95%:</b> Zone-redundant deployment (VMs or PaaS in Availability Zones).</li>
+      <li><b>99.99%:</b> Multi-region active-passive with automated failover.</li>
+      <li><b>99.999%:</b> Active-active multi-region with real-time replication. Very expensive and complex.</li>
+    </ul>
+
+    <div class="subhead">Recovery objectives</div>
+    <dl class="glossary">
+      <div class="term"><dt>RPO</dt><dd>Recovery Point Objective — how much data loss you can tolerate. Backup frequency drives this.</dd></div>
+      <div class="term"><dt>RTO</dt><dd>Recovery Time Objective — how fast you must be back after a disaster. Automation and pre-provisioned standby drive this.</dd></div>
+      <div class="term"><dt>Azure Site Recovery</dt><dd>Managed DR service — replicates workloads to a secondary region for failover.</dd></div>
+      <div class="term"><dt>Azure Backup</dt><dd>Managed backup service for VMs, databases, and file shares with retention policies.</dd></div>
+    </dl>
+
+    <div class="subhead">Failure patterns to design against</div>
+    <ul class="clean">
+      <li><b>Retry with exponential backoff:</b> Transient failures should trigger retries; don't hammer a struggling service</li>
+      <li><b>Circuit breaker:</b> Stop calling a failing dependency temporarily to give it time to recover</li>
+      <li><b>Bulkhead:</b> Isolate failures so one failing component doesn't take down others</li>
+      <li><b>Health checks:</b> Load balancers only send traffic to instances passing health checks</li>
+      <li><b>Graceful degradation:</b> When a non-critical service is down, keep core functionality working</li>
+    </ul>
+
+    <div class="callout">
+      <div class="h">◈ The SLA math trap</div>
+      <p>Composite SLA is calculated by <b>multiplying, not averaging.</b> If your app depends on Service A (99.9%) and Service B (99.9%), your composite is 99.9% × 99.9% = 99.8%. Chain more dependencies and the SLA drops fast. Every service you add is a potential availability hit. This is the argument for redundancy at each layer and for embracing async / decoupled architectures where a dependency failure doesn't take down the whole system.</p>
+    </div>
+  </section>
+
+  <!-- 09 SECURITY -->
+  <section class="blk" id="security">
+    <span class="refno">09</span>
+    <h3>Cloud security</h3>
+    <p class="sub">The shared responsibility model is the whole game — knowing what's yours vs. the cloud's.</p>
+
+    <div class="subhead">The shared responsibility model</div>
+    <table class="tbl">
+      <tr><th>Layer</th><th>IaaS</th><th>PaaS</th><th>SaaS</th></tr>
+      <tr><td>Physical security</td><td>Cloud</td><td>Cloud</td><td>Cloud</td></tr>
+      <tr><td>Network infrastructure</td><td>Cloud</td><td>Cloud</td><td>Cloud</td></tr>
+      <tr><td>Hypervisor</td><td>Cloud</td><td>Cloud</td><td>Cloud</td></tr>
+      <tr><td>Operating system</td><td><b>You</b></td><td>Cloud</td><td>Cloud</td></tr>
+      <tr><td>Runtime / middleware</td><td><b>You</b></td><td>Cloud</td><td>Cloud</td></tr>
+      <tr><td>Application code</td><td><b>You</b></td><td><b>You</b></td><td>Cloud</td></tr>
+      <tr><td>Data</td><td><b>You</b></td><td><b>You</b></td><td><b>You</b></td></tr>
+      <tr><td>Identity and access</td><td><b>You</b></td><td><b>You</b></td><td><b>You</b></td></tr>
+      <tr><td>Configuration</td><td><b>You</b></td><td><b>You</b></td><td><b>You</b></td></tr>
+    </table>
+    <p class="body"><b>Data and identity are always yours.</b> No matter the service model. The cloud provider can't protect you from a leaked credential or a misconfigured storage account.</p>
+
+    <div class="subhead">Zero Trust — the current standard</div>
+    <ul class="clean">
+      <li><b>Verify explicitly:</b> Every request authenticated and authorized, not just perimeter-based</li>
+      <li><b>Least privilege access:</b> Users and services get only the permissions they need</li>
+      <li><b>Assume breach:</b> Design as if attackers are already inside; limit blast radius</li>
+    </ul>
+
+    <div class="subhead">Cloud security building blocks</div>
+    <dl class="glossary">
+      <div class="term"><dt>Entra ID (identity)</dt><dd>Central identity provider. SSO, MFA, Conditional Access policies.</dd></div>
+      <div class="term"><dt>Managed identities</dt><dd>Cloud resources have their own identities — no stored credentials in code.</dd></div>
+      <div class="term"><dt>Key Vault</dt><dd>Secrets, keys, certificates. Access controlled via Entra ID.</dd></div>
+      <div class="term"><dt>Network Security Groups</dt><dd>Firewall rules at subnet or NIC level.</dd></div>
+      <div class="term"><dt>Azure Firewall</dt><dd>Managed cloud firewall with threat intelligence.</dd></div>
+      <div class="term"><dt>Web Application Firewall</dt><dd>Filters malicious HTTP requests (SQL injection, XSS, OWASP Top 10) — attached to Front Door / App Gateway.</dd></div>
+      <div class="term"><dt>Private Endpoints</dt><dd>Access PaaS services via private IP inside your VNet — no public internet exposure.</dd></div>
+      <div class="term"><dt>Defender for Cloud</dt><dd>Security posture management + threat detection across your Azure resources.</dd></div>
+      <div class="term"><dt>Encryption in transit</dt><dd>TLS on all endpoints. Non-negotiable.</dd></div>
+      <div class="term"><dt>Encryption at rest</dt><dd>Default on all Azure storage services. Customer-managed keys available for extra control.</dd></div>
+    </dl>
+
+    <div class="callout">
+      <div class="h">◈ Most cloud breaches are misconfigurations</div>
+      <p>The most common cause of cloud data breaches isn't a novel attack — it's <b>publicly-exposed storage accounts, over-permissioned service principals, or leaked API keys in code.</b> Cloud security is 80% "did you configure it right?" and 20% "sophisticated attack." Use Azure Policy to prevent bad configurations. Use Defender for Cloud to catch drift. Rotate secrets. Never put keys in source code.</p>
+    </div>
+  </section>
+
+  <!-- 10 COST -->
+  <section class="blk" id="cost">
+    <span class="refno">10</span>
+    <h3>Cloud cost — the pillar juniors underestimate</h3>
+    <p class="sub">Cloud gives you the ability to build anything. It also gives you the ability to bankrupt the business overnight.</p>
+
+    <p class="body">In on-prem, cost is decided at purchase and forgotten. In cloud, <b>every design decision has an ongoing bill</b>, and bad decisions compound daily. Cost is a first-class design pillar.</p>
+
+    <div class="subhead">Cost optimization techniques</div>
+    <ul class="clean">
+      <li><b>Right-sizing:</b> Match VM tier to actual usage. Most orgs over-provision; downsize what's underused.</li>
+      <li><b>Reserved instances:</b> Commit to 1-3 years of usage for 30-70% discount on steady workloads.</li>
+      <li><b>Savings plans:</b> Flexible commitment on compute spend — similar discount, more flexibility.</li>
+      <li><b>Spot / Low-priority VMs:</b> Up to 90% discount for interruptible workloads (batch, dev/test).</li>
+      <li><b>Azure Hybrid Benefit:</b> Use existing Windows Server and SQL Server licenses in Azure for big discount.</li>
+      <li><b>Auto-scaling:</b> Don't pay for capacity you're not using; scale down at night, up during peak.</li>
+      <li><b>Serverless where fit:</b> Functions and consumption tiers only bill when running.</li>
+      <li><b>Storage tiers:</b> Hot/Cool/Cold/Archive for blob — huge savings for infrequently-accessed data.</li>
+      <li><b>Delete unused resources:</b> Orphaned disks, old snapshots, unused public IPs quietly cost money forever.</li>
+      <li><b>Tags for chargeback:</b> Tag resources by cost center, project, environment. Enables real cost accountability.</li>
+    </ul>
+
+    <div class="subhead">Tools</div>
+    <dl class="glossary">
+      <div class="term"><dt>Pricing Calculator</dt><dd>Estimate costs <i>before</i> deploying.</dd></div>
+      <div class="term"><dt>TCO Calculator</dt><dd>Compare on-prem vs. Azure costs for migration planning.</dd></div>
+      <div class="term"><dt>Cost Management + Billing</dt><dd>Track spend, set budgets with alerts, analyze cost drivers.</dd></div>
+      <div class="term"><dt>Azure Advisor</dt><dd>Personalized recommendations including cost-saving suggestions.</dd></div>
+    </dl>
+
+    <div class="callout">
+      <div class="h">◈ The war stories</div>
+      <p>Every cloud engineer has heard about the intern who spun up a huge cluster and forgot to shut it down, or the developer whose bug caused Cosmos DB to burn through six figures in a weekend. Set budgets with alerts. Set spending limits on dev subscriptions. Review the bill monthly. <b>Runaway cost is a real risk, and it's your job to design against it.</b></p>
+    </div>
+  </section>
+
+  <!-- 11 PRACTICE -->
+  <section class="blk" id="practice">
+    <span class="refno">11</span>
+    <h3>Practice — three cloud design exercises</h3>
+    <p class="sub">Sketch these on paper before reading anyone's solutions. That's where real learning happens.</p>
+
+    <div class="scenario">
+      <div class="h">◈ Exercise 1 — Modern e-commerce site on Azure</div>
+      <p><b>Requirements:</b> 50,000 daily active users, ~500 concurrent, spikes 5x during holiday sales. Must be HTTPS with SSL. Product catalog ~100k items. Payment via Stripe. Order confirmation emails. 99.9% availability target.</p>
+      <p><b>Sketch this yourself first.</b> Think through: what serves the web pages? Where does the product catalog live? Where does session state go? How do orders get processed reliably? Where do product images live? How do you handle the traffic spike?</p>
+      <p><b>Reasonable architecture:</b> Front Door (global HTTPS + WAF + CDN for images) → App Service (scaled with auto-scale rules) → Azure SQL Database (products, orders, users) + Cache for Redis (session state, hot product data) + Blob Storage (product images). Order confirmation goes to Service Bus queue → Function → SendGrid for email. Application Insights + Log Analytics watching. Key Vault holds Stripe keys and DB connection strings. Cost Management tracks spend.</p>
+    </div>
+
+    <div class="scenario">
+      <div class="h">◈ Exercise 2 — Migrate a small business from on-prem to Azure</div>
+      <p><b>Current state:</b> Windows Server on-prem hosting file share and a legacy .NET app with SQL Server. Two locations connected by a VPN. Windows domain with 50 users. Backups on tape.</p>
+      <p><b>Design a migration.</b> Do you lift-and-shift or refactor? What's the target Azure architecture?</p>
+      <p><b>Reasonable phased approach:</b> Phase 1 (lift-and-shift): Move domain controller and file share to Azure VMs; extend Entra ID Connect to sync identities. Move SQL Server to Azure SQL Managed Instance (near-full SQL compat, minimal code changes). Move legacy .NET app to App Service (may work as-is or need small changes). Connect Azure to remaining on-prem via VPN or ExpressRoute. Phase 2 (optimize): Retire domain controllers if possible, move fully to Entra ID. Break monolith into services if warranted. Use managed identities instead of AD service accounts. Phase 3: Archive tape backups; use Azure Backup with geo-redundant storage. Use Azure Migrate to plan and execute.</p>
+    </div>
+
+    <div class="scenario">
+      <div class="h">◈ Exercise 3 — Real-time IoT data pipeline</div>
+      <p><b>Requirements:</b> 10,000 IoT sensors sending readings every 30 seconds. Need real-time dashboards, alerts on threshold breaches, and long-term storage for analytics. Compliance requires 7 years retention.</p>
+      <p><b>Sketch it.</b> Think through: how do sensors send data? Where does it land? How do you process it in real-time? Where does it store long-term?</p>
+      <p><b>Reasonable design:</b> Sensors → IoT Hub (device management, secure ingestion) → Event Hubs (high-throughput streaming) → Stream Analytics (real-time processing, threshold checks) → Alerts fire via Logic Apps or Functions to notification systems. Data also lands in Data Lake Storage for long-term retention (7 years, moved to Archive tier after 90 days for cost). Power BI reads from Stream Analytics for real-time dashboards; Synapse Analytics for historical queries. Cost Management with tags per project. Defender for IoT for device security.</p>
+    </div>
+
+    <div class="callout">
+      <div class="h">◈ How to actually get good at this</div>
+      <p>Sketching designs is one thing. <b>Building them is another.</b> Spin up a free Azure account. Pick Exercise 1 and actually deploy a version of it, even at tiny scale. See how the services fit together in real life. Break things. Fix them. That's where design intuition really forms — and by the way, it's also perfect portfolio material for landing better roles.</p>
+    </div>
+  </section>
+
+  <!-- 12 NEXT -->
+  <section class="blk" id="next">
+    <span class="refno">12</span>
+    <h3>The path forward — from beginner to cloud engineer</h3>
+    <p class="sub">A concrete sequence that turns study into career progression.</p>
+
+    <div class="subhead">The certification arc</div>
+    <table class="tbl">
+      <tr><th>Cert</th><th>What it proves</th><th>When to take it</th></tr>
+      <tr><td><b>AZ-900</b> Azure Fundamentals</td><td>Cloud concepts and Azure basics</td><td>Foundation. Take first. (You have this.)</td></tr>
+      <tr><td><b>AZ-104</b> Azure Administrator</td><td>Operational Azure — VMs, storage, networking, identity, monitoring</td><td>Next up. The workhorse cert.</td></tr>
+      <tr><td><b>AZ-500</b> Azure Security Engineer</td><td>Security-focused Azure work</td><td>If security is your direction.</td></tr>
+      <tr><td><b>AZ-305</b> Azure Solutions Architect Expert</td><td>Designing Azure solutions — this is the "systems designer" cert</td><td>After AZ-104. The real cloud architecture credential.</td></tr>
+      <tr><td><b>AZ-400</b> Azure DevOps Engineer</td><td>CI/CD, IaC, automation</td><td>If DevOps direction.</td></tr>
+    </table>
+
+    <div class="subhead">Study resources worth your time</div>
+    <ul class="clean">
+      <li><b>learn.microsoft.com</b> — Microsoft Learn is free, structured, and directly aligned to the certs. Start here for AZ-104.</li>
+      <li><b>Azure Well-Architected Framework docs</b> — free from Microsoft, comprehensive. Read it front to back.</li>
+      <li><b>Azure Architecture Center</b> — Microsoft's library of reference architectures and design patterns. Bookmark it.</li>
+      <li><b>"Designing Distributed Systems" by Brendan Burns</b> — patterns for container-native cloud design. Short and dense.</li>
+      <li><b>"Cloud Native Patterns" by Cornelia Davis</b> — modern cloud application patterns.</li>
+      <li><b>John Savill on YouTube</b> — deep, high-quality Azure walkthroughs for free.</li>
+    </ul>
+
+    <div class="subhead">Hands-on practice — the essential half</div>
+    <ul class="clean">
+      <li><b>Free Azure account</b> — $200 credit + free tier of many services indefinitely. Enough to build real things.</li>
+      <li><b>Deploy the practice exercises</b> from Section 11 at small scale. Actually build them.</li>
+      <li><b>Home lab in Azure</b> — a personal website, a portfolio API, a hobby project. Doesn't matter what — matters that you're using cloud primitives.</li>
+      <li><b>Contribute to open source</b> — many projects have infrastructure repos where you can practice IaC and cloud config.</li>
+      <li><b>Document what you build</b> — READMEs on GitHub with architecture diagrams. This is portfolio gold for cloud roles.</li>
+    </ul>
+
+    <div class="subhead">Career progression path</div>
+    <table class="tbl">
+      <tr><th>Role</th><th>Typical requirements</th><th>Vegas salary (2026 rough)</th></tr>
+      <tr><td>IT Support / Junior Sysadmin</td><td>Fundamentals, some Azure exposure</td><td>$50-65k</td></tr>
+      <tr><td>Cloud Admin / Sysadmin</td><td>AZ-104, real hands-on Azure operations, few years experience</td><td>$75-95k</td></tr>
+      <tr><td>Cloud Engineer</td><td>AZ-104 + AZ-305, real designs shipped, IaC experience</td><td>$95-130k</td></tr>
+      <tr><td>Cloud / Solutions Architect</td><td>AZ-305 + 5+ years, leading complex designs</td><td>$130-180k+</td></tr>
+      <tr><td>Senior / Principal Architect</td><td>Deep expertise, cross-cloud, business leadership</td><td>$180k+</td></tr>
+    </table>
+
+    <div class="callout">
+      <div class="h">◈ The honest career truth</div>
+      <p>The gap between "I studied for the cert" and "I can design and run production cloud systems" is enormous — and only closed by <b>actually doing it, breaking things, and fixing them under pressure.</b> Every real job you have where you touch cloud is career capital. Certs open doors; real projects and real production experience are what walks you through them into better roles. Study the theory, take the certs, but prioritize <i>getting into roles where you touch real cloud infrastructure</i>. That's where the leveling-up actually happens.</p>
+    </div>
+  </section>
+
+</div>
+
+<footer>
+  <div class="fr">Cloud Systems Design Study Guide · Azure-centric with AWS notes · Beginner → Intermediate · Study alongside AZ-104 for maximum reinforcement</div>
+</footer>
+
+</body>
+</html>

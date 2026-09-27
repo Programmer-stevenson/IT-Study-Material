@@ -1,0 +1,1133 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>MD-102 Endpoint Administrator — Field Manual</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Space+Grotesk:wght@400;500;600;700&family=Inter:wght@400;500;600&family=JetBrains+Mono:wght@400;500;600&display=swap" rel="stylesheet">
+<style>
+:root{
+  --bg:#0a0e15;
+  --bg-2:#0d121b;
+  --surface:#121925;
+  --surface-2:#19222f;
+  --surface-3:#1f2a3a;
+  --border:#243044;
+  --border-soft:#1b2433;
+  --text:#e6ecf5;
+  --text-dim:#93a1b5;
+  --text-faint:#5d6e85;
+  --azure:#4cc2ff;
+  --teal:#2dd4bf;
+  --violet:#a78bfa;
+  --amber:#f5b95a;
+  --green:#4ade80;
+  --red:#fb7185;
+  --pink:#f472b6;
+  --d1:#4cc2ff;  /* Deploy */
+  --d2:#a78bfa;  /* Identity & Compliance */
+  --d3:#2dd4bf;  /* Manage & Protect */
+  --d4:#f5b95a;  /* Apps */
+  --mono:'JetBrains Mono',ui-monospace,'SF Mono',Menlo,monospace;
+  --display:'Space Grotesk',system-ui,sans-serif;
+  --body:'Inter',system-ui,-apple-system,sans-serif;
+  --sidebar-w:312px;
+}
+*{box-sizing:border-box;margin:0;padding:0}
+html{scroll-behavior:smooth;scroll-padding-top:24px}
+body{
+  background:var(--bg);
+  color:var(--text);
+  font-family:var(--body);
+  font-size:15.5px;
+  line-height:1.65;
+  -webkit-font-smoothing:antialiased;
+}
+body::before{
+  content:"";position:fixed;inset:0;z-index:0;pointer-events:none;
+  background:
+    radial-gradient(900px 500px at 78% -8%, rgba(76,194,255,.10), transparent 60%),
+    radial-gradient(800px 600px at -5% 18%, rgba(167,139,250,.08), transparent 55%),
+    radial-gradient(700px 700px at 90% 95%, rgba(45,212,191,.06), transparent 60%);
+}
+a{color:inherit;text-decoration:none}
+::selection{background:rgba(76,194,255,.32);color:#fff}
+
+/* ---------- Layout ---------- */
+.shell{display:flex;position:relative;z-index:1}
+.sidebar{
+  width:var(--sidebar-w);flex:0 0 var(--sidebar-w);
+  height:100vh;position:sticky;top:0;
+  border-right:1px solid var(--border-soft);
+  background:linear-gradient(180deg,var(--bg-2),rgba(10,14,21,.85));
+  backdrop-filter:blur(8px);
+  display:flex;flex-direction:column;
+  overflow-y:auto;
+}
+.sidebar::-webkit-scrollbar{width:9px}
+.sidebar::-webkit-scrollbar-thumb{background:var(--border);border-radius:9px}
+.main{flex:1;min-width:0;max-width:1080px;margin:0 auto;padding:0 clamp(20px,4vw,72px)}
+
+/* ---------- Sidebar brand ---------- */
+.brand{padding:26px 24px 18px;border-bottom:1px solid var(--border-soft)}
+.brand .code{
+  font-family:var(--mono);font-size:12px;letter-spacing:.22em;
+  color:var(--azure);text-transform:uppercase;font-weight:600;
+}
+.brand h1{
+  font-family:var(--display);font-weight:700;font-size:22px;line-height:1.15;
+  margin-top:7px;letter-spacing:-.01em;
+}
+.brand .sub{font-size:12.5px;color:var(--text-faint);margin-top:6px;font-family:var(--mono)}
+
+/* ---------- Readiness meter ---------- */
+.readiness{padding:18px 24px;border-bottom:1px solid var(--border-soft)}
+.readiness .lbl{display:flex;justify-content:space-between;align-items:baseline;font-size:11px;
+  letter-spacing:.16em;text-transform:uppercase;color:var(--text-faint);font-family:var(--mono);margin-bottom:9px}
+.readiness .pct{font-size:13px;color:var(--green);font-weight:600}
+.meter{height:8px;border-radius:99px;background:var(--surface-2);overflow:hidden;border:1px solid var(--border-soft)}
+.meter > i{display:block;height:100%;width:0;border-radius:99px;
+  background:linear-gradient(90deg,var(--azure),var(--teal) 55%,var(--green));
+  transition:width .5s cubic-bezier(.2,.8,.2,1)}
+.readiness .hint{font-size:11.5px;color:var(--text-faint);margin-top:8px}
+
+/* ---------- Nav ---------- */
+nav{padding:14px 14px 28px;flex:1}
+.nav-domain{margin-bottom:6px}
+.nav-domain > a{
+  display:flex;align-items:center;gap:11px;padding:10px 12px;border-radius:9px;
+  font-weight:600;font-size:14px;color:var(--text-dim);transition:.15s;
+}
+.nav-domain > a:hover{background:var(--surface);color:var(--text)}
+.nav-domain > a .dot{width:9px;height:9px;border-radius:3px;flex:0 0 9px;background:var(--accent)}
+.nav-domain > a .wt{margin-left:auto;font-family:var(--mono);font-size:11px;color:var(--text-faint)}
+.nav-sub{list-style:none;margin:2px 0 8px 30px;padding-left:12px;border-left:1px solid var(--border-soft)}
+.nav-sub li a{display:block;padding:5px 10px;font-size:12.8px;color:var(--text-faint);border-radius:6px;transition:.12s}
+.nav-sub li a:hover{color:var(--text);background:var(--surface)}
+.nav-d1{--accent:var(--d1)} .nav-d2{--accent:var(--d2)}
+.nav-d3{--accent:var(--d3)} .nav-d4{--accent:var(--d4)}
+.nav-foot{padding:0 26px 22px;font-size:11px;color:var(--text-faint);font-family:var(--mono)}
+
+/* ---------- Hero ---------- */
+.hero{padding:62px 0 30px;border-bottom:1px solid var(--border-soft)}
+.hero .eyebrow{font-family:var(--mono);font-size:12px;letter-spacing:.24em;text-transform:uppercase;color:var(--azure)}
+.hero h2{font-family:var(--display);font-weight:700;font-size:clamp(34px,5vw,54px);line-height:1.04;
+  letter-spacing:-.02em;margin:14px 0 18px}
+.hero h2 em{font-style:normal;color:var(--azure)}
+.hero p.lede{font-size:17px;color:var(--text-dim);max-width:64ch}
+.hero-stats{display:grid;grid-template-columns:repeat(auto-fit,minmax(150px,1fr));gap:14px;margin-top:34px}
+.stat{background:var(--surface);border:1px solid var(--border-soft);border-radius:13px;padding:16px 18px}
+.stat .n{font-family:var(--display);font-size:25px;font-weight:700;color:var(--text)}
+.stat .n small{font-size:14px;color:var(--text-faint);font-weight:500}
+.stat .k{font-size:11.5px;color:var(--text-faint);font-family:var(--mono);letter-spacing:.08em;
+  text-transform:uppercase;margin-top:3px}
+
+/* domain section banners */
+.domain-head{margin:64px 0 8px;padding-top:14px;scroll-margin-top:18px}
+.domain-head .tag{display:inline-flex;align-items:center;gap:9px;font-family:var(--mono);font-size:12px;
+  letter-spacing:.14em;text-transform:uppercase;color:var(--accent);font-weight:600}
+.domain-head .tag .sq{width:11px;height:11px;border-radius:3px;background:var(--accent)}
+.domain-head h2{font-family:var(--display);font-weight:700;font-size:clamp(27px,3.6vw,38px);
+  letter-spacing:-.015em;margin:12px 0 6px;line-height:1.08}
+.domain-head .weight{font-size:13.5px;color:var(--text-dim)}
+.domain-head .weight b{color:var(--accent)}
+.dh1{--accent:var(--d1)} .dh2{--accent:var(--d2)} .dh3{--accent:var(--d3)} .dh4{--accent:var(--d4)}
+.rule{height:2px;border:none;margin:18px 0 4px;
+  background:linear-gradient(90deg,var(--accent),transparent 70%);opacity:.7}
+
+/* ---------- Topic blocks ---------- */
+section.topic{padding:30px 0 6px;scroll-margin-top:18px;border-bottom:1px solid var(--border-soft)}
+section.topic:last-child{border-bottom:none}
+.topic-h{display:flex;align-items:flex-start;gap:14px}
+.chk{appearance:none;-webkit-appearance:none;flex:0 0 22px;width:22px;height:22px;margin-top:5px;
+  border:1.5px solid var(--border);border-radius:7px;background:var(--surface);cursor:pointer;
+  position:relative;transition:.15s}
+.chk:hover{border-color:var(--accent,#4cc2ff)}
+.chk:checked{background:var(--accent,#4cc2ff);border-color:var(--accent,#4cc2ff)}
+.chk:checked::after{content:"";position:absolute;left:7px;top:3px;width:5px;height:10px;
+  border:solid #07101c;border-width:0 2.5px 2.5px 0;transform:rotate(43deg)}
+.chk:focus-visible{outline:2px solid var(--azure);outline-offset:2px}
+.topic h3{font-family:var(--display);font-weight:600;font-size:22px;letter-spacing:-.01em;line-height:1.25}
+.topic h4{font-family:var(--display);font-weight:600;font-size:16.5px;margin:22px 0 6px;color:var(--text)}
+.topic p{margin:11px 0;color:var(--text)}
+.topic p.dim{color:var(--text-dim)}
+.topic ul,.topic ol{margin:11px 0 11px 4px;padding-left:22px}
+.topic li{margin:6px 0}
+.topic li::marker{color:var(--text-faint)}
+strong{color:#fff;font-weight:600}
+em.term{font-style:normal;color:var(--azure);font-weight:500}
+code{font-family:var(--mono);font-size:.84em;background:var(--surface-2);border:1px solid var(--border-soft);
+  padding:1.5px 6px;border-radius:6px;color:var(--teal)}
+
+/* code blocks */
+pre{background:#080c12;border:1px solid var(--border);border-radius:12px;padding:16px 18px;margin:16px 0;
+  overflow-x:auto;font-family:var(--mono);font-size:13px;line-height:1.7;position:relative}
+pre code{background:none;border:none;padding:0;color:#cdd9e8;font-size:inherit}
+pre .cmt{color:#5d7088}
+pre .cmd{color:var(--teal)}
+pre .flag{color:var(--amber)}
+pre .str{color:#9fd69a}
+.pre-tag{position:absolute;top:0;right:0;font-family:var(--mono);font-size:10px;letter-spacing:.1em;
+  text-transform:uppercase;color:var(--text-faint);background:var(--surface-2);
+  border-left:1px solid var(--border);border-bottom:1px solid var(--border);
+  border-bottom-left-radius:8px;border-top-right-radius:11px;padding:4px 10px}
+
+/* callouts */
+.call{border-radius:12px;padding:15px 17px 15px 18px;margin:18px 0;border:1px solid var(--border);
+  background:var(--surface);position:relative;border-left-width:3px}
+.call .ct{font-family:var(--mono);font-size:11px;letter-spacing:.14em;text-transform:uppercase;
+  font-weight:600;display:flex;align-items:center;gap:8px;margin-bottom:6px}
+.call p{margin:5px 0}
+.call.exam{border-left-color:var(--amber);background:linear-gradient(100deg,rgba(245,185,90,.07),var(--surface) 40%)}
+.call.exam .ct{color:var(--amber)}
+.call.warn{border-left-color:var(--red);background:linear-gradient(100deg,rgba(251,113,133,.07),var(--surface) 40%)}
+.call.warn .ct{color:var(--red)}
+.call.tip{border-left-color:var(--teal);background:linear-gradient(100deg,rgba(45,212,191,.06),var(--surface) 40%)}
+.call.tip .ct{color:var(--teal)}
+.call.path{border-left-color:var(--violet);background:linear-gradient(100deg,rgba(167,139,250,.07),var(--surface) 40%)}
+.call.path .ct{color:var(--violet)}
+.call.path code{color:var(--violet);background:rgba(167,139,250,.08)}
+
+/* tables */
+.tbl-wrap{overflow-x:auto;margin:18px 0;border:1px solid var(--border);border-radius:12px}
+table{width:100%;border-collapse:collapse;font-size:13.6px;min-width:480px}
+th,td{text-align:left;padding:11px 15px;border-bottom:1px solid var(--border-soft);vertical-align:top}
+thead th{background:var(--surface-2);color:var(--text-dim);font-family:var(--mono);font-size:11.5px;
+  letter-spacing:.06em;text-transform:uppercase;font-weight:600;position:sticky;top:0}
+tbody tr:last-child td{border-bottom:none}
+tbody tr:hover{background:var(--surface)}
+td strong{color:var(--azure);font-weight:600}
+
+/* key-fact pills row */
+.facts{display:grid;grid-template-columns:repeat(auto-fit,minmax(210px,1fr));gap:12px;margin:18px 0}
+.fact{background:var(--surface);border:1px solid var(--border-soft);border-radius:11px;padding:13px 15px}
+.fact .fk{font-family:var(--mono);font-size:10.5px;letter-spacing:.1em;text-transform:uppercase;
+  color:var(--text-faint);margin-bottom:5px}
+.fact .fv{font-size:14px;color:var(--text);font-weight:500}
+
+/* back to top */
+.totop{position:fixed;right:22px;bottom:22px;z-index:20;width:46px;height:46px;border-radius:13px;
+  background:var(--surface-2);border:1px solid var(--border);color:var(--azure);cursor:pointer;
+  display:flex;align-items:center;justify-content:center;font-size:19px;opacity:0;transform:translateY(12px);
+  transition:.25s;backdrop-filter:blur(6px)}
+.totop.show{opacity:1;transform:none}
+.totop:hover{border-color:var(--azure);background:var(--surface-3)}
+
+/* mobile menu */
+.menu-btn{display:none}
+@media(max-width:980px){
+  .sidebar{position:fixed;left:0;top:0;z-index:50;transform:translateX(-100%);transition:transform .3s;
+    box-shadow:0 0 60px rgba(0,0,0,.6)}
+  .sidebar.open{transform:none}
+  .main{max-width:100%}
+  .menu-btn{display:flex;position:fixed;top:14px;left:14px;z-index:40;width:46px;height:46px;border-radius:12px;
+    background:var(--surface-2);border:1px solid var(--border);color:var(--text);align-items:center;
+    justify-content:center;cursor:pointer;backdrop-filter:blur(6px)}
+  .scrim{position:fixed;inset:0;background:rgba(4,7,12,.6);z-index:45;opacity:0;pointer-events:none;transition:.3s}
+  .scrim.show{opacity:1;pointer-events:auto}
+  .hero{padding-top:74px}
+}
+.section-counter{font-family:var(--mono);font-size:12px;color:var(--text-faint);margin-bottom:2px}
+.footer{padding:50px 0 80px;color:var(--text-faint);font-size:13px;border-top:1px solid var(--border-soft);margin-top:40px}
+.footer b{color:var(--text-dim)}
+</style>
+</head>
+<body>
+
+<button class="menu-btn" id="menuBtn" aria-label="Toggle navigation">☰</button>
+<div class="scrim" id="scrim"></div>
+
+<div class="shell">
+<!-- ================= SIDEBAR ================= -->
+<aside class="sidebar" id="sidebar">
+  <div class="brand">
+    <div class="code">Exam MD-102</div>
+    <h1>Endpoint Administrator Field Manual</h1>
+    <div class="sub">Microsoft 365 Certified · Associate</div>
+  </div>
+
+  <div class="readiness">
+    <div class="lbl"><span>Exam Readiness</span><span class="pct" id="pct">0%</span></div>
+    <div class="meter"><i id="meterFill"></i></div>
+    <div class="hint" id="readyHint">Check off topics as you master them.</div>
+  </div>
+
+  <nav id="nav">
+    <div class="nav-domain nav-d1">
+      <a href="#domain1"><span class="dot"></span>1 · Deploy Windows client<span class="wt">25–30%</span></a>
+      <ul class="nav-sub">
+        <li><a href="#t-prep">Prepare a deployment</a></li>
+        <li><a href="#t-autopilot">Windows Autopilot</a></li>
+        <li><a href="#t-mdt">MDT &amp; Configuration Manager</a></li>
+        <li><a href="#t-activation">Activation &amp; editions</a></li>
+      </ul>
+    </div>
+    <div class="nav-domain nav-d2">
+      <a href="#domain2"><span class="dot"></span>2 · Identity &amp; compliance<span class="wt">15–20%</span></a>
+      <ul class="nav-sub">
+        <li><a href="#t-identity">Manage identity</a></li>
+        <li><a href="#t-join">Entra join &amp; registration</a></li>
+        <li><a href="#t-laps">Windows LAPS</a></li>
+        <li><a href="#t-rbac">Intune RBAC</a></li>
+        <li><a href="#t-compliance">Compliance policies</a></li>
+        <li><a href="#t-ca">Conditional Access</a></li>
+      </ul>
+    </div>
+    <div class="nav-domain nav-d3">
+      <a href="#domain3"><span class="dot"></span>3 · Manage &amp; protect<span class="wt">40–45%</span></a>
+      <ul class="nav-sub">
+        <li><a href="#t-lifecycle">Device lifecycle</a></li>
+        <li><a href="#t-enroll">Enrollment</a></li>
+        <li><a href="#t-config">Configuration profiles</a></li>
+        <li><a href="#t-android">Android &amp; kiosk modes</a></li>
+        <li><a href="#t-monitor">Monitoring &amp; analytics</a></li>
+        <li><a href="#t-updates">Device updates</a></li>
+        <li><a href="#t-protect">Endpoint protection</a></li>
+        <li><a href="#t-encrypt">Encryption &amp; baselines</a></li>
+      </ul>
+    </div>
+    <div class="nav-domain nav-d4">
+      <a href="#domain4"><span class="dot"></span>4 · Manage applications<span class="wt">10–15%</span></a>
+      <ul class="nav-sub">
+        <li><a href="#t-apps">Deploy &amp; update apps</a></li>
+        <li><a href="#t-m365apps">Microsoft 365 Apps</a></li>
+        <li><a href="#t-appprotect">App protection (APP)</a></li>
+        <li><a href="#t-appconfig">App configuration</a></li>
+      </ul>
+    </div>
+    <div class="nav-domain">
+      <a href="#cheats"><span class="dot" style="background:var(--green)"></span>Rapid-fire cheat sheet</a>
+    </div>
+  </nav>
+  <div class="nav-foot">Progress saves to this browser.<br>v1 · build for self-study.</div>
+</aside>
+
+<!-- ================= MAIN ================= -->
+<main class="main">
+
+  <!-- HERO -->
+  <header class="hero">
+    <div class="eyebrow">Microsoft 365 · Modern Work</div>
+    <h2>Everything on the <em>MD-102</em> exam, in one place.</h2>
+    <p class="lede">A working administrator's reference for deploying, managing, securing, and supporting Windows and mobile endpoints with Microsoft Intune, Entra ID, Autopilot, and Configuration Manager. Built around the four official skill domains — with the exam tips, portal paths, and gotchas that actually move the needle on test day.</p>
+    <div class="hero-stats">
+      <div class="stat"><div class="n">4</div><div class="k">Skill domains</div></div>
+      <div class="stat"><div class="n">~40–60</div><div class="k">Questions</div></div>
+      <div class="stat"><div class="n">100<small> min</small></div><div class="k">Duration</div></div>
+      <div class="stat"><div class="n">700<small>/1000</small></div><div class="k">Passing score</div></div>
+    </div>
+    <div class="call tip" style="margin-top:28px">
+      <div class="ct">◆ How to use this guide</div>
+      <p>Work top to bottom. Tick the checkbox on each topic once you can explain it from memory — the readiness meter in the sidebar fills as you go and persists in this browser. Anything in an <strong style="color:var(--amber)">amber Exam box</strong> is a frequently-tested discriminator; <strong style="color:var(--violet)">violet Path boxes</strong> give the exact admin-center navigation.</p>
+    </div>
+  </header>
+
+  <!-- ============================================================= -->
+  <!-- DOMAIN 1 -->
+  <!-- ============================================================= -->
+  <div class="domain-head dh1" id="domain1">
+    <div class="tag"><span class="sq"></span>Domain 01</div>
+    <h2>Deploy the Windows client</h2>
+    <div class="weight">Exam weight: <b>25–30%</b> · Imaging vs. modern provisioning, Autopilot end-to-end, MDT &amp; ConfigMgr task sequences, activation and editions.</div>
+    <hr class="rule">
+  </div>
+
+  <!-- 1.1 Prepare -->
+  <section class="topic" id="t-prep" style="--accent:var(--d1)">
+    <div class="topic-h">
+      <input type="checkbox" class="chk" data-id="prep">
+      <div>
+        <div class="section-counter">1.1</div>
+        <h3>Prepare for a Windows client deployment</h3>
+      </div>
+    </div>
+    <p>Before choosing tools, decide between two fundamentally different paths and let requirements drive the answer.</p>
+
+    <h4>Migrate vs. rebuild ("wipe-and-load")</h4>
+    <ul>
+      <li><strong>In-place upgrade / migrate</strong> — keeps apps, settings, and user data. Fastest, lowest user disruption. Use when hardware stays and the existing image is healthy. Driven by Windows Setup or a ConfigMgr <em class="term">in-place upgrade task sequence</em>.</li>
+      <li><strong>Rebuild / wipe-and-load</strong> — deploys a clean image, then restores user state. Use for new hardware, corrupted installs, or moving from BIOS→UEFI / x86→x64. User data is captured and restored with the <em class="term">User State Migration Tool (USMT)</em> via <code>ScanState</code> and <code>LoadState</code>.</li>
+    </ul>
+
+    <h4>Imaging vs. modern provisioning</h4>
+    <div class="tbl-wrap"><table>
+      <thead><tr><th>Approach</th><th>What it is</th><th>Best when</th></tr></thead>
+      <tbody>
+        <tr><td><strong>Traditional imaging</strong></td><td>Build &amp; capture a reference <code>.wim</code>, deploy with MDT/ConfigMgr task sequences over the network or USB/PXE.</td><td>On-prem, full control of the image, large refresh projects, no internet at deploy time.</td></tr>
+        <tr><td><strong>Modern provisioning</strong></td><td>Ship the OEM image as-is; <strong>Autopilot</strong> + Intune transform it on first boot. No custom image to maintain.</td><td>Cloud-managed, remote/ship-to-user, "drop-ship" scenarios, minimizing image maintenance.</td></tr>
+        <tr><td><strong>Provisioning packages</strong></td><td><code>.ppkg</code> files built in <strong>Windows Configuration Designer (WCD)</strong> apply bulk settings/enrollment without re-imaging.</td><td>Quick bulk enrollment, kiosk setup, or tweaking an existing install offline.</td></tr>
+      </tbody>
+    </table></div>
+
+    <div class="call exam">
+      <div class="ct">▲ Exam discriminator</div>
+      <p>"Minimize image maintenance / ship directly to remote users" → <strong>Windows Autopilot</strong>. "Need full control of the OS image, on-prem PXE" → <strong>MDT/ConfigMgr task sequence</strong>. "Apply settings to existing devices without reimaging" → <strong>provisioning package (.ppkg)</strong> from Windows Configuration Designer.</p>
+    </div>
+
+    <h4>Deployment tool selection at a glance</h4>
+    <div class="tbl-wrap"><table>
+      <thead><tr><th>Tool</th><th>Use it for</th></tr></thead>
+      <tbody>
+        <tr><td><strong>Windows Autopilot</strong></td><td>Cloud-driven provisioning of OEM-supplied devices; user-driven, self-deploying, pre-provisioned modes.</td></tr>
+        <tr><td><strong>MDT</strong> (Microsoft Deployment Toolkit)</td><td>Free, lite-touch (LTI) imaging using Windows ADK + WinPE; reference image build &amp; capture.</td></tr>
+        <tr><td><strong>Configuration Manager</strong></td><td>Zero-touch (ZTI) at enterprise scale, OS deployment, PXE, software, co-management.</td></tr>
+        <tr><td><strong>Windows Configuration Designer</strong></td><td>Author provisioning packages (.ppkg).</td></tr>
+        <tr><td><strong>Subscription Activation / Azure</strong></td><td>Step up edition (Pro→Enterprise) and provision cloud PCs (Windows 365 / AVD).</td></tr>
+      </tbody>
+    </table></div>
+  </section>
+
+  <!-- 1.2 Autopilot -->
+  <section class="topic" id="t-autopilot" style="--accent:var(--d1)">
+    <div class="topic-h">
+      <input type="checkbox" class="chk" data-id="autopilot">
+      <div>
+        <div class="section-counter">1.2</div>
+        <h3>Plan &amp; implement Windows Autopilot</h3>
+      </div>
+    </div>
+    <p>Autopilot customizes the out-of-box experience (OOBE) so a device that ships from the OEM transforms into a fully-managed, business-ready PC the first time it connects to the internet — no custom image required.</p>
+
+    <h4>The end-to-end flow</h4>
+    <ol>
+      <li><strong>Register the device</strong> — its <em class="term">hardware hash</em> (a.k.a. hardware ID, a 4K string derived from the device) is uploaded to Autopilot. Sources: OEM/reseller registers at purchase, an Intune partner, or you collect it yourself.</li>
+      <li><strong>Assign a deployment profile</strong> — targets a device group (often a dynamic group keyed on the Autopilot <code>ZTDID</code> / order ID / group tag).</li>
+      <li><strong>User powers on</strong> → connects to network → Autopilot recognizes the device, applies the profile, and drives Entra join + Intune enrollment automatically.</li>
+      <li><strong>Enrollment Status Page (ESP)</strong> blocks the desktop until required apps, policies, and certs land.</li>
+    </ol>
+
+    <div class="call path">
+      <div class="ct">◇ Portal path</div>
+      <p>Register &amp; manage at <code>Intune admin center → Devices → Enrollment → Windows → Windows Autopilot deployment profiles / Devices</code>. (Historically under <em>Devices → Windows → Windows enrollment</em>.)</p>
+    </div>
+
+    <h4>Collecting the hardware hash yourself</h4>
+    <pre><span class="pre-tag">PowerShell</span><code><span class="cmt"># Install the community script from the PowerShell Gallery</span>
+<span class="cmd">Install-Script</span> <span class="flag">-Name</span> Get-WindowsAutopilotInfo <span class="flag">-Force</span>
+
+<span class="cmt"># Export this device's hardware hash to CSV</span>
+<span class="cmd">Get-WindowsAutopilotInfo</span> <span class="flag">-OutputFile</span> <span class="str">.\AutopilotHWID.csv</span>
+
+<span class="cmt"># Collect AND upload straight into Intune (interactive sign-in)</span>
+<span class="cmd">Get-WindowsAutopilotInfo</span> <span class="flag">-Online</span></code></pre>
+    <p class="dim">The CSV columns are <code>Device Serial Number</code>, <code>Windows Product ID</code>, and <code>Hardware Hash</code>. Import via <em>Autopilot devices → Import</em>.</p>
+
+    <h4>Deployment modes — know these cold</h4>
+    <div class="tbl-wrap"><table>
+      <thead><tr><th>Mode</th><th>Who completes it</th><th>Key traits</th></tr></thead>
+      <tbody>
+        <tr><td><strong>User-driven</strong></td><td>The end user, at their location.</td><td>User signs in with their own Entra credentials; device joins as Entra join or Entra hybrid join. Most common.</td></tr>
+        <tr><td><strong>Self-deploying</strong></td><td>Nobody — zero user interaction.</td><td>Great for kiosks/digital signage/shared devices. <strong>Requires TPM 2.0</strong> for attestation. No user assigned.</td></tr>
+        <tr><td><strong>Pre-provisioned</strong> (was "white glove")</td><td>IT/OEM provisions the heavy apps; user finishes.</td><td>Splits into a technician phase (lands apps/policies) and a user phase. Slashes the user's wait time. Hardware attestation required.</td></tr>
+        <tr><td><strong>Autopilot for existing devices</strong></td><td>ConfigMgr task sequence.</td><td>Wipe-and-load an existing domain PC into an Autopilot/Entra-managed state using an offline <code>AutopilotConfigurationFile.json</code>.</td></tr>
+      </tbody>
+    </table></div>
+
+    <div class="call exam">
+      <div class="ct">▲ Exam discriminator</div>
+      <p><strong>Self-deploying</strong> and <strong>pre-provisioning</strong> both require <strong>TPM 2.0</strong> (device attestation). If a question says "no user interaction / shared kiosk device," answer <strong>self-deploying</strong>. If it says "reduce the time the user waits while IT pre-loads apps," answer <strong>pre-provisioned / white glove</strong>.</p>
+    </div>
+
+    <h4>Enrollment Status Page (ESP)</h4>
+    <p>The ESP shows provisioning progress and can <strong>block device use until required apps and profiles install</strong>. Configure: show progress, block until complete, allow/block retry &amp; reset, allow use on failure, and which <em>blocking apps</em> must succeed. There's a default ESP plus assignable custom profiles.</p>
+
+    <h4>Join type set by the profile</h4>
+    <ul>
+      <li><strong>Entra join</strong> — cloud-only identity; the default modern target.</li>
+      <li><strong>Entra hybrid join</strong> — also joins on-prem AD. Requires the <strong>Intune Connector for Active Directory</strong> (creates the AD computer object) and line-of-sight to a domain controller during OOBE.</li>
+    </ul>
+
+    <div class="call warn">
+      <div class="ct">✕ Common Autopilot failures</div>
+      <p>Device not registered (hash never uploaded) · profile not assigned before first boot (assign <em>before</em> OOBE) · no network/DNS to reach Entra &amp; Intune · MDM auto-enrollment not enabled in Entra · hybrid join missing the Intune Connector or DC line-of-sight · ESP timeout from a slow/failing blocking app.</p>
+    </div>
+  </section>
+
+  <!-- 1.3 MDT & ConfigMgr -->
+  <section class="topic" id="t-mdt" style="--accent:var(--d1)">
+    <div class="topic-h">
+      <input type="checkbox" class="chk" data-id="mdt">
+      <div>
+        <div class="section-counter">1.3</div>
+        <h3>Deploy with MDT &amp; Configuration Manager</h3>
+      </div>
+    </div>
+    <p>The classic on-prem imaging path. Both build on the <strong>Windows Assessment and Deployment Kit (ADK)</strong> and <strong>WinPE</strong>.</p>
+
+    <h4>Deployment scenarios &amp; touch levels</h4>
+    <div class="tbl-wrap"><table>
+      <thead><tr><th>Term</th><th>Means</th></tr></thead>
+      <tbody>
+        <tr><td><strong>LTI</strong> — Lite Touch Installation</td><td>MDT alone. One manual kickoff at the target, then automated. Uses a <em>deployment share</em>.</td></tr>
+        <tr><td><strong>ZTI</strong> — Zero Touch Installation</td><td>ConfigMgr (often with MDT integration). Fully automated, enterprise scale, PXE.</td></tr>
+        <tr><td><strong>UDI</strong> — User Driven Installation</td><td>ConfigMgr + MDT wizard that lets a technician choose options at deploy time.</td></tr>
+      </tbody>
+    </table></div>
+
+    <h4>Core MDT building blocks</h4>
+    <ul>
+      <li><strong>Deployment share</strong> — repository for OS images, apps, drivers, packages, and task sequences.</li>
+      <li><strong>Task sequence</strong> — ordered steps that partition disk, apply the image, inject drivers, install apps, and join the domain.</li>
+      <li><strong>Reference image</strong> — built &amp; captured ("build and capture") then deployed; thick (apps baked in), thin (apps layered after), or hybrid.</li>
+      <li><strong>Boot image (WinPE)</strong> — the lightweight environment that runs the task sequence.</li>
+      <li><strong>MDT database / rules</strong> — <code>CustomSettings.ini</code> and <code>Bootstrap.ini</code> automate prompts.</li>
+    </ul>
+
+    <h4>Configuration Manager adds</h4>
+    <ul>
+      <li><strong>PXE-enabled distribution point</strong> for network boot; <strong>boot media</strong> (USB/ISO) for offline.</li>
+      <li><strong>Device collections</strong> as deployment targets; <strong>driver packages</strong> and <strong>OS image packages</strong>.</li>
+      <li><strong>Co-management</strong> — a Windows device is managed by ConfigMgr <em>and</em> Intune simultaneously, with workloads sliding from ConfigMgr to Intune (pilot → all).</li>
+    </ul>
+
+    <div class="call tip">
+      <div class="ct">◆ Co-management workloads</div>
+      <p>Movable sliders include: Compliance policies, Device configuration, Endpoint Protection, Resource access policies, Client apps, Office Click-to-Run apps, Windows Update policies. Move them <em>Pilot Intune</em> first, then <em>Intune</em> for all.</p>
+    </div>
+  </section>
+
+  <!-- 1.4 Activation & editions -->
+  <section class="topic" id="t-activation" style="--accent:var(--d1)">
+    <div class="topic-h">
+      <input type="checkbox" class="chk" data-id="activation">
+      <div>
+        <div class="section-counter">1.4</div>
+        <h3>Editions, activation &amp; subscription</h3>
+      </div>
+    </div>
+    <h4>Pick the edition</h4>
+    <div class="tbl-wrap"><table>
+      <thead><tr><th>Edition</th><th>Why choose it</th></tr></thead>
+      <tbody>
+        <tr><td><strong>Windows Pro</strong></td><td>Baseline business edition; supports Entra join &amp; MDM. Min for cloud management.</td></tr>
+        <tr><td><strong>Enterprise</strong></td><td>Advanced security &amp; management: AppLocker, Credential/Application Guard, DirectAccess, full delivery optimization, Modern BitLocker management. Reached via Subscription Activation.</td></tr>
+        <tr><td><strong>Education / Pro Education</strong></td><td>Academic equivalents of Enterprise/Pro.</td></tr>
+        <tr><td><strong>LTSC</strong></td><td>Long-Term Servicing Channel — no feature updates, for fixed-function devices (medical, ATM). Not for general office use.</td></tr>
+      </tbody>
+    </table></div>
+
+    <h4>Activation methods</h4>
+    <ul>
+      <li><strong>Subscription Activation</strong> — a user with a Windows Enterprise E3/E5 license signs in and the device <em>steps up</em> from Pro → Enterprise automatically; steps back down when the license is removed. No keys to manage.</li>
+      <li><strong>KMS</strong> (Key Management Service) — on-prem activation host; clients re-activate every 180 days. Needs the activation threshold met.</li>
+      <li><strong>Active Directory–Based Activation</strong> — activates domain-joined devices via AD; no separate KMS host count.</li>
+      <li><strong>MAK</strong> (Multiple Activation Key) — one-time activation against Microsoft; good for disconnected devices.</li>
+    </ul>
+
+    <div class="call exam">
+      <div class="ct">▲ Exam discriminator</div>
+      <p>"Users have Windows Enterprise E3/E5 and you want Pro devices to become Enterprise on sign-in, no keys" → <strong>Subscription Activation</strong>. "Activate many on-prem domain devices automatically" → <strong>AD-Based Activation</strong> or <strong>KMS</strong>. "Activate a handful of offline devices" → <strong>MAK</strong>.</p>
+    </div>
+  </section>
+
+  <!-- ============================================================= -->
+  <!-- DOMAIN 2 -->
+  <!-- ============================================================= -->
+  <div class="domain-head dh2" id="domain2">
+    <div class="tag"><span class="sq"></span>Domain 02</div>
+    <h2>Manage identity &amp; compliance</h2>
+    <div class="weight">Exam weight: <b>15–20%</b> · Authentication, Entra join &amp; registration, Windows LAPS, Intune RBAC, compliance policies, Conditional Access.</div>
+    <hr class="rule">
+  </div>
+
+  <!-- 2.1 Identity -->
+  <section class="topic" id="t-identity" style="--accent:var(--d2)">
+    <div class="topic-h">
+      <input type="checkbox" class="chk" data-id="identity">
+      <div><div class="section-counter">2.1</div><h3>Manage identity &amp; authentication</h3></div>
+    </div>
+    <p>Windows devices authenticate against <strong>Microsoft Entra ID</strong> (formerly Azure AD), on-prem AD, or both. Strengthen sign-in with passwordless options.</p>
+
+    <h4>Passwordless &amp; modern auth on Windows</h4>
+    <ul>
+      <li><strong>Windows Hello for Business (WHfB)</strong> — replaces passwords with a PIN or biometric tied to the device via asymmetric keys / certs. Deployment models: <em>cloud Kerberos trust</em> (recommended/simplest), <em>key trust</em>, and <em>certificate trust</em>.</li>
+      <li><strong>FIDO2 security keys</strong> — phishing-resistant hardware keys for passwordless sign-in.</li>
+      <li><strong>Microsoft Authenticator</strong> — passwordless phone sign-in and MFA.</li>
+      <li><strong>Multi-factor authentication (MFA)</strong> — enforced best via Conditional Access; "security defaults" turns on baseline MFA tenant-wide.</li>
+    </ul>
+
+    <div class="call exam">
+      <div class="ct">▲ Exam discriminator</div>
+      <p>For a cloud-only or hybrid org wanting the <strong>simplest WHfB rollout</strong>, choose <strong>cloud Kerberos trust</strong> — it avoids deploying a PKI/certificate infrastructure and uses Entra Kerberos for on-prem resource access.</p>
+    </div>
+
+    <h4>Self-Service Password Reset (SSPR)</h4>
+    <p>Lets users reset/unlock their own accounts after registering authentication methods (phone, email, security questions, Authenticator). Combine with <strong>password writeback</strong> (via Entra Connect) so resets sync back to on-prem AD.</p>
+    <div class="call path">
+      <div class="ct">◇ Portal path</div>
+      <p><code>Entra admin center → Protection → Password reset</code> — set scope (None / Selected group / All), required methods, and registration.</p>
+    </div>
+  </section>
+
+  <!-- 2.2 Join & registration -->
+  <section class="topic" id="t-join" style="--accent:var(--d2)">
+    <div class="topic-h">
+      <input type="checkbox" class="chk" data-id="join">
+      <div><div class="section-counter">2.2</div><h3>Entra join, hybrid join &amp; registration</h3></div>
+    </div>
+    <div class="tbl-wrap"><table>
+      <thead><tr><th>State</th><th>Identity</th><th>Typical owner</th><th>Notes</th></tr></thead>
+      <tbody>
+        <tr><td><strong>Entra registered</strong> (workplace-joined)</td><td>Personal account; device added with a work account.</td><td>BYOD / personal.</td><td>Sign in with personal creds; SSO to work apps. Supports Windows, iOS, Android, macOS.</td></tr>
+        <tr><td><strong>Entra joined</strong></td><td>Cloud organizational account only.</td><td>Corporate, cloud-first.</td><td>Sign in with Entra creds; auto-MDM enroll possible. Windows 10/11 &amp; some servers.</td></tr>
+        <tr><td><strong>Entra hybrid joined</strong></td><td>Joined to <em>both</em> on-prem AD and Entra ID.</td><td>Corporate with on-prem footprint.</td><td>Needs Entra Connect + DC line-of-sight; supports GPO + cloud management.</td></tr>
+      </tbody>
+    </table></div>
+
+    <div class="call exam">
+      <div class="ct">▲ Exam discriminator</div>
+      <p><strong>BYOD / personal device that just needs SSO to work apps</strong> → Entra <strong>registered</strong>. <strong>Company-owned, cloud-managed</strong> → Entra <strong>joined</strong>. <strong>Company-owned, still needs on-prem AD/GPO</strong> → Entra <strong>hybrid joined</strong>.</p>
+    </div>
+
+    <h4>Automatic MDM enrollment</h4>
+    <p>Enable <strong>MDM auto-enrollment</strong> so Entra-joined / hybrid-joined Windows devices enroll in Intune automatically. Set MDM user scope to <em>Some</em> or <em>All</em>.</p>
+    <div class="call path">
+      <div class="ct">◇ Portal path</div>
+      <p><code>Entra admin center → Devices → Mobility (MDM) → Microsoft Intune</code> → set <strong>MDM user scope</strong>. Also review <em>Devices → Device settings</em> for who can join and device limits.</p>
+    </div>
+  </section>
+
+  <!-- 2.3 LAPS -->
+  <section class="topic" id="t-laps" style="--accent:var(--d2)">
+    <div class="topic-h">
+      <input type="checkbox" class="chk" data-id="laps">
+      <div><div class="section-counter">2.3</div><h3>Windows LAPS</h3></div>
+    </div>
+    <p><strong>Windows Local Administrator Password Solution</strong> automatically randomizes and rotates the built-in local admin password and backs it up securely — eliminating shared/static local admin passwords. It's now <strong>built into Windows</strong> (no separate MSI for current builds).</p>
+    <ul>
+      <li><strong>Backup directory:</strong> <em>Microsoft Entra ID</em> (cloud) or <em>Windows Server Active Directory</em> (on-prem).</li>
+      <li><strong>Managed via Intune:</strong> an <em>Account protection</em> / endpoint-security LAPS policy sets rotation interval, password length/complexity, and the account to manage.</li>
+      <li><strong>Retrieve the password:</strong> in Entra, on the device blade → <em>Local administrator password recovery</em> (requires the right role/permission). Reading it can force an immediate rotation.</li>
+    </ul>
+    <div class="call path">
+      <div class="ct">◇ Portal path</div>
+      <p><code>Intune admin center → Endpoint security → Account protection → Create policy → Local admin password solution (Windows LAPS)</code>.</p>
+    </div>
+  </section>
+
+  <!-- 2.4 RBAC -->
+  <section class="topic" id="t-rbac" style="--accent:var(--d2)">
+    <div class="topic-h">
+      <input type="checkbox" class="chk" data-id="rbac">
+      <div><div class="section-counter">2.4</div><h3>Intune role-based access control (RBAC)</h3></div>
+    </div>
+    <p>RBAC controls <em>who</em> can do <em>what</em>, <em>to which</em> objects. An <strong>assignment</strong> binds three things together:</p>
+    <ul>
+      <li><strong>Role</strong> — permission set (built-in or custom).</li>
+      <li><strong>Members</strong> — the admin group that gets the permissions.</li>
+      <li><strong>Scope (groups + scope tags)</strong> — which devices/users they manage and which tagged objects they see.</li>
+    </ul>
+
+    <h4>Built-in Intune roles (examples)</h4>
+    <div class="tbl-wrap"><table>
+      <thead><tr><th>Role</th><th>Scope of power</th></tr></thead>
+      <tbody>
+        <tr><td><strong>Help Desk Operator</strong></td><td>Remote tasks, assign apps/policies — day-to-day support.</td></tr>
+        <tr><td><strong>Policy and Profile Manager</strong></td><td>Manage compliance &amp; configuration profiles, baselines.</td></tr>
+        <tr><td><strong>Application Manager</strong></td><td>Manage apps and app protection/configuration policies.</td></tr>
+        <tr><td><strong>Endpoint Security Manager</strong></td><td>Security baselines, endpoint security tasks.</td></tr>
+        <tr><td><strong>Read Only Operator</strong></td><td>View only.</td></tr>
+        <tr><td><strong>Intune Role Administrator</strong></td><td>Manage roles &amp; assignments.</td></tr>
+      </tbody>
+    </table></div>
+    <div class="call tip">
+      <div class="ct">◆ Scope tags</div>
+      <p><strong>Scope tags</strong> filter visibility (e.g., region-based admins only see their region's devices/policies). They're attached to objects and to RBAC assignments — useful for delegated, geographically split administration.</p>
+    </div>
+  </section>
+
+  <!-- 2.5 Compliance -->
+  <section class="topic" id="t-compliance" style="--accent:var(--d2)">
+    <div class="topic-h">
+      <input type="checkbox" class="chk" data-id="compliance">
+      <div><div class="section-counter">2.5</div><h3>Compliance policies</h3></div>
+    </div>
+    <p>A <strong>compliance policy</strong> defines the rules a device must meet to be considered healthy (minimum OS version, encryption on, AV/firewall on, no jailbreak/root, password requirements, threat level). The result feeds <strong>Conditional Access</strong>.</p>
+
+    <h4>Common compliance settings by platform</h4>
+    <div class="tbl-wrap"><table>
+      <thead><tr><th>Category</th><th>Examples</th></tr></thead>
+      <tbody>
+        <tr><td><strong>Device health</strong></td><td>Require BitLocker, Secure Boot, Code integrity; block rooted/jailbroken devices.</td></tr>
+        <tr><td><strong>Device properties</strong></td><td>Min/max OS version, build ranges.</td></tr>
+        <tr><td><strong>System security</strong></td><td>Password/PIN length &amp; type, encryption, firewall, real-time AV, Defender, min security patch level.</td></tr>
+        <tr><td><strong>Microsoft Defender for Endpoint</strong></td><td>Require device <em>machine risk score</em> at or under a level (Clear/Low/Medium/High).</td></tr>
+      </tbody>
+    </table></div>
+
+    <h4>Built-in vs. assigned compliance &amp; "not evaluated"</h4>
+    <ul>
+      <li>There is a tenant-wide <strong>built-in compliance policy</strong> — when no policy is assigned, you decide whether unassigned devices are treated as <em>compliant</em> or <em>not compliant</em> via <strong>Compliance settings → Mark devices with no compliance policy assigned</strong>.</li>
+      <li>Set the <strong>Compliance status validity period</strong> (days a device can go without checking in before being marked non-compliant).</li>
+    </ul>
+
+    <h4>Actions for noncompliance</h4>
+    <p>Each policy can stage <strong>graduated actions</strong> on a schedule: mark noncompliant immediately or after N days, <strong>send email</strong> to the user, <strong>send push notification</strong>, <strong>remotely lock</strong>, or <strong>retire</strong> the device after a grace period.</p>
+
+    <div class="call exam">
+      <div class="ct">▲ Exam discriminator</div>
+      <p>Compliance policy alone <em>reports</em> health — it does not block access. To actually <strong>block a noncompliant device from resources</strong>, you must pair it with a <strong>Conditional Access</strong> policy that requires "device to be marked as compliant."</p>
+    </div>
+  </section>
+
+  <!-- 2.6 Conditional Access -->
+  <section class="topic" id="t-ca" style="--accent:var(--d2)">
+    <div class="topic-h">
+      <input type="checkbox" class="chk" data-id="ca">
+      <div><div class="section-counter">2.6</div><h3>Conditional Access (CA)</h3></div>
+    </div>
+    <p>CA is the policy engine that evaluates <strong>signals</strong> and enforces <strong>decisions</strong>. Think: <em>if</em> these conditions, <em>then</em> grant/block with controls.</p>
+
+    <div class="tbl-wrap"><table>
+      <thead><tr><th>Assignments (the "if")</th><th>Access controls (the "then")</th></tr></thead>
+      <tbody>
+        <tr><td>Users / groups / roles · Target resources (cloud apps) · Network &amp; locations · Device platforms · Client apps · Device filters · Sign-in risk</td><td><strong>Grant:</strong> require MFA, require compliant device, require Entra hybrid join, require approved client app / app protection policy, require password change. <strong>Block</strong> access. <strong>Session:</strong> app-enforced restrictions, sign-in frequency.</td></tr>
+      </tbody>
+    </table></div>
+
+    <div class="call path">
+      <div class="ct">◇ Portal path</div>
+      <p><code>Entra admin center → Protection → Conditional Access → Policies → New policy</code>. Always test with <strong>Report-only</strong> mode first, and keep an emergency <em>break-glass</em> account excluded.</p>
+    </div>
+    <div class="call warn">
+      <div class="ct">✕ Watch out</div>
+      <p>CA "require compliant device" needs devices that are <strong>Entra registered or joined</strong> (so Intune can report compliance). Always exclude a break-glass admin account so a misconfigured policy can't lock everyone out.</p>
+    </div>
+  </section>
+
+  <!-- ============================================================= -->
+  <!-- DOMAIN 3 -->
+  <!-- ============================================================= -->
+  <div class="domain-head dh3" id="domain3">
+    <div class="tag"><span class="sq"></span>Domain 03</div>
+    <h2>Manage, maintain &amp; protect devices</h2>
+    <div class="weight">Exam weight: <b>40–45%</b> — the heaviest domain. Lifecycle, enrollment for every platform, configuration profiles, monitoring &amp; analytics, updates, and endpoint protection.</div>
+    <hr class="rule">
+  </div>
+
+  <!-- 3.1 Lifecycle -->
+  <section class="topic" id="t-lifecycle" style="--accent:var(--d3)">
+    <div class="topic-h">
+      <input type="checkbox" class="chk" data-id="lifecycle">
+      <div><div class="section-counter">3.1</div><h3>Device lifecycle in Intune</h3></div>
+    </div>
+    <p>Enroll → configure → protect → monitor → <strong>remove</strong>. Know the four removal actions cold — they are constantly tested.</p>
+    <div class="tbl-wrap"><table>
+      <thead><tr><th>Action</th><th>What happens</th><th>Use when</th></tr></thead>
+      <tbody>
+        <tr><td><strong>Retire</strong></td><td>Removes <em>company</em> data, apps, and policies; leaves <em>personal</em> data intact. Device unenrolls.</td><td>BYOD offboarding — employee keeps their phone.</td></tr>
+        <tr><td><strong>Wipe</strong></td><td>Factory reset — erases <em>everything</em>. Optional: keep enrollment state, or "wipe + retain user data."</td><td>Corporate device reassigned, lost, or stolen.</td></tr>
+        <tr><td><strong>Delete</strong></td><td>Removes the device record from Intune (cleanup). Device still has data until it checks in.</td><td>Stale records.</td></tr>
+        <tr><td><strong>Fresh Start</strong> (Windows)</td><td>Reinstalls Windows, removes apps, optionally keeps user data — strips OEM bloat.</td><td>Cleaning up a Windows PC.</td></tr>
+        <tr><td><strong>Autopilot Reset</strong></td><td>Wipes to a business-ready state, re-applies Autopilot config, keeps Entra/MDM enrollment.</td><td>Repurposing a shared Windows device.</td></tr>
+      </tbody>
+    </table></div>
+    <div class="call exam">
+      <div class="ct">▲ Exam discriminator</div>
+      <p><strong>Retire</strong> = remove company data only (personal kept) → BYOD. <strong>Wipe</strong> = full factory reset → corporate/lost/stolen. If the question stresses "keep the user's personal photos," it's <strong>Retire</strong>.</p>
+    </div>
+    <p><strong>Policy sets</strong> bundle apps, policies, and profiles into one assignable unit so onboarding a group applies everything at once.</p>
+  </section>
+
+  <!-- 3.2 Enrollment -->
+  <section class="topic" id="t-enroll" style="--accent:var(--d3)">
+    <div class="topic-h">
+      <input type="checkbox" class="chk" data-id="enroll">
+      <div><div class="section-counter">3.2</div><h3>Enrollment across platforms</h3></div>
+    </div>
+
+    <h4>Enrollment restrictions (two kinds)</h4>
+    <ul>
+      <li><strong>Device platform restrictions</strong> — allow/block platforms (iOS, Android, Windows, macOS), set min/max OS versions, and block personally-owned devices.</li>
+      <li><strong>Device limit restrictions</strong> — cap how many devices a user can enroll (1–15).</li>
+    </ul>
+
+    <h4>Windows</h4>
+    <ul>
+      <li><strong>Automatic enrollment</strong> via Entra MDM scope (covered in 2.2) — for Entra join / hybrid join.</li>
+      <li><strong>Bulk enrollment</strong> with a provisioning package (WCD) using a <em>bulk token</em>.</li>
+      <li><strong>Autopilot</strong> for OOBE-driven enrollment.</li>
+      <li><strong>Group Policy</strong> can trigger auto-enrollment of hybrid-joined devices.</li>
+    </ul>
+
+    <h4>Apple (iOS/iPadOS &amp; macOS)</h4>
+    <ul>
+      <li><strong>Apple MDM push certificate (APNs)</strong> is mandatory before any Apple device can enroll — renew annually.</li>
+      <li><strong>Automated Device Enrollment (ADE)</strong> — formerly DEP — corporate-owned devices bought through Apple Business Manager / Apple School Manager; supervised, zero-touch, enforced enrollment via an <em>enrollment profile</em> + ADE token.</li>
+      <li><strong>Apple Configurator</strong> — enroll via USB with a setup-assistant or direct profile.</li>
+      <li><strong>BYOD</strong> — user-initiated via Company Portal / web (account-driven for iOS).</li>
+    </ul>
+
+    <h4>Android</h4>
+    <div class="tbl-wrap"><table>
+      <thead><tr><th>Management mode</th><th>Ownership / use</th></tr></thead>
+      <tbody>
+        <tr><td><strong>Personally-owned work profile (BYOD)</strong></td><td>Personal device; a separate, isolated work profile holds company apps/data.</td></tr>
+        <tr><td><strong>Corporate-owned, fully managed</strong></td><td>Company device, single use, fully controlled — no personal profile.</td></tr>
+        <tr><td><strong>Corporate-owned with work profile (COPE)</strong></td><td>Company device that also allows personal use, with a managed work profile.</td></tr>
+        <tr><td><strong>Corporate-owned, dedicated (kiosk)</strong></td><td>Single-purpose / shared device — kiosk, signage, line-of-business handheld.</td></tr>
+      </tbody>
+    </table></div>
+    <p class="dim">All Android Enterprise modes require a one-time <strong>Managed Google Play</strong> connection between Intune and your enterprise Google account.</p>
+  </section>
+
+  <!-- 3.3 Configuration profiles -->
+  <section class="topic" id="t-config" style="--accent:var(--d3)">
+    <div class="topic-h">
+      <input type="checkbox" class="chk" data-id="config">
+      <div><div class="section-counter">3.3</div><h3>Configuration profiles</h3></div>
+    </div>
+    <p>Configuration profiles push settings (Wi-Fi, VPN, certificates, restrictions, browser config, OEM controls) to devices. Choose the right <strong>profile type</strong>:</p>
+    <div class="tbl-wrap"><table>
+      <thead><tr><th>Profile type</th><th>What it's for</th></tr></thead>
+      <tbody>
+        <tr><td><strong>Settings catalog</strong></td><td>The modern, granular menu — search and pick individual settings. Microsoft's recommended starting point for Windows/macOS/iOS.</td></tr>
+        <tr><td><strong>Templates</strong></td><td>Pre-grouped scenarios: Wi-Fi, VPN, Email, Certificates (SCEP/PKCS/trusted root), Device restrictions, Endpoint protection, Edition upgrade, Kiosk, etc.</td></tr>
+        <tr><td><strong>Administrative templates (ADMX)</strong></td><td>GPO-style ADMX-backed settings delivered from the cloud — familiar to AD admins. (Settings catalog now supersedes most of these.)</td></tr>
+        <tr><td><strong>Custom (OMA-URI)</strong></td><td>Push a CSP setting not surfaced in the UI by specifying its OMA-URI path/value/data type.</td></tr>
+      </tbody>
+    </table></div>
+
+    <h4>Certificates</h4>
+    <ul>
+      <li><strong>Trusted root certificate</strong> — distribute your root CA (prerequisite for SCEP/PKCS).</li>
+      <li><strong>SCEP</strong> — issues device/user certs via a SCEP/NDES connector; great for scale.</li>
+      <li><strong>PKCS</strong> — certs issued directly from an enterprise CA via the PKCS connector.</li>
+    </ul>
+
+    <h4>Assignment &amp; filters</h4>
+    <p>Assign to user or device groups (Include/Exclude). <strong>Assignment filters</strong> add rules (e.g., <code>deviceModel</code>, OS version, ownership) to narrow a broad group at assignment time. Resolve conflicts: explicit settings can clash — Intune flags <em>conflict</em> states; the last/most-restrictive may win depending on setting.</p>
+
+    <div class="call tip">
+      <div class="ct">◆ Troubleshooting profiles</div>
+      <p>Check <em>Device → Monitor</em> for per-setting status (Succeeded/Error/Conflict/Pending). On the client, <strong>Settings → Accounts → Access work or school → Info → Sync</strong> forces a check-in. Use <strong>Troubleshooting + support</strong> blade to view assignments for a user.</p>
+    </div>
+  </section>
+
+  <!-- 3.4 Android & kiosk -->
+  <section class="topic" id="t-android" style="--accent:var(--d3)">
+    <div class="topic-h">
+      <input type="checkbox" class="chk" data-id="android">
+      <div><div class="section-counter">3.4</div><h3>Kiosk mode, Android profiles &amp; Microsoft Tunnel</h3></div>
+    </div>
+    <h4>Windows kiosk</h4>
+    <ul>
+      <li><strong>Single-app kiosk</strong> — locks the device to one UWP/Edge app under an auto-logon local account; ideal for signage/check-in.</li>
+      <li><strong>Multi-app kiosk</strong> — a restricted Start menu of allowed apps (uses AssignedAccess CSP).</li>
+    </ul>
+    <h4>Microsoft Tunnel</h4>
+    <p><strong>Microsoft Tunnel</strong> is a VPN gateway that runs in a Linux container and gives <em>iOS/iPadOS and Android</em> managed devices secure access to on-prem resources. Needs the <em>Tunnel Gateway</em> server, a <em>Server configuration</em>, a <em>Site</em>, and the <em>Microsoft Defender</em> app (or Tunnel client) plus a VPN profile pushed from Intune.</p>
+  </section>
+
+  <!-- 3.5 Monitoring -->
+  <section class="topic" id="t-monitor" style="--accent:var(--d3)">
+    <div class="topic-h">
+      <input type="checkbox" class="chk" data-id="monitor">
+      <div><div class="section-counter">3.5</div><h3>Monitoring &amp; Endpoint analytics</h3></div>
+    </div>
+    <ul>
+      <li><strong>Intune dashboards</strong> — device &amp; policy status, app install reports, compliance reports.</li>
+      <li><strong>Azure Monitor</strong> — route Intune <em>diagnostic logs</em> to a Log Analytics workspace for KQL queries, workbooks, and long-term retention/alerting.</li>
+      <li><strong>Endpoint analytics</strong> — scores the user experience.</li>
+    </ul>
+    <h4>Endpoint analytics components</h4>
+    <div class="tbl-wrap"><table>
+      <thead><tr><th>Feature</th><th>Surfaces</th></tr></thead>
+      <tbody>
+        <tr><td><strong>Startup performance</strong></td><td>Boot &amp; sign-in times; identifies slow devices/drivers.</td></tr>
+        <tr><td><strong>Application reliability</strong></td><td>App crash/hang rates per app and device.</td></tr>
+        <tr><td><strong>Work from anywhere</strong></td><td>Cloud-management &amp; modern-provisioning readiness.</td></tr>
+        <tr><td><strong>Resource performance</strong></td><td>CPU/RAM pressure — spot under-spec hardware.</td></tr>
+        <tr><td><strong>Proactive remediations</strong></td><td>Detection + remediation script packages that run on a schedule to auto-fix common issues.</td></tr>
+      </tbody>
+    </table></div>
+  </section>
+
+  <!-- 3.6 Updates -->
+  <section class="topic" id="t-updates" style="--accent:var(--d3)">
+    <div class="topic-h">
+      <input type="checkbox" class="chk" data-id="updates">
+      <div><div class="section-counter">3.6</div><h3>Device updates (Windows Update for Business)</h3></div>
+    </div>
+    <p>Intune drives <strong>Windows Update for Business (WUfB)</strong> — no WSUS infrastructure. Three Windows update objects:</p>
+    <div class="tbl-wrap"><table>
+      <thead><tr><th>Object</th><th>Controls</th></tr></thead>
+      <tbody>
+        <tr><td><strong>Update rings</strong></td><td>Deferral periods, deadlines, active hours, restart behavior, and which quality/feature updates devices receive. Build <em>rings</em> (Pilot → Broad) for staged rollout.</td></tr>
+        <tr><td><strong>Feature updates</strong></td><td>Pin a target Windows feature version (e.g., stay on 23H2) and roll it out on a schedule.</td></tr>
+        <tr><td><strong>Quality updates (expedite)</strong></td><td><em>Expedite</em> a critical/security patch to deploy ASAP, overriding deferrals.</td></tr>
+        <tr><td><strong>Driver updates</strong></td><td>Approve or auto-approve driver/firmware updates from Windows Update.</td></tr>
+      </tbody>
+    </table></div>
+
+    <h4>Servicing channels &amp; rollback</h4>
+    <ul>
+      <li><strong>General Availability Channel</strong> — annual feature updates (standard business).</li>
+      <li><strong>LTSC</strong> — no feature updates, long support (special-purpose only).</li>
+      <li><strong>Uninstall</strong> behavior + deadline grace periods let you recover from a bad patch.</li>
+    </ul>
+
+    <h4>Delivery Optimization</h4>
+    <p><strong>Delivery Optimization</strong> reduces bandwidth by letting devices share update/app content peer-to-peer (LAN, group, or cloud). Tune <em>download mode</em> (HTTP only, LAN, group, internet peering) and set group IDs to bound the peer mesh.</p>
+
+    <h4>Apple &amp; Android updates</h4>
+    <ul>
+      <li><strong>Apple:</strong> create update policies for <em>supervised/ADE</em> devices to push and schedule iOS/iPadOS/macOS OS updates and delay visibility of new releases.</li>
+      <li><strong>Android (Enterprise):</strong> set system update behavior (automatic, postpone up to 30 days, maintenance window) for fully managed/dedicated devices.</li>
+    </ul>
+    <div class="call exam">
+      <div class="ct">▲ Exam discriminator</div>
+      <p>"Get a single urgent security fix out now, bypassing the ring's deferral" → <strong>Expedite a quality update</strong>. "Keep devices on a specific Windows version and prevent moving to the next feature release" → <strong>Feature update profile</strong>. "Cut WAN bandwidth during a rollout" → <strong>Delivery Optimization</strong>.</p>
+    </div>
+  </section>
+
+  <!-- 3.7 Endpoint protection -->
+  <section class="topic" id="t-protect" style="--accent:var(--d3)">
+    <div class="topic-h">
+      <input type="checkbox" class="chk" data-id="protect">
+      <div><div class="section-counter">3.7</div><h3>Endpoint protection &amp; Defender</h3></div>
+    </div>
+    <p>The <strong>Endpoint security</strong> node centralizes protective policies and Microsoft Defender for Endpoint (MDE) integration.</p>
+    <div class="tbl-wrap"><table>
+      <thead><tr><th>Endpoint security policy</th><th>What it does</th></tr></thead>
+      <tbody>
+        <tr><td><strong>Antivirus</strong></td><td>Microsoft Defender Antivirus config, scan schedules, exclusions, tamper protection.</td></tr>
+        <tr><td><strong>Disk encryption</strong></td><td>BitLocker (Windows) &amp; FileVault (macOS) policy + key escrow.</td></tr>
+        <tr><td><strong>Firewall</strong></td><td>Microsoft Defender Firewall rules &amp; profiles.</td></tr>
+        <tr><td><strong>Endpoint detection &amp; response (EDR)</strong></td><td>Onboard devices to Microsoft Defender for Endpoint.</td></tr>
+        <tr><td><strong>Attack surface reduction (ASR)</strong></td><td>ASR rules, controlled folder access, exploit protection, web/network protection, app/device control.</td></tr>
+        <tr><td><strong>Account protection</strong></td><td>Windows Hello for Business, Credential Guard, Windows LAPS.</td></tr>
+      </tbody>
+    </table></div>
+
+    <h4>Onboarding to Microsoft Defender for Endpoint</h4>
+    <ol>
+      <li>Establish the <strong>service-to-service connection</strong> between Intune and Microsoft Defender for Endpoint (in <em>Endpoint security → Microsoft Defender for Endpoint</em>).</li>
+      <li>Turn on <strong>Connect Windows devices … to Microsoft Defender for Endpoint</strong>.</li>
+      <li>Deploy an <strong>EDR onboarding policy</strong> (uses the onboarding blob automatically).</li>
+      <li>Use the device <strong>risk score</strong> in compliance + CA to gate access.</li>
+    </ol>
+  </section>
+
+  <!-- 3.8 Encryption & baselines -->
+  <section class="topic" id="t-encrypt" style="--accent:var(--d3)">
+    <div class="topic-h">
+      <input type="checkbox" class="chk" data-id="encrypt">
+      <div><div class="section-counter">3.8</div><h3>Encryption &amp; security baselines</h3></div>
+    </div>
+    <h4>BitLocker via Intune</h4>
+    <ul>
+      <li>Deploy through a <strong>Disk encryption</strong> endpoint-security policy (or a device-config Endpoint protection template).</li>
+      <li>Set drive type (OS / fixed / removable), encryption method (e.g., XTS-AES 256), and require TPM.</li>
+      <li><strong>Recovery keys escrow to Entra ID automatically</strong>; retrieve via the device blade or have users use the Company Portal / <code>aka.ms/myrecoverykey</code>.</li>
+      <li><strong>FileVault</strong> is the macOS equivalent, with personal recovery key escrow.</li>
+    </ul>
+
+    <h4>Security baselines</h4>
+    <p>A <strong>security baseline</strong> is a Microsoft-recommended, pre-configured group of settings (for Windows, Defender for Endpoint, Edge, Windows 365, etc.). Deploy it, then customize. Baselines are <strong>versioned</strong> — you may need to upgrade a profile to a newer baseline version. Watch for conflicts when multiple baselines/profiles target the same device.</p>
+    <div class="call warn">
+      <div class="ct">✕ Baseline conflicts</div>
+      <p>If two baselines or a baseline + config profile set the same setting differently, the device shows a <strong>conflict</strong> and the setting may not apply. Standardize on one baseline per scope and layer carefully.</p>
+    </div>
+  </section>
+
+  <!-- ============================================================= -->
+  <!-- DOMAIN 4 -->
+  <!-- ============================================================= -->
+  <div class="domain-head dh4" id="domain4">
+    <div class="tag"><span class="sq"></span>Domain 04</div>
+    <h2>Manage applications</h2>
+    <div class="weight">Exam weight: <b>10–15%</b> · Deploying every app type, Microsoft 365 Apps, app protection (MAM), and app configuration policies.</div>
+    <hr class="rule">
+  </div>
+
+  <!-- 4.1 Deploy apps -->
+  <section class="topic" id="t-apps" style="--accent:var(--d4)">
+    <div class="topic-h">
+      <input type="checkbox" class="chk" data-id="apps">
+      <div><div class="section-counter">4.1</div><h3>Deploy &amp; update apps with Intune</h3></div>
+    </div>
+
+    <h4>App types</h4>
+    <div class="tbl-wrap"><table>
+      <thead><tr><th>App type</th><th>Notes</th></tr></thead>
+      <tbody>
+        <tr><td><strong>Store apps</strong></td><td>Microsoft Store, Apple App Store (VPP), Managed Google Play, web apps. Auto-updated by the store.</td></tr>
+        <tr><td><strong>Microsoft 365 Apps (Windows/macOS)</strong></td><td>Built-in Office suite deployment with a guided configuration designer.</td></tr>
+        <tr><td><strong>Win32 app</strong></td><td>Package complex installers (EXE/MSI/scripts) into a <code>.intunewin</code> with the <strong>Microsoft Win32 Content Prep Tool</strong>. Supports detection rules, requirements, dependencies, supersedence, install/uninstall commands.</td></tr>
+        <tr><td><strong>Line-of-business (LOB)</strong></td><td>Upload an installer directly: <code>.msi</code> (Windows), <code>.ipa</code> (iOS), <code>.apk</code> (Android), <code>.pkg</code> (macOS).</td></tr>
+        <tr><td><strong>Web link</strong></td><td>A pinned URL shortcut.</td></tr>
+      </tbody>
+    </table></div>
+
+    <pre><span class="pre-tag">Win32 packaging</span><code><span class="cmt"># Wrap a source folder + setup file into .intunewin</span>
+<span class="cmd">IntuneWinAppUtil.exe</span> <span class="flag">-c</span> <span class="str">C:\Source</span> <span class="flag">-s</span> <span class="str">setup.exe</span> <span class="flag">-o</span> <span class="str">C:\Output</span></code></pre>
+
+    <h4>Assignment intents</h4>
+    <div class="tbl-wrap"><table>
+      <thead><tr><th>Intent</th><th>Behavior</th></tr></thead>
+      <tbody>
+        <tr><td><strong>Required</strong></td><td>Installed automatically on assigned devices/users.</td></tr>
+        <tr><td><strong>Available for enrolled devices</strong></td><td>Shows in <strong>Company Portal</strong> for the user to install on demand.</td></tr>
+        <tr><td><strong>Uninstall</strong></td><td>Removes the app from targeted devices.</td></tr>
+      </tbody>
+    </table></div>
+    <p class="dim"><strong>Win32 detection rules</strong> (file, registry, MSI code, or script) tell Intune whether the app is already installed — get these right or installs loop/fail.</p>
+  </section>
+
+  <!-- 4.2 M365 Apps -->
+  <section class="topic" id="t-m365apps" style="--accent:var(--d4)">
+    <div class="topic-h">
+      <input type="checkbox" class="chk" data-id="m365apps">
+      <div><div class="section-counter">4.2</div><h3>Microsoft 365 Apps deployment</h3></div>
+    </div>
+    <div class="tbl-wrap"><table>
+      <thead><tr><th>Tool</th><th>Use it for</th></tr></thead>
+      <tbody>
+        <tr><td><strong>Intune (Microsoft 365 Apps)</strong></td><td>Cloud deployment with a UI: pick architecture (64-bit), update channel, languages, apps to exclude, shared computer activation.</td></tr>
+        <tr><td><strong>Office Deployment Tool (ODT)</strong></td><td><code>setup.exe</code> + a <code>configuration.xml</code> to download &amp; install/customize Office on-prem.</td></tr>
+        <tr><td><strong>Office Customization Tool (OCT)</strong></td><td>Web UI at config.office.com that <em>generates the XML</em> ODT consumes.</td></tr>
+        <tr><td><strong>Microsoft 365 Apps admin center</strong></td><td>Manage update channels, servicing profiles, inventory, and health for deployed Office.</td></tr>
+      </tbody>
+    </table></div>
+    <h4>Update channels</h4>
+    <ul>
+      <li><strong>Current Channel</strong> — newest features, frequent.</li>
+      <li><strong>Monthly Enterprise Channel</strong> — predictable monthly cadence (recommended for managed orgs).</li>
+      <li><strong>Semi-Annual Enterprise Channel</strong> — twice-yearly features, most stable for regulated environments.</li>
+    </ul>
+    <p>Configure <strong>Office app policies</strong> (privacy, macros, defaults) via the <em>Cloud Policy service for Microsoft 365</em> (config.office.com) or via Intune ADMX/settings catalog.</p>
+  </section>
+
+  <!-- 4.3 App protection -->
+  <section class="topic" id="t-appprotect" style="--accent:var(--d4)">
+    <div class="topic-h">
+      <input type="checkbox" class="chk" data-id="appprotect">
+      <div><div class="section-counter">4.3</div><h3>App protection policies (MAM)</h3></div>
+    </div>
+    <p><strong>App protection policies (APP)</strong> — also called <strong>Mobile Application Management (MAM)</strong> — protect <em>company data inside an app</em> without managing the whole device. They work on <strong>enrolled and unenrolled (MAM-WE) devices</strong>, which makes them the go-to for <strong>BYOD</strong>.</p>
+    <h4>What APP can enforce</h4>
+    <ul>
+      <li><strong>Data relocation:</strong> block copy/paste, "Save As," and backup to personal locations; restrict cut/copy/paste between managed and unmanaged apps.</li>
+      <li><strong>Access requirements:</strong> require an app PIN or biometric, corporate credentials, min OS/app version, block on jailbroken/rooted.</li>
+      <li><strong>Conditional launch:</strong> wipe company data or block after N failed PIN attempts, offline grace period, or max device threat level.</li>
+      <li><strong>Selective wipe:</strong> remove only the corporate data within the app, leaving personal data untouched.</li>
+    </ul>
+    <div class="call exam">
+      <div class="ct">▲ Exam discriminator</div>
+      <p>"Protect company data on <strong>personal phones</strong> without enrolling/managing the whole device" → <strong>App protection policy (MAM)</strong>. APP requires apps built with the <strong>Intune App SDK / wrapped</strong> (most Microsoft mobile apps qualify). Pair with a CA "require approved client app or app protection policy" grant.</p>
+    </div>
+  </section>
+
+  <!-- 4.4 App config -->
+  <section class="topic" id="t-appconfig" style="--accent:var(--d4)">
+    <div class="topic-h">
+      <input type="checkbox" class="chk" data-id="appconfig">
+      <div><div class="section-counter">4.4</div><h3>App configuration policies</h3></div>
+    </div>
+    <p><strong>App configuration policies (ACP)</strong> pre-set an app's settings (server URLs, sign-in hints, feature toggles) so users don't configure them manually. Two delivery channels:</p>
+    <div class="tbl-wrap"><table>
+      <thead><tr><th>Type</th><th>Delivered to</th><th>Requires</th></tr></thead>
+      <tbody>
+        <tr><td><strong>Managed devices</strong></td><td>Apps on <em>enrolled (MDM)</em> devices.</td><td>Device enrolled in Intune; uses the OS config channel.</td></tr>
+        <tr><td><strong>Managed apps</strong></td><td>Apps governed by an <em>app protection policy</em> (works without enrollment).</td><td>App supports the Intune App SDK; pairs with MAM for BYOD.</td></tr>
+      </tbody>
+    </table></div>
+    <p class="dim">Example: pre-configure the Outlook app with the user's mailbox and block other accounts; or set the Edge mobile homepage/allowed-account org policies.</p>
+  </section>
+
+  <!-- ============================================================= -->
+  <!-- CHEAT SHEET -->
+  <!-- ============================================================= -->
+  <div class="domain-head" id="cheats" style="--accent:var(--green)">
+    <div class="tag"><span class="sq"></span>Rapid-fire</div>
+    <h2>Exam-day cheat sheet</h2>
+    <div class="weight">The discriminators most likely to decide a borderline question.</div>
+    <hr class="rule">
+  </div>
+  <section class="topic" style="--accent:var(--green);border-bottom:none">
+    <div class="facts">
+      <div class="fact"><div class="fk">Self-deploying / pre-provision</div><div class="fv">Require <strong>TPM 2.0</strong> (attestation).</div></div>
+      <div class="fact"><div class="fk">Retire vs Wipe</div><div class="fv">Retire = company data only · Wipe = full factory reset.</div></div>
+      <div class="fact"><div class="fk">Block noncompliant access</div><div class="fv">Compliance policy <em>+</em> Conditional Access (require compliant).</div></div>
+      <div class="fact"><div class="fk">BYOD data protection</div><div class="fv">App protection policy (MAM-WE), no enrollment.</div></div>
+      <div class="fact"><div class="fk">Apple enrollment prereq</div><div class="fv">APNs push certificate (renew yearly).</div></div>
+      <div class="fact"><div class="fk">Corp Apple zero-touch</div><div class="fv">ADE via Apple Business Manager + token.</div></div>
+      <div class="fact"><div class="fk">Urgent single patch</div><div class="fv">Expedite a quality update.</div></div>
+      <div class="fact"><div class="fk">Pin Windows version</div><div class="fv">Feature update profile.</div></div>
+      <div class="fact"><div class="fk">Pro → Enterprise on sign-in</div><div class="fv">Subscription Activation (E3/E5).</div></div>
+      <div class="fact"><div class="fk">Simplest WHfB</div><div class="fv">Cloud Kerberos trust.</div></div>
+      <div class="fact"><div class="fk">Local admin pw rotation</div><div class="fv">Windows LAPS (Entra or AD backup).</div></div>
+      <div class="fact"><div class="fk">Win32 packaging</div><div class="fv">.intunewin via Content Prep Tool.</div></div>
+      <div class="fact"><div class="fk">On-prem VPN for mobile</div><div class="fv">Microsoft Tunnel.</div></div>
+      <div class="fact"><div class="fk">BitLocker keys</div><div class="fv">Auto-escrow to Entra ID.</div></div>
+      <div class="fact"><div class="fk">Delegated regional admin</div><div class="fv">RBAC scope tags + scope groups.</div></div>
+      <div class="fact"><div class="fk">Cut update bandwidth</div><div class="fv">Delivery Optimization peering.</div></div>
+    </div>
+
+    <div class="call tip">
+      <div class="ct">◆ Five-minute pre-exam review</div>
+      <p><strong>Identity states:</strong> registered = BYOD/SSO · joined = corp cloud · hybrid = corp + on-prem AD. <strong>Android modes:</strong> work profile (BYOD) · fully managed · COPE · dedicated/kiosk. <strong>Autopilot modes:</strong> user-driven · self-deploying (TPM) · pre-provisioned (TPM) · for existing devices (ConfigMgr TS). <strong>Config profile types:</strong> settings catalog · templates · ADMX · custom OMA-URI.</p>
+    </div>
+  </section>
+
+  <div class="footer">
+    <p><b>MD-102 Endpoint Administrator — Field Manual.</b> A self-study reference organized around the four official skill domains. Microsoft updates exam objectives and product names periodically — always confirm current details against the official <b>Skills Measured</b> document and Microsoft Learn before sitting the exam.</p>
+    <p style="margin-top:10px">Product names current as of build: Microsoft Entra ID (formerly Azure AD), Microsoft Intune admin center, Microsoft Defender for Endpoint, Microsoft 365 Apps.</p>
+  </div>
+
+</main>
+</div>
+
+<button class="totop" id="toTop" aria-label="Back to top">↑</button>
+
+<script>
+/* progress + persistence (degrades gracefully if storage is blocked) */
+(function(){
+  var KEY='md102_progress_v1';
+  var store={};
+  try{ store=JSON.parse(localStorage.getItem(KEY)||'{}'); }catch(e){ store={}; }
+  var boxes=function(){return Array.prototype.slice.call(document.querySelectorAll('.chk'));};
+
+  function save(){ try{ localStorage.setItem(KEY,JSON.stringify(store)); }catch(e){} }
+  function update(){
+    var all=boxes(), done=all.filter(function(b){return b.checked;}).length;
+    var pct= all.length? Math.round(done/all.length*100):0;
+    document.getElementById('pct').textContent=pct+'%';
+    document.getElementById('meterFill').style.width=pct+'%';
+    var hint=document.getElementById('readyHint');
+    if(pct===0) hint.textContent='Check off topics as you master them.';
+    else if(pct<40) hint.textContent=done+' of '+all.length+' topics down. Keep going.';
+    else if(pct<75) hint.textContent='Solid progress — '+done+'/'+all.length+' mastered.';
+    else if(pct<100) hint.textContent='Nearly exam-ready: '+done+'/'+all.length+'.';
+    else hint.textContent='All '+all.length+' topics mastered. Go book it. ✦';
+  }
+  document.addEventListener('change',function(e){
+    if(e.target.classList.contains('chk')){
+      store[e.target.dataset.id]=e.target.checked; save(); update();
+    }
+  });
+  window.addEventListener('DOMContentLoaded',function(){
+    boxes().forEach(function(b){ if(store[b.dataset.id]) b.checked=true; });
+    update();
+  });
+
+  /* mobile menu */
+  var sb=document.getElementById('sidebar'), scrim=document.getElementById('scrim');
+  function toggle(open){ sb.classList.toggle('open',open); scrim.classList.toggle('show',open); }
+  document.getElementById('menuBtn').addEventListener('click',function(){ toggle(!sb.classList.contains('open')); });
+  scrim.addEventListener('click',function(){ toggle(false); });
+  document.querySelectorAll('.nav-sub a, .nav-domain > a').forEach(function(a){
+    a.addEventListener('click',function(){ if(window.innerWidth<=980) toggle(false); });
+  });
+
+  /* back to top */
+  var tt=document.getElementById('toTop');
+  window.addEventListener('scroll',function(){ tt.classList.toggle('show', window.scrollY>500); });
+  tt.addEventListener('click',function(){ window.scrollTo({top:0,behavior:'smooth'}); });
+})();
+</script>
+</body>
+</html>

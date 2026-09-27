@@ -1,0 +1,588 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>IT Admin Console — 100 Terms & Flashcards</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=JetBrains+Mono:wght@400;500;700&family=Inter:wght@400;500;600&display=swap" rel="stylesheet">
+<style>
+  :root{
+    --bg:#0d141d;
+    --panel:#141f2b;
+    --panel-2:#1a2734;
+    --line:#243343;
+    --text:#cdd9e5;
+    --muted:#69788a;
+    --ok:#5fd08a;
+    --cyan:#4fd2e0;
+    --amber:#f5b544;
+    --violet:#b68cf0;
+    --coral:#ff6b6b;
+    --blue:#6ba8ff;
+    --teal:#45c8b0;
+    --pink:#f08cc4;
+    --orange:#ff9f5a;
+    --mono:"JetBrains Mono",ui-monospace,"SF Mono",Menlo,Consolas,monospace;
+    --sans:"Inter",system-ui,-apple-system,Segoe UI,Roboto,sans-serif;
+  }
+  *{box-sizing:border-box;margin:0;padding:0}
+  html{scroll-behavior:smooth}
+  body{
+    background:
+      radial-gradient(1200px 600px at 80% -10%, rgba(79,210,224,.06), transparent 60%),
+      var(--bg);
+    color:var(--text);
+    font-family:var(--sans);
+    line-height:1.5;
+    -webkit-font-smoothing:antialiased;
+    min-height:100vh;
+  }
+  .wrap{max-width:1080px;margin:0 auto;padding:0 20px 80px}
+
+  /* ---- Status bar header ---- */
+  .statusbar{
+    display:flex;align-items:center;gap:14px;flex-wrap:wrap;
+    border-bottom:1px solid var(--line);
+    padding:18px 20px;
+    font-family:var(--mono);font-size:12px;
+    background:rgba(13,20,29,.7);
+    backdrop-filter:blur(6px);
+    position:sticky;top:0;z-index:30;
+    max-width:1080px;margin:0 auto;
+  }
+  .dot{width:9px;height:9px;border-radius:50%;background:var(--ok);box-shadow:0 0 8px var(--ok);animation:pulse 2.4s infinite}
+  @keyframes pulse{0%,100%{opacity:1}50%{opacity:.35}}
+  .statusbar .sys{color:var(--cyan);font-weight:700;letter-spacing:.04em}
+  .statusbar .meta{color:var(--muted)}
+  .statusbar .meta b{color:var(--text);font-weight:500}
+  .spacer{flex:1}
+
+  /* ---- Hero ---- */
+  header.hero{padding:46px 0 26px}
+  .eyebrow{font-family:var(--mono);font-size:12px;letter-spacing:.22em;color:var(--cyan);text-transform:uppercase;margin-bottom:14px}
+  h1{
+    font-family:var(--mono);font-weight:700;
+    font-size:clamp(30px,6vw,52px);line-height:1.02;letter-spacing:-.01em;
+  }
+  h1 .cursor{display:inline-block;width:.55ch;height:.95em;background:var(--cyan);transform:translateY(.12em);margin-left:4px;animation:blink 1.1s steps(1) infinite}
+  @keyframes blink{50%{opacity:0}}
+  .sub{margin-top:16px;max-width:60ch;color:var(--muted);font-size:15.5px}
+  .sub b{color:var(--text);font-weight:600}
+
+  /* ---- Mode tabs ---- */
+  .tabs{display:flex;gap:6px;margin:30px 0 22px;border:1px solid var(--line);border-radius:11px;padding:5px;background:var(--panel);width:fit-content}
+  .tab{
+    font-family:var(--mono);font-size:13px;font-weight:500;
+    color:var(--muted);background:transparent;border:0;cursor:pointer;
+    padding:9px 18px;border-radius:7px;transition:.18s;
+  }
+  .tab:hover{color:var(--text)}
+  .tab.active{background:var(--panel-2);color:var(--cyan);box-shadow:inset 0 0 0 1px var(--line)}
+  .view{display:none}
+  .view.active{display:block;animation:fade .3s ease}
+  @keyframes fade{from{opacity:0;transform:translateY(6px)}to{opacity:1;transform:none}}
+
+  /* ---- Controls ---- */
+  .controls{display:flex;gap:12px;flex-wrap:wrap;align-items:center;margin-bottom:18px}
+  .search{
+    flex:1;min-width:220px;display:flex;align-items:center;gap:10px;
+    background:var(--panel);border:1px solid var(--line);border-radius:9px;padding:10px 14px;
+  }
+  .search:focus-within{border-color:var(--cyan);box-shadow:0 0 0 3px rgba(79,210,224,.12)}
+  .search span{color:var(--muted);font-family:var(--mono);font-size:13px}
+  .search input{flex:1;background:transparent;border:0;outline:0;color:var(--text);font-family:var(--sans);font-size:14.5px}
+  .search input::placeholder{color:var(--muted)}
+  .count{font-family:var(--mono);font-size:12px;color:var(--muted);white-space:nowrap}
+
+  .chips{display:flex;gap:7px;flex-wrap:wrap;margin-bottom:24px}
+  .chip{
+    font-family:var(--mono);font-size:11.5px;letter-spacing:.02em;
+    border:1px solid var(--line);background:var(--panel);color:var(--muted);
+    padding:6px 12px;border-radius:20px;cursor:pointer;transition:.16s;white-space:nowrap;
+  }
+  .chip:hover{color:var(--text);border-color:var(--muted)}
+  .chip.active{color:var(--bg);font-weight:600}
+
+  /* ---- Reference grid ---- */
+  .grid{display:grid;grid-template-columns:repeat(auto-fill,minmax(290px,1fr));gap:13px}
+  .term{
+    background:var(--panel);border:1px solid var(--line);border-radius:12px;
+    padding:16px 16px 15px;position:relative;overflow:hidden;transition:.18s;
+  }
+  .term:hover{border-color:var(--accent,var(--muted));transform:translateY(-2px)}
+  .term::before{content:"";position:absolute;left:0;top:0;bottom:0;width:3px;background:var(--accent,var(--muted))}
+  .term .top{display:flex;justify-content:space-between;align-items:start;gap:10px;margin-bottom:8px}
+  .term .name{font-family:var(--mono);font-weight:600;font-size:15px;color:var(--text);letter-spacing:-.01em}
+  .term .cat{font-family:var(--mono);font-size:9.5px;letter-spacing:.06em;text-transform:uppercase;color:var(--accent,var(--muted));white-space:nowrap;padding-top:3px;opacity:.85}
+  .term .def{font-size:13.5px;color:var(--muted);line-height:1.5}
+  .term .num{position:absolute;right:14px;bottom:10px;font-family:var(--mono);font-size:10px;color:var(--line)}
+
+  /* ---- Flashcards ---- */
+  .fc-stage{display:flex;flex-direction:column;align-items:center;gap:22px;padding:14px 0 4px}
+  .fc-progress{font-family:var(--mono);font-size:12px;color:var(--muted);display:flex;gap:14px;align-items:center}
+  .fc-progress b{color:var(--cyan)}
+  .bar{width:160px;height:4px;background:var(--line);border-radius:2px;overflow:hidden}
+  .bar i{display:block;height:100%;background:var(--cyan);transition:width .3s}
+
+  .card-scene{width:100%;max-width:560px;height:320px;perspective:1600px}
+  .card{position:relative;width:100%;height:100%;cursor:pointer;transition:transform .55s cubic-bezier(.4,.2,.2,1);transform-style:preserve-3d}
+  .card.flipped{transform:rotateY(180deg)}
+  .face{
+    position:absolute;inset:0;backface-visibility:hidden;border-radius:18px;
+    border:1px solid var(--line);background:var(--panel);
+    display:flex;flex-direction:column;justify-content:center;align-items:center;
+    padding:34px;text-align:center;
+  }
+  .face::before{content:"";position:absolute;left:0;right:0;top:0;height:4px;background:var(--accent,var(--cyan));border-radius:18px 18px 0 0}
+  .face .led{position:absolute;top:16px;right:18px;display:flex;align-items:center;gap:7px;font-family:var(--mono);font-size:10px;letter-spacing:.08em;text-transform:uppercase;color:var(--muted)}
+  .face .led i{width:7px;height:7px;border-radius:50%;background:var(--accent,var(--cyan));box-shadow:0 0 7px var(--accent,var(--cyan))}
+  .face .tag{position:absolute;top:16px;left:18px;font-family:var(--mono);font-size:10px;letter-spacing:.06em;text-transform:uppercase;color:var(--accent,var(--cyan))}
+  .front .q{font-family:var(--mono);font-weight:700;font-size:clamp(22px,4.4vw,34px);color:var(--text);letter-spacing:-.01em}
+  .front .hint{margin-top:18px;font-family:var(--mono);font-size:11px;color:var(--muted);letter-spacing:.05em}
+  .back{transform:rotateY(180deg)}
+  .back .a{font-size:clamp(15px,2.6vw,18px);color:var(--text);line-height:1.55;max-width:42ch}
+  .back .label{font-family:var(--mono);font-size:11px;color:var(--muted);margin-bottom:14px;letter-spacing:.08em;text-transform:uppercase}
+
+  .fc-controls{display:flex;gap:10px;align-items:center;flex-wrap:wrap;justify-content:center}
+  .btn{
+    font-family:var(--mono);font-size:13px;font-weight:500;cursor:pointer;
+    background:var(--panel);border:1px solid var(--line);color:var(--text);
+    padding:11px 20px;border-radius:9px;transition:.16s;
+  }
+  .btn:hover{border-color:var(--cyan);color:var(--cyan)}
+  .btn:active{transform:translateY(1px)}
+  .btn.primary{background:var(--cyan);color:var(--bg);border-color:var(--cyan);font-weight:600}
+  .btn.primary:hover{background:#6ee0ec;color:var(--bg)}
+  .btn.ghost{padding:11px 15px}
+  .fc-filter{display:flex;gap:7px;flex-wrap:wrap;justify-content:center;margin-top:4px}
+
+  /* ---- Ops checklist ---- */
+  .ops{margin-top:64px;border-top:1px solid var(--line);padding-top:40px}
+  .ops h2{font-family:var(--mono);font-size:13px;letter-spacing:.16em;text-transform:uppercase;color:var(--amber);margin-bottom:6px}
+  .ops .lead{color:var(--muted);font-size:14.5px;margin-bottom:26px;max-width:62ch}
+  .ops-cols{display:grid;grid-template-columns:repeat(auto-fit,minmax(240px,1fr));gap:26px}
+  .ops-col h3{font-family:var(--mono);font-size:12px;letter-spacing:.05em;text-transform:uppercase;margin-bottom:12px;color:var(--text)}
+  .ops-col h3 .tk{color:var(--cyan)}
+  .task{display:flex;gap:11px;padding:9px 0;border-bottom:1px solid rgba(36,51,67,.5);font-size:13.5px;color:var(--muted);cursor:pointer;transition:.15s}
+  .task:hover{color:var(--text)}
+  .task .box{flex:none;width:16px;height:16px;border:1px solid var(--line);border-radius:4px;margin-top:2px;display:grid;place-items:center;transition:.15s}
+  .task .box::after{content:"✓";font-size:11px;color:var(--bg);opacity:0;font-family:var(--mono)}
+  .task.done .box{background:var(--ok);border-color:var(--ok)}
+  .task.done .box::after{opacity:1}
+  .task.done span{text-decoration:line-through;opacity:.55}
+
+  footer{margin-top:60px;border-top:1px solid var(--line);padding-top:20px;font-family:var(--mono);font-size:11px;color:var(--muted);display:flex;justify-content:space-between;flex-wrap:wrap;gap:8px}
+
+  @media (max-width:560px){
+    .card-scene{height:300px}
+    .statusbar{font-size:11px;gap:10px}
+    .hide-sm{display:none}
+  }
+  @media (prefers-reduced-motion:reduce){
+    *{animation:none!important;transition:none!important}
+    .card{transition:transform .01s!important}
+  }
+</style>
+</head>
+<body>
+
+<div class="statusbar">
+  <span class="dot"></span>
+  <span class="sys">ADMIN://console</span>
+  <span class="meta hide-sm">node <b>study-01</b></span>
+  <span class="meta">terms <b id="sb-count">100</b></span>
+  <span class="spacer"></span>
+  <span class="meta hide-sm">status <b style="color:var(--ok)">OK</b></span>
+</div>
+
+<div class="wrap">
+  <header class="hero">
+    <div class="eyebrow">IT Administration · Knowledge Refresh</div>
+    <h1>What every admin<br>should know<span class="cursor"></span></h1>
+    <p class="sub">100 core terms across networking, identity, security, cloud, and operations — with plain-English definitions, a searchable reference, and a <b>flashcard drill</b> for review. Plus a checklist of what the job actually involves day to day.</p>
+  </header>
+
+  <div class="tabs" role="tablist">
+    <button class="tab active" data-view="reference" role="tab">› Reference</button>
+    <button class="tab" data-view="flashcards" role="tab">› Flashcards</button>
+  </div>
+
+  <!-- REFERENCE VIEW -->
+  <section class="view active" id="reference">
+    <div class="controls">
+      <label class="search">
+        <span>grep&nbsp;&gt;</span>
+        <input type="text" id="search" placeholder="search a term or definition…" autocomplete="off">
+      </label>
+      <span class="count" id="ref-count">100 results</span>
+    </div>
+    <div class="chips" id="chips"></div>
+    <div class="grid" id="grid"></div>
+  </section>
+
+  <!-- FLASHCARD VIEW -->
+  <section class="view" id="flashcards">
+    <div class="fc-stage">
+      <div class="fc-progress">
+        <span>card <b id="fc-pos">1</b> / <span id="fc-total">100</span></span>
+        <div class="bar"><i id="fc-bar"></i></div>
+        <span id="fc-cat-label">all categories</span>
+      </div>
+
+      <div class="card-scene">
+        <div class="card" id="card">
+          <div class="face front">
+            <span class="tag" id="f-tag">NET</span>
+            <span class="led"><i></i> term</span>
+            <div class="q" id="f-q">DNS</div>
+            <div class="hint">tap / space to reveal · ← → to navigate</div>
+          </div>
+          <div class="face back">
+            <span class="led"><i></i> definition</span>
+            <div class="label">definition</div>
+            <div class="a" id="f-a">…</div>
+          </div>
+        </div>
+      </div>
+
+      <div class="fc-controls">
+        <button class="btn ghost" id="fc-prev">← prev</button>
+        <button class="btn primary" id="fc-flip">flip</button>
+        <button class="btn ghost" id="fc-next">next →</button>
+        <button class="btn" id="fc-shuffle">⤮ shuffle</button>
+      </div>
+      <div class="fc-filter" id="fc-filter"></div>
+    </div>
+  </section>
+
+  <!-- OPS CHECKLIST -->
+  <section class="ops">
+    <h2>// What an admin should be doing</h2>
+    <p class="lead">Knowing the terms is half of it. These are the recurring responsibilities that keep an environment healthy, secure, and recoverable. Tap to check off as you review.</p>
+    <div class="ops-cols" id="ops"></div>
+  </section>
+
+  <footer>
+    <span>IT_ADMIN_CONSOLE · v1.0 · 100 terms</span>
+    <span id="foot-clock">--:--</span>
+  </footer>
+</div>
+
+<script>
+/* ---------------- DATA ---------------- */
+const CATS = {
+  Networking:{c:"--cyan"}, Identity:{c:"--amber"}, "OS & Servers":{c:"--ok"},
+  Storage:{c:"--violet"}, Security:{c:"--coral"}, Cloud:{c:"--blue"},
+  Endpoint:{c:"--teal"}, Email:{c:"--pink"}, Operations:{c:"--orange"}
+};
+
+const TERMS = [
+  // Networking
+  ["DNS","Networking","Translates human-readable domain names into the IP addresses machines use to reach each other."],
+  ["DHCP","Networking","Automatically hands out IP addresses, subnet masks, and gateways to devices joining a network."],
+  ["Subnet / CIDR","Networking","Divides a network into smaller ranges; CIDR notation like /24 defines how many addresses are in it."],
+  ["Default Gateway","Networking","The router a device sends traffic to when the destination is outside its local network."],
+  ["NAT","Networking","Maps many private internal IPs to one public IP so internal devices can reach the internet."],
+  ["VLAN","Networking","Logically splits one physical switch/network into isolated segments without extra hardware."],
+  ["VPN","Networking","An encrypted tunnel connecting remote users or sites securely into a private network."],
+  ["Firewall","Networking","Filters traffic by rules to allow or block connections based on ports, IPs, and protocols."],
+  ["DNS Records","Networking","Entries that map names to data: A (IPv4), CNAME (alias), MX (mail), TXT (text/verification)."],
+  ["TCP vs UDP","Networking","TCP is reliable and ordered; UDP is fast and connectionless with no delivery guarantee."],
+  ["OSI Model","Networking","A 7-layer framework (physical → application) describing how data moves across a network."],
+  ["Ports","Networking","Numbered service endpoints: 80 HTTP, 443 HTTPS, 22 SSH, 3389 RDP, 25 SMTP, 445 SMB."],
+  ["Load Balancer","Networking","Distributes incoming traffic across multiple servers for capacity and fault tolerance."],
+  ["Proxy","Networking","An intermediary that forwards, caches, or filters requests between clients and servers."],
+  ["Latency vs Bandwidth","Networking","Latency is the delay before data moves; bandwidth is how much can move at once."],
+
+  // Identity & Access
+  ["Active Directory","Identity","Microsoft's directory service for managing users, computers, groups, and resources on a domain."],
+  ["Domain Controller","Identity","The server that authenticates logins and enforces Active Directory policy."],
+  ["Group Policy (GPO)","Identity","Centrally pushes settings and restrictions to users and machines across a domain."],
+  ["Organizational Unit","Identity","An AD container used to organize objects and target policy or delegation to them."],
+  ["LDAP","Identity","The protocol used to query and modify directory services like Active Directory."],
+  ["Kerberos","Identity","A ticket-based authentication protocol that proves identity without resending passwords."],
+  ["Entra ID (Azure AD)","Identity","Microsoft's cloud identity service for authentication and access to cloud apps."],
+  ["SSO","Identity","Single Sign-On lets one set of credentials grant access to many applications."],
+  ["MFA","Identity","Multi-Factor Authentication requires two or more proofs (password + phone/token)."],
+  ["SAML / OAuth","Identity","Standards for federated login (SAML) and delegated authorization (OAuth) across apps."],
+  ["RBAC","Identity","Role-Based Access Control grants permissions based on a user's assigned role, not individually."],
+  ["Least Privilege","Identity","Give every user and process only the minimum access needed to do its job."],
+  ["Service Account","Identity","A non-human account used by an application or service to run scheduled or background tasks."],
+
+  // OS & Servers
+  ["Windows Server","OS & Servers","Server OS hosting roles like AD, DNS, DHCP, file shares, and web services."],
+  ["PowerShell","OS & Servers","Microsoft's scripting and automation shell for managing Windows at scale."],
+  ["Bash","OS & Servers","The default command-line shell on most Linux and Unix systems."],
+  ["File Permissions","OS & Servers","On Linux, chmod/chown control who can read, write, or execute files and dirs."],
+  ["systemd","OS & Servers","The init system on modern Linux that starts, stops, and supervises services."],
+  ["Cron","OS & Servers","A Linux scheduler that runs commands or scripts automatically at set times."],
+  ["Hypervisor","OS & Servers","Software that creates and runs virtual machines (VMware ESXi, Hyper-V, Proxmox)."],
+  ["Virtual Machine","OS & Servers","A fully software-emulated computer running its own OS on shared physical hardware."],
+  ["Container","OS & Servers","A lightweight, isolated bundle of an app and its dependencies (e.g. Docker)."],
+  ["Kubernetes","OS & Servers","Orchestrates the deployment, scaling, and healing of containers across many hosts."],
+  ["Registry","OS & Servers","Windows' hierarchical database storing OS and application configuration settings."],
+  ["Daemon / Service","OS & Servers","A background process that runs without direct user interaction to provide functionality."],
+
+  // Storage & Backup
+  ["RAID","Storage","Combines multiple disks for redundancy and/or performance (levels 0, 1, 5, 6, 10)."],
+  ["SAN","Storage","A dedicated high-speed network presenting block storage to servers."],
+  ["NAS","Storage","A device serving shared files over the network at the file level."],
+  ["Snapshot","Storage","A point-in-time image of data or a VM you can roll back to."],
+  ["Backup Types","Storage","Full copies everything; incremental copies changes since last backup; differential since last full."],
+  ["3-2-1 Rule","Storage","Keep 3 copies of data, on 2 different media, with 1 stored offsite."],
+  ["RTO","Storage","Recovery Time Objective: the maximum acceptable downtime before service is restored."],
+  ["RPO","Storage","Recovery Point Objective: the maximum acceptable amount of data loss, measured in time."],
+  ["Disaster Recovery","Storage","The documented plan and process to restore IT systems after a major failure."],
+  ["Deduplication","Storage","Removes duplicate blocks of data to reduce the storage backups consume."],
+  ["Retention Policy","Storage","Rules defining how long backups and data are kept before deletion."],
+  ["iSCSI","Storage","Carries SCSI block-storage commands over standard IP networks."],
+
+  // Security
+  ["EDR","Security","Endpoint Detection & Response continuously monitors devices and responds to threats."],
+  ["Patch Management","Security","The process of testing and deploying software/OS updates to close vulnerabilities."],
+  ["Vulnerability Scanning","Security","Automated checks that find known weaknesses across systems and software."],
+  ["CVE","Security","A standardized public identifier for a specific known security vulnerability."],
+  ["Zero-Day","Security","An exploit for a flaw that has no patch available yet, leaving systems exposed."],
+  ["Phishing","Security","Fraudulent messages that trick users into revealing credentials or running malware."],
+  ["Ransomware","Security","Malware that encrypts files and demands payment for the decryption key."],
+  ["Encryption","Security","Scrambling data at rest or in transit so only authorized parties can read it."],
+  ["TLS/SSL Certificate","Security","Validates a server's identity and encrypts web traffic, enabling HTTPS."],
+  ["PKI","Security","Public Key Infrastructure: the keys, certificates, and authorities that manage trust."],
+  ["Zero Trust","Security","A model that trusts nothing by default and verifies every request and device."],
+  ["SIEM","Security","Aggregates and correlates logs across systems to detect and alert on security events."],
+  ["IDS / IPS","Security","Detects (IDS) or actively blocks (IPS) malicious traffic on the network."],
+  ["ACL","Security","An Access Control List: ordered rules defining who or what can access a resource."],
+  ["Hardening","Security","Reducing a system's attack surface by removing, disabling, or securing components."],
+  ["BitLocker","Security","Windows full-disk encryption that protects data if a device is lost or stolen."],
+
+  // Cloud
+  ["IaaS / PaaS / SaaS","Cloud","Cloud service tiers: raw infrastructure, a managed platform, or ready-to-use software."],
+  ["AWS / Azure / GCP","Cloud","The three major public cloud providers offering compute, storage, and managed services."],
+  ["Cloud Models","Cloud","Public (shared), private (dedicated), or hybrid (a mix) hosting environments."],
+  ["Cloud IAM","Cloud","Manages cloud identities, roles, and fine-grained permissions to resources."],
+  ["Object Storage","Cloud","Stores unstructured data as objects with metadata (AWS S3, Azure Blob)."],
+  ["Region / AZ","Cloud","Geographic regions contain isolated Availability Zones for resilience."],
+  ["Auto-Scaling","Cloud","Automatically adds or removes resources to match current demand."],
+  ["Shared Responsibility","Cloud","Splits security duties: the provider secures the cloud, you secure what's in it."],
+  ["Resource Group / Tenant","Cloud","Logical containers and isolation boundaries that organize cloud resources."],
+  ["Infrastructure as Code","Cloud","Defining and provisioning infrastructure through version-controlled files (Terraform)."],
+
+  // Endpoint & Device
+  ["MDM","Endpoint","Mobile Device Management enrolls, configures, and secures endpoints remotely."],
+  ["Intune","Endpoint","Microsoft's cloud service for managing and protecting devices and apps."],
+  ["Imaging / Provisioning","Endpoint","Deploying a standardized OS and app configuration to new devices."],
+  ["SCCM / MECM","Endpoint","On-prem tooling for software deployment, patching, and device management at scale."],
+  ["BYOD","Endpoint","A policy allowing employees to use personal devices for work under controls."],
+  ["BIOS / UEFI","Endpoint","Firmware that initializes hardware and starts the OS when a machine boots."],
+  ["TPM","Endpoint","A secure chip that stores encryption keys and supports secure boot and BitLocker."],
+  ["Asset Management","Endpoint","Tracking the inventory, ownership, and lifecycle of hardware and software."],
+
+  // Email & Collaboration
+  ["Exchange / M365","Email","Microsoft's mail and collaboration platform (mailboxes, calendars, Teams)."],
+  ["SMTP / IMAP / POP3","Email","Protocols for sending (SMTP) and retrieving (IMAP, POP3) email."],
+  ["SPF","Email","A DNS record listing which servers are allowed to send mail for your domain."],
+  ["DKIM","Email","Cryptographically signs outgoing mail so receivers can verify it wasn't altered."],
+  ["DMARC","Email","A policy telling receivers what to do when SPF/DKIM checks fail, stopping spoofing."],
+  ["Distribution List","Email","A single email address that forwards messages to a group of recipients."],
+
+  // Operations
+  ["Monitoring & Alerting","Operations","Continuously watching systems and notifying staff when something breaks or degrades."],
+  ["Ticketing System","Operations","Tracks user requests and incidents through to resolution (ServiceNow, Jira, Zendesk)."],
+  ["SLA","Operations","A Service Level Agreement defining target uptime or response/resolution times."],
+  ["Change Management","Operations","A controlled, reviewed process for making changes to reduce the risk of outages."],
+  ["Documentation","Operations","Maintaining configs, diagrams, and runbooks so systems aren't tribal knowledge."],
+  ["Log Management","Operations","Collecting, retaining, and reviewing system and event logs for troubleshooting and audit."],
+  ["Automation / Scripting","Operations","Using scripts to eliminate repetitive manual tasks and reduce human error."],
+  ["Incident Response","Operations","A structured process to detect, contain, eradicate, and recover from security incidents."]
+];
+
+/* ---------------- BUILD REFERENCE ---------------- */
+const grid = document.getElementById('grid');
+const chipsEl = document.getElementById('chips');
+const search = document.getElementById('search');
+const refCount = document.getElementById('ref-count');
+let activeCat = "All";
+
+function catColor(cat){ return getComputedStyle(document.documentElement).getPropertyValue(CATS[cat]?.c || '--muted'); }
+
+function renderGrid(){
+  const q = search.value.trim().toLowerCase();
+  let shown = 0;
+  grid.innerHTML = "";
+  TERMS.forEach((t,i)=>{
+    const [name,cat,def] = t;
+    const matchCat = activeCat==="All" || cat===activeCat;
+    const matchQ = !q || name.toLowerCase().includes(q) || def.toLowerCase().includes(q);
+    if(!(matchCat&&matchQ)) return;
+    shown++;
+    const el = document.createElement('div');
+    el.className = 'term';
+    el.style.setProperty('--accent', `var(${CATS[cat].c})`);
+    el.innerHTML = `
+      <div class="top">
+        <div class="name">${name}</div>
+        <div class="cat">${cat}</div>
+      </div>
+      <div class="def">${def}</div>
+      <div class="num">#${String(i+1).padStart(3,'0')}</div>`;
+    grid.appendChild(el);
+  });
+  refCount.textContent = `${shown} result${shown!==1?'s':''}`;
+}
+
+// chips
+const allChip = mkChip("All", "--text");
+chipsEl.appendChild(allChip);
+Object.keys(CATS).forEach(cat=> chipsEl.appendChild(mkChip(cat, CATS[cat].c)));
+function mkChip(label, colorVar){
+  const c = document.createElement('button');
+  c.className = 'chip' + (label==="All"?' active':'');
+  c.textContent = label==="All" ? "all" : label;
+  if(label==="All"){ c.style.borderColor = "var(--muted)"; c.dataset.col="--cyan"; }
+  else c.dataset.col = colorVar;
+  c.onclick = ()=>{
+    activeCat = label;
+    [...chipsEl.children].forEach(x=>{ x.classList.remove('active'); x.style.background=""; x.style.color=""; x.style.borderColor=""; });
+    c.classList.add('active');
+    c.style.background = `var(${c.dataset.col})`;
+    c.style.borderColor = `var(${c.dataset.col})`;
+    renderGrid();
+  };
+  return c;
+}
+search.addEventListener('input', renderGrid);
+renderGrid();
+
+/* ---------------- FLASHCARDS ---------------- */
+let deck = TERMS.map((t,i)=>i);
+let pos = 0;
+let fcCat = "All";
+const card = document.getElementById('card');
+const fQ = document.getElementById('f-q');
+const fA = document.getElementById('f-a');
+const fTag = document.getElementById('f-tag');
+const fcPos = document.getElementById('fc-pos');
+const fcTotal = document.getElementById('fc-total');
+const fcBar = document.getElementById('fc-bar');
+const fcCatLabel = document.getElementById('fc-cat-label');
+
+const TAG = {Networking:"NET",Identity:"IAM","OS & Servers":"OS",Storage:"STOR",Security:"SEC",Cloud:"CLOUD",Endpoint:"DEV",Email:"MAIL",Operations:"OPS"};
+
+function buildDeck(){
+  deck = TERMS.map((t,i)=>i).filter(i=> fcCat==="All" || TERMS[i][1]===fcCat);
+  pos = 0;
+  fcTotal.textContent = deck.length;
+  fcCatLabel.textContent = fcCat==="All" ? "all categories" : fcCat.toLowerCase();
+  showCard();
+}
+function showCard(){
+  card.classList.remove('flipped');
+  const [name,cat,def] = TERMS[deck[pos]];
+  // small delay so it doesn't show the answer while flipping back
+  setTimeout(()=>{
+    fQ.textContent = name;
+    fA.textContent = def;
+    fTag.textContent = TAG[cat];
+    const col = `var(${CATS[cat].c})`;
+    card.querySelectorAll('.face').forEach(f=> f.style.setProperty('--accent', col));
+  }, card.classList.contains('flipped')?0:0);
+  fcPos.textContent = pos+1;
+  fcBar.style.width = ((pos+1)/deck.length*100)+'%';
+}
+function flip(){ card.classList.toggle('flipped'); }
+function next(){ pos=(pos+1)%deck.length; showCard(); }
+function prev(){ pos=(pos-1+deck.length)%deck.length; showCard(); }
+function shuffle(){
+  for(let i=deck.length-1;i>0;i--){ const j=Math.floor(Math.random()*(i+1)); [deck[i],deck[j]]=[deck[j],deck[i]]; }
+  pos=0; showCard();
+}
+
+card.onclick = flip;
+document.getElementById('fc-flip').onclick = flip;
+document.getElementById('fc-next').onclick = next;
+document.getElementById('fc-prev').onclick = prev;
+document.getElementById('fc-shuffle').onclick = shuffle;
+
+// fc category filter
+const fcFilter = document.getElementById('fc-filter');
+["All",...Object.keys(CATS)].forEach(cat=>{
+  const b = document.createElement('button');
+  b.className='chip'+(cat==="All"?' active':'');
+  b.textContent = cat==="All"?"all":cat;
+  b.dataset.col = cat==="All"?"--cyan":CATS[cat].c;
+  if(cat==="All"){ b.style.background="var(--cyan)"; b.style.borderColor="var(--cyan)"; b.style.color="var(--bg)"; }
+  b.onclick=()=>{
+    fcCat=cat;
+    [...fcFilter.children].forEach(x=>{x.classList.remove('active');x.style.background="";x.style.color="";x.style.borderColor="";});
+    b.classList.add('active'); b.style.background=`var(${b.dataset.col})`; b.style.borderColor=`var(${b.dataset.col})`; b.style.color="var(--bg)";
+    buildDeck();
+  };
+  fcFilter.appendChild(b);
+});
+buildDeck();
+
+// keyboard
+document.addEventListener('keydown',e=>{
+  if(!document.getElementById('flashcards').classList.contains('active')) return;
+  if(e.code==="Space"){ e.preventDefault(); flip(); }
+  else if(e.code==="ArrowRight") next();
+  else if(e.code==="ArrowLeft") prev();
+});
+
+/* ---------------- TAB SWITCH ---------------- */
+document.querySelectorAll('.tab').forEach(tab=>{
+  tab.onclick=()=>{
+    document.querySelectorAll('.tab').forEach(t=>t.classList.remove('active'));
+    document.querySelectorAll('.view').forEach(v=>v.classList.remove('active'));
+    tab.classList.add('active');
+    document.getElementById(tab.dataset.view).classList.add('active');
+  };
+});
+
+/* ---------------- OPS CHECKLIST ---------------- */
+const OPS = {
+  "Daily / continuous":[
+    "Check monitoring dashboards and overnight alerts",
+    "Triage the helpdesk ticket queue by priority",
+    "Verify backups completed successfully",
+    "Review security and authentication logs for anomalies"
+  ],
+  "Weekly / recurring":[
+    "Test and apply pending patches in a controlled window",
+    "Review disk, memory, and capacity trends",
+    "Audit new/changed user accounts and access",
+    "Run or review vulnerability scan results"
+  ],
+  "Ongoing discipline":[
+    "Keep documentation and network diagrams current",
+    "Enforce least privilege and MFA everywhere",
+    "Periodically test restores, not just backups",
+    "Follow change management for production changes",
+    "Maintain an asset inventory and license tracking",
+    "Automate repetitive tasks to cut human error"
+  ]
+};
+const opsEl = document.getElementById('ops');
+Object.entries(OPS).forEach(([title,tasks])=>{
+  const col = document.createElement('div');
+  col.className='ops-col';
+  col.innerHTML = `<h3><span class="tk">›</span> ${title}</h3>`;
+  tasks.forEach(t=>{
+    const row = document.createElement('div');
+    row.className='task';
+    row.innerHTML = `<span class="box"></span><span>${t}</span>`;
+    row.onclick=()=>row.classList.toggle('done');
+    col.appendChild(row);
+  });
+  opsEl.appendChild(col);
+});
+
+/* ---------------- CLOCK ---------------- */
+const clock = document.getElementById('foot-clock');
+function tick(){ const d=new Date(); clock.textContent = `uptime ${d.toLocaleTimeString([], {hour:'2-digit',minute:'2-digit',second:'2-digit'})}`; }
+tick(); setInterval(tick,1000);
+</script>
+</body>
+</html>

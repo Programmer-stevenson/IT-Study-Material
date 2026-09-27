@@ -1,0 +1,1546 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>CCNA Deep Dive — Commands &amp; Theory</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Chakra+Petch:wght@500;600;700&family=IBM+Plex+Mono:wght@400;500;600&family=IBM+Plex+Sans:wght@400;500;600;700&display=swap" rel="stylesheet">
+<style>
+:root{
+  --bg:#0b1016; --bg2:#111923; --panel:#15202c; --panel2:#1b2735;
+  --line:#26323f; --line2:#35424f;
+  --txt:#dde5ec; --txt-dim:#92a1af; --txt-faint:#5e6b78;
+  --accent:#3dd7c4; --accent2:#ffb454; --accent3:#6aa6ff;
+  --pink:#ff7eb0; --red:#ff6b6b;
+  --code-bg:#080d12;
+}
+html[data-theme="light"]{
+  --bg:#eef1f4; --bg2:#e3e8ed; --panel:#ffffff; --panel2:#f4f6f8;
+  --line:#d6dce2; --line2:#c2cbd4;
+  --txt:#1d2935; --txt-dim:#5a6878; --txt-faint:#8a98a6;
+  --accent:#0b9e8c; --accent2:#c47c12; --accent3:#2f6fd6;
+  --pink:#c84580; --red:#d4453e;
+  --code-bg:#0e1822;
+}
+*{box-sizing:border-box;margin:0;padding:0}
+html{scroll-behavior:smooth}
+body{font-family:'IBM Plex Sans',sans-serif;background:var(--bg);color:var(--txt);
+  line-height:1.65;font-size:14.5px;-webkit-font-smoothing:antialiased}
+#progress{position:fixed;top:0;left:0;height:3px;width:0;
+  background:linear-gradient(90deg,var(--accent),var(--accent3));z-index:200}
+
+.shell{display:flex;min-height:100vh}
+nav.side{width:268px;flex-shrink:0;background:var(--bg2);
+  border-right:1px solid var(--line);
+  position:sticky;top:0;height:100vh;overflow-y:auto;
+  padding:20px 0 40px}
+nav.side::-webkit-scrollbar{width:6px}
+nav.side::-webkit-scrollbar-thumb{background:var(--line2);border-radius:3px}
+.brand{padding:0 22px 16px;border-bottom:1px solid var(--line);margin-bottom:10px}
+.brand .tag{font-family:'IBM Plex Mono',monospace;font-size:9.5px;
+  letter-spacing:2px;color:var(--accent);text-transform:uppercase}
+.brand h1{font-family:'Chakra Petch',sans-serif;font-weight:700;
+  font-size:22px;letter-spacing:.5px;margin-top:3px;line-height:1.15}
+.brand h1 span{color:var(--txt-dim);font-weight:500;font-size:15px;display:block}
+.navsec{font-family:'IBM Plex Mono',monospace;font-size:10px;letter-spacing:1.5px;
+  color:var(--txt-faint);text-transform:uppercase;padding:14px 22px 4px}
+nav.side a{display:flex;align-items:center;gap:8px;
+  padding:5px 22px 5px 22px;color:var(--txt-dim);text-decoration:none;
+  font-size:13px;border-left:2px solid transparent;transition:.15s}
+nav.side a:hover{color:var(--txt);background:var(--panel)}
+nav.side a.active{color:var(--accent);border-left-color:var(--accent);background:var(--panel)}
+nav.side a .num{font-family:'IBM Plex Mono',monospace;font-size:10.5px;
+  color:var(--txt-faint);min-width:24px}
+nav.side a.active .num{color:var(--accent)}
+
+main{flex:1;min-width:0;padding:28px 50px 90px;max-width:980px}
+
+.topbar{display:flex;align-items:center;gap:10px;margin-bottom:24px;flex-wrap:wrap}
+.search{flex:1;min-width:200px;position:relative}
+.search input{width:100%;background:var(--panel);border:1px solid var(--line);
+  color:var(--txt);padding:9px 12px 9px 34px;border-radius:8px;
+  font-family:'IBM Plex Sans',sans-serif;font-size:13.5px;outline:none}
+.search input:focus{border-color:var(--accent)}
+.search svg{position:absolute;left:11px;top:50%;transform:translateY(-50%);
+  width:15px;height:15px;stroke:var(--txt-faint)}
+.btn{background:var(--panel);border:1px solid var(--line);color:var(--txt-dim);
+  padding:9px 14px;border-radius:8px;cursor:pointer;font-family:'IBM Plex Mono',monospace;
+  font-size:11.5px;letter-spacing:.5px;transition:.15s;white-space:nowrap}
+.btn:hover{border-color:var(--accent);color:var(--accent)}
+
+.hero{background:linear-gradient(135deg,var(--panel),var(--panel2));
+  border:1px solid var(--line);border-radius:14px;padding:24px 26px;
+  margin-bottom:30px;position:relative;overflow:hidden}
+.hero::before{content:"";position:absolute;right:-50px;top:-50px;width:220px;height:220px;
+  background:radial-gradient(circle,var(--accent) 0%,transparent 70%);opacity:.12}
+.hero h2{font-family:'Chakra Petch',sans-serif;font-size:26px;margin-bottom:6px}
+.hero p{color:var(--txt-dim);font-size:14px;max-width:680px}
+
+section{margin-bottom:46px;scroll-margin-top:20px}
+section > h2{font-family:'Chakra Petch',sans-serif;font-size:26px;
+  border-bottom:2px solid var(--accent);padding-bottom:8px;margin-bottom:14px;
+  display:flex;align-items:center;gap:12px}
+section > h2 .secnum{font-family:'IBM Plex Mono',monospace;font-size:14px;
+  color:var(--bg);background:var(--accent);padding:4px 9px;border-radius:6px;font-weight:600}
+section.alt > h2{border-bottom-color:var(--accent2)}
+section.alt > h2 .secnum{background:var(--accent2)}
+
+h3{font-family:'Chakra Petch',sans-serif;font-size:18px;margin:24px 0 8px;color:var(--accent)}
+h4{font-size:14.5px;font-weight:600;margin:16px 0 6px;color:var(--txt)}
+p.body{margin-bottom:10px;font-size:14px}
+ul.list,ol.list{margin:4px 0 12px 4px;list-style:none}
+ul.list li,ol.list li{padding:3px 0 3px 22px;position:relative;font-size:13.8px}
+ul.list li::before{content:"▸";position:absolute;left:4px;color:var(--accent);font-size:11px;top:4px}
+ol.list{counter-reset:ol-cnt}
+ol.list li{counter-increment:ol-cnt;padding-left:28px}
+ol.list li::before{content:counter(ol-cnt)".";position:absolute;left:4px;
+  color:var(--accent);font-family:'IBM Plex Mono',monospace;font-size:12px;
+  font-weight:600;top:4px}
+strong{color:var(--txt);font-weight:600}
+em{color:var(--accent2);font-style:normal;font-weight:500}
+
+.tbl-wrap{overflow-x:auto;margin:12px 0;border:1px solid var(--line);border-radius:9px}
+table{width:100%;border-collapse:collapse;font-size:12.8px}
+th{background:var(--bg2);text-align:left;padding:9px 12px;
+  font-family:'IBM Plex Mono',monospace;font-size:10.5px;letter-spacing:.5px;
+  text-transform:uppercase;color:var(--accent);border-bottom:1px solid var(--line)}
+td{padding:8px 12px;border-bottom:1px solid var(--line);color:var(--txt-dim);vertical-align:top}
+td:first-child{color:var(--txt);font-weight:500}
+tr:last-child td{border-bottom:none}
+tbody tr:hover td{background:var(--panel2)}
+td code{background:var(--code-bg);padding:1px 6px;border-radius:4px;
+  font-family:'IBM Plex Mono',monospace;font-size:12px;color:#9fe8dd}
+html[data-theme="light"] td code{color:#1a6b62}
+
+/* command block */
+.cmd-block{background:var(--code-bg);border:1px solid var(--line);
+  border-left:3px solid var(--accent);border-radius:9px;
+  padding:14px 16px;margin:14px 0;font-family:'IBM Plex Mono',monospace;
+  font-size:12.5px;color:#a8efe2;overflow-x:auto;line-height:1.85}
+.cmd-block .cmt{color:#5e6b78;font-style:italic}
+.cmd-block .prompt{color:var(--accent2);user-select:none}
+.cmd-block .key{color:#ff7eb0}
+.cmd-block .num{color:#ffb454}
+html[data-theme="light"] .cmd-block{color:#7fe6d6}
+
+.cmd-desc{background:var(--panel);border:1px solid var(--line);
+  border-radius:9px;padding:12px 16px;margin:12px 0;font-size:13.5px}
+.cmd-desc .lbl{font-family:'IBM Plex Mono',monospace;font-size:10px;
+  letter-spacing:1.5px;text-transform:uppercase;color:var(--accent);
+  font-weight:600;margin-right:6px}
+.cmd-desc + .cmd-desc{margin-top:-6px}
+
+.note{display:flex;gap:11px;background:var(--panel2);
+  border-left:3px solid var(--accent3);border-radius:0 8px 8px 0;
+  padding:11px 15px;margin:13px 0;font-size:13.4px}
+.note.warn{border-left-color:var(--accent2)}
+.note.danger{border-left-color:var(--red)}
+.note.tip{border-left-color:var(--accent)}
+.note .ico{font-size:16px;flex-shrink:0;line-height:1.3}
+.note b{color:var(--accent3)}
+.note.warn b{color:var(--accent2)}
+.note.danger b{color:var(--red)}
+.note.tip b{color:var(--accent)}
+
+.why{background:linear-gradient(135deg,var(--panel),var(--panel2));
+  border:1px solid var(--line2);border-radius:10px;padding:14px 18px;margin:14px 0;
+  position:relative;padding-left:60px}
+.why::before{content:"WHY";position:absolute;left:14px;top:14px;
+  font-family:'Chakra Petch',sans-serif;font-size:13px;font-weight:700;
+  color:var(--accent);letter-spacing:1.5px;
+  border:2px solid var(--accent);padding:3px 6px;border-radius:5px}
+.why p{font-size:13.5px;color:var(--txt)}
+
+.gotcha{background:rgba(255,107,107,.07);border:1px solid rgba(255,107,107,.3);
+  border-radius:9px;padding:11px 15px;margin:12px 0;font-size:13.2px}
+.gotcha b{color:var(--red)}
+
+footer{margin-top:50px;padding-top:24px;border-top:1px solid var(--line);
+  color:var(--txt-faint);font-size:12px;text-align:center;
+  font-family:'IBM Plex Mono',monospace;letter-spacing:.5px}
+
+.menu-btn{display:none}
+@media(max-width:880px){
+  nav.side{position:fixed;left:-268px;z-index:120;transition:.25s;
+    box-shadow:0 0 40px rgba(0,0,0,.5)}
+  nav.side.show{left:0}
+  main{padding:22px 16px 80px}
+  .menu-btn{display:block}
+  .hero{padding:18px}
+}
+.hide{display:none!important}
+</style>
+</head>
+<body>
+<div id="progress"></div>
+
+<div class="shell">
+<nav class="side" id="sidebar">
+  <div class="brand">
+    <div class="tag">Network Admin Reference</div>
+    <h1>CCNA <span>Deep Dive</span></h1>
+  </div>
+  <div class="navsec">Foundations</div>
+  <a href="#s01"><span class="num">01</span> Cisco IOS &amp; CLI</a>
+  <a href="#s02"><span class="num">02</span> Initial Device Setup</a>
+  <a href="#s03"><span class="num">03</span> Interface Configuration</a>
+  <div class="navsec">Switching (L2)</div>
+  <a href="#s04"><span class="num">04</span> VLANs &amp; Trunking</a>
+  <a href="#s05"><span class="num">05</span> Inter-VLAN Routing</a>
+  <a href="#s06"><span class="num">06</span> Spanning Tree</a>
+  <a href="#s07"><span class="num">07</span> EtherChannel</a>
+  <div class="navsec">Routing (L3)</div>
+  <a href="#s08"><span class="num">08</span> Routing Fundamentals</a>
+  <a href="#s09"><span class="num">09</span> Static Routing</a>
+  <a href="#s10"><span class="num">10</span> OSPF</a>
+  <a href="#s11"><span class="num">11</span> First Hop Redundancy</a>
+  <div class="navsec">Services</div>
+  <a href="#s12"><span class="num">12</span> DHCP</a>
+  <a href="#s13"><span class="num">13</span> NAT &amp; PAT</a>
+  <a href="#s14"><span class="num">14</span> NTP, DNS, Syslog, SNMP</a>
+  <div class="navsec">Security</div>
+  <a href="#s15"><span class="num">15</span> Device Hardening</a>
+  <a href="#s16"><span class="num">16</span> SSH &amp; AAA</a>
+  <a href="#s17"><span class="num">17</span> Access Control Lists</a>
+  <a href="#s18"><span class="num">18</span> L2 Security</a>
+  <div class="navsec">Operations</div>
+  <a href="#s19"><span class="num">19</span> Troubleshooting</a>
+  <a href="#s20"><span class="num">20</span> Admin Best Practices</a>
+</nav>
+
+<main>
+  <div class="topbar">
+    <button class="btn menu-btn" id="menuBtn">☰ Menu</button>
+    <div class="search">
+      <svg viewBox="0 0 24 24" fill="none" stroke-width="2"><circle cx="11" cy="11" r="7"/><path d="M21 21l-4.3-4.3"/></svg>
+      <input type="text" id="search" placeholder="Filter by command, concept, or keyword…">
+    </div>
+    <button class="btn" id="themeBtn">◐ Theme</button>
+  </div>
+
+  <div class="hero">
+    <h2>Complete Commands &amp; Theory Reference</h2>
+    <p>Every command explains <strong>what it does</strong>, <strong>why it matters</strong>, and <strong>what trips people up</strong>. Use the sidebar to jump around, or read it straight through. Aimed at passing the 200-301 exam and being competent on day one of the job.</p>
+  </div>
+
+<!-- ============================================================ -->
+<!-- SECTION 01: CISCO IOS & CLI                                    -->
+<!-- ============================================================ -->
+<section id="s01">
+  <h2><span class="secnum">01</span> Cisco IOS &amp; the CLI</h2>
+
+  <p class="body">Cisco IOS (Internetwork Operating System) is the software that runs on most Cisco routers and switches. You interact with it through a hierarchical CLI. <em>Everything</em> in your career as a network admin starts here, so build muscle memory for these basics.</p>
+
+  <h3>The Modes — and Why They Exist</h3>
+  <p class="body">IOS uses different <strong>modes</strong> so dangerous commands can't be run accidentally. Each mode has its own prompt and command set. You move down into deeper modes and back up with <code>exit</code> or <code>end</code>.</p>
+
+  <div class="tbl-wrap"><table>
+    <thead><tr><th>Mode</th><th>Prompt</th><th>Enter With</th><th>What You Can Do</th></tr></thead>
+    <tbody>
+    <tr><td>User EXEC</td><td><code>R1&gt;</code></td><td>(default after login)</td><td>View limited info, ping, traceroute</td></tr>
+    <tr><td>Privileged EXEC</td><td><code>R1#</code></td><td><code>enable</code></td><td>All show commands, debug, reload, save</td></tr>
+    <tr><td>Global Config</td><td><code>R1(config)#</code></td><td><code>configure terminal</code></td><td>Device-wide settings: hostname, users, routing</td></tr>
+    <tr><td>Interface Config</td><td><code>R1(config-if)#</code></td><td><code>interface gi0/0</code></td><td>Per-interface settings: IP, speed, switchport</td></tr>
+    <tr><td>Line Config</td><td><code>R1(config-line)#</code></td><td><code>line vty 0 4</code></td><td>Console, VTY (SSH/Telnet), aux line settings</td></tr>
+    <tr><td>Router Config</td><td><code>R1(config-router)#</code></td><td><code>router ospf 1</code></td><td>Routing-protocol settings</td></tr>
+    </tbody>
+  </table></div>
+
+  <div class="why"><p>The mode hierarchy is a <strong>safety boundary</strong>. A junior admin can't accidentally erase a config from User EXEC. Knowing which mode a command belongs to is a real exam skill — many wrong answers on the test are <em>valid commands in the wrong mode</em>.</p></div>
+
+  <h3>The Help System — Use it Constantly</h3>
+  <div class="cmd-block">
+<span class="prompt">R1#</span> ?                       <span class="cmt">! list every command available in this mode</span>
+<span class="prompt">R1#</span> show ?                  <span class="cmt">! list all show-command options</span>
+<span class="prompt">R1#</span> show ip ?               <span class="cmt">! drill down further</span>
+<span class="prompt">R1#</span> sh<span class="key">[Tab]</span>                 <span class="cmt">! Tab completes the command</span>
+<span class="prompt">R1#</span> show int br             <span class="cmt">! abbreviations work if unambiguous</span>
+<span class="prompt">R1(config)#</span> do show ip route   <span class="cmt">! "do" runs an EXEC command from config mode</span>
+  </div>
+
+  <div class="cmd-desc"><span class="lbl">PRO MOVE</span><strong>do</strong> is huge for daily work. You're in config mode, you want to verify something with a show command — instead of exiting and re-entering, prefix it with <code>do</code>.</div>
+
+  <h3>Editing &amp; Recalling Commands</h3>
+  <ul class="list">
+    <li><strong>Up/Down arrow</strong> — scroll through command history.</li>
+    <li><strong>Ctrl+A</strong> — jump to start of line. <strong>Ctrl+E</strong> — jump to end.</li>
+    <li><strong>Ctrl+U</strong> — clear the line. <strong>Ctrl+W</strong> — delete the previous word.</li>
+    <li><strong>Ctrl+Shift+6</strong> — break out of a hung ping or traceroute (the "escape sequence").</li>
+    <li><strong>show history</strong> — recent commands. <strong>terminal history size 50</strong> — increase the buffer.</li>
+  </ul>
+
+  <h3>Configuration Files — running-config vs startup-config</h3>
+  <p class="body">A Cisco device stores its config in <strong>two places</strong>:</p>
+  <ul class="list">
+    <li><strong>running-config</strong> — lives in RAM, is the <em>active</em> config. Every command you enter changes this <em>immediately</em>.</li>
+    <li><strong>startup-config</strong> — lives in NVRAM, loaded at boot. Survives a reload.</li>
+  </ul>
+
+  <div class="gotcha"><b>The number-one mistake junior admins make:</b> they configure a device, walk away proud, the device reboots, and the entire config is gone — because they never copied running-config to startup-config. <strong>Always save your work.</strong></div>
+
+  <div class="cmd-block">
+<span class="prompt">R1#</span> show running-config             <span class="cmt">! the active config</span>
+<span class="prompt">R1#</span> show startup-config             <span class="cmt">! what loads at boot</span>
+<span class="prompt">R1#</span> copy running-config startup-config   <span class="cmt">! save (most common)</span>
+<span class="prompt">R1#</span> write memory                    <span class="cmt">! older shorthand — same thing</span>
+<span class="prompt">R1#</span> wr                              <span class="cmt">! shortest form, very common in practice</span>
+<span class="prompt">R1#</span> erase startup-config            <span class="cmt">! wipe NVRAM (factory reset on next boot)</span>
+<span class="prompt">R1#</span> reload                          <span class="cmt">! reboot the device</span>
+  </div>
+
+  <h3>Negating Commands with "no"</h3>
+  <p class="body">Almost every config command is undone by typing <code>no</code> in front of it. <code>shutdown</code> shuts an interface; <code>no shutdown</code> brings it up. <code>ip address 10.0.0.1 255.255.255.0</code> sets it; <code>no ip address</code> removes it. This pattern is universal.</p>
+</section>
+
+<!-- ============================================================ -->
+<!-- SECTION 02: INITIAL DEVICE SETUP                              -->
+<!-- ============================================================ -->
+<section id="s02" class="alt">
+  <h2><span class="secnum">02</span> Initial Device Setup</h2>
+
+  <p class="body">First commands you run on every new device, in order. This is the "baseline hardening" that turns a factory-fresh switch into a manageable, secured node on your network.</p>
+
+  <h3>Hostname &amp; Identity</h3>
+  <div class="cmd-block">
+<span class="prompt">Switch&gt;</span> enable
+<span class="prompt">Switch#</span> configure terminal
+<span class="prompt">Switch(config)#</span> hostname BR1-SW-01
+<span class="prompt">BR1-SW-01(config)#</span> banner motd #
+  Authorized access only. Activity is monitored.
+  #
+  </div>
+  <div class="cmd-desc"><span class="lbl">WHY</span>A meaningful hostname shows up in <code>show cdp neighbors</code> outputs across your whole network — naming consistency saves you in an outage. The <strong>MOTD (message of the day) banner</strong> is a <em>legal requirement</em> in many jurisdictions for prosecuting unauthorized access. Never use a "welcome" message — that implies invitation.</div>
+
+  <h3>Passwords — the Right Way</h3>
+  <div class="cmd-block">
+<span class="prompt">R1(config)#</span> enable secret StrongP@ss123    <span class="cmt">! privileged-mode password (HASHED)</span>
+<span class="prompt">R1(config)#</span> service password-encryption    <span class="cmt">! obscures any plaintext passwords in config</span>
+<span class="prompt">R1(config)#</span> security passwords min-length 10
+<span class="prompt">R1(config)#</span> login block-for 120 attempts 3 within 60  <span class="cmt">! lockout after brute force</span>
+  </div>
+
+  <div class="tbl-wrap"><table>
+    <thead><tr><th>Command</th><th>Strength</th><th>Use?</th></tr></thead>
+    <tbody>
+    <tr><td><code>enable password</code></td><td>Clear text (type 0) or weak Vigenère (type 7)</td><td>Never</td></tr>
+    <tr><td><code>enable secret</code></td><td>MD5 hash (type 5) or SHA-256 (type 8/9)</td><td>Always</td></tr>
+    <tr><td><code>username X password Y</code></td><td>Clear text by default</td><td>Avoid</td></tr>
+    <tr><td><code>username X secret Y</code></td><td>Hashed</td><td>Always</td></tr>
+    </tbody>
+  </table></div>
+
+  <div class="note danger"><span class="ico">🔒</span><div><b>Real-world warning:</b> <code>service password-encryption</code> uses <strong>Cisco type 7</strong>, which is trivially decryptable — there are websites that crack it in milliseconds. It hides shoulder-surfing, <em>not</em> a determined attacker. Real protection comes from using <code>secret</code> (hashed) commands and not letting unauthorized users see configs in the first place.</div></div>
+
+  <h3>Console &amp; VTY Lines</h3>
+  <p class="body">Lines are how people connect <em>into</em> the device. <strong>Console</strong> = physical port (rollover cable). <strong>VTY</strong> = virtual lines for SSH/Telnet (usually 0–4, sometimes 0–15).</p>
+  <div class="cmd-block">
+<span class="prompt">R1(config)#</span> line console 0
+<span class="prompt">R1(config-line)#</span> password ConsoleSecret
+<span class="prompt">R1(config-line)#</span> login
+<span class="prompt">R1(config-line)#</span> exec-timeout 10 0        <span class="cmt">! auto-logout after 10 min idle</span>
+<span class="prompt">R1(config-line)#</span> logging synchronous       <span class="cmt">! stop log msgs from breaking your typing</span>
+
+<span class="prompt">R1(config)#</span> line vty 0 4
+<span class="prompt">R1(config-line)#</span> transport input ssh       <span class="cmt">! SSH only, no Telnet</span>
+<span class="prompt">R1(config-line)#</span> login local               <span class="cmt">! authenticate against local user database</span>
+  </div>
+  <div class="cmd-desc"><span class="lbl">EVERY-INTERFACE PRO TIP</span><code>logging synchronous</code> is the single best quality-of-life command. Without it, syslog messages interrupt whatever you're typing mid-keystroke. Apply it to console <em>and</em> VTY.</div>
+
+  <h3>Verify Your Baseline</h3>
+  <div class="cmd-block">
+<span class="prompt">R1#</span> show version             <span class="cmt">! IOS version, uptime, model, serial #</span>
+<span class="prompt">R1#</span> show clock               <span class="cmt">! current time (sync this with NTP later)</span>
+<span class="prompt">R1#</span> show users               <span class="cmt">! who is logged in right now</span>
+<span class="prompt">R1#</span> show running-config | section line   <span class="cmt">! check line configs only</span>
+  </div>
+</section>
+
+<!-- ============================================================ -->
+<!-- SECTION 03: INTERFACE CONFIGURATION                           -->
+<!-- ============================================================ -->
+<section id="s03">
+  <h2><span class="secnum">03</span> Interface Configuration</h2>
+
+  <p class="body">Interfaces are where the rubber meets the road. <em>Every</em> outage you'll troubleshoot eventually comes back to an interface state, an IP, or a duplex/speed mismatch. Know these commands cold.</p>
+
+  <h3>Interface Naming Conventions</h3>
+  <p class="body">Cisco names interfaces by type and slot/port. Examples: <code>GigabitEthernet0/0/1</code> = gigabit, slot 0, sub-slot 0, port 1. The shorthand <code>gi0/0/1</code> works just as well. Common abbreviations: <code>fa</code> (FastEthernet), <code>gi</code> (Gigabit), <code>te</code> (TenGig), <code>se</code> (Serial), <code>lo</code> (Loopback), <code>vlan</code> (SVI).</p>
+
+  <h3>The Most Common Interface Config</h3>
+  <div class="cmd-block">
+<span class="prompt">R1(config)#</span> interface gi0/1
+<span class="prompt">R1(config-if)#</span> description Uplink to BR2-Core      <span class="cmt">! always document!</span>
+<span class="prompt">R1(config-if)#</span> ip address 10.0.1.1 255.255.255.0
+<span class="prompt">R1(config-if)#</span> no shutdown                          <span class="cmt">! routers default to shutdown!</span>
+<span class="prompt">R1(config-if)#</span> exit
+  </div>
+
+  <div class="why"><p>The <strong>description</strong> field shows up in <code>show interfaces</code> outputs and in your monitoring system. When a coworker is troubleshooting at 2am and sees "Uplink to BR2-Core" instead of an unlabeled port, that's saving real money and time.</p></div>
+
+  <h3>Speed, Duplex &amp; Auto-Negotiation</h3>
+  <div class="cmd-block">
+<span class="prompt">R1(config-if)#</span> speed 1000          <span class="cmt">! force 1 Gbps (10, 100, 1000, or auto)</span>
+<span class="prompt">R1(config-if)#</span> duplex full         <span class="cmt">! full, half, or auto</span>
+<span class="prompt">R1(config-if)#</span> mdix auto           <span class="cmt">! auto-detect crossover vs straight-through</span>
+  </div>
+
+  <div class="gotcha"><b>The classic duplex mismatch:</b> one side hardcoded to <em>full</em>, the other left at <em>auto</em>. Auto can't negotiate properly with a hardcoded peer, so it falls back to <em>half</em>. Result: late collisions, high error counters, terrible performance, link still up. <strong>Rule:</strong> either hardcode <em>both</em> sides or auto-negotiate on <em>both</em> sides. Never mix.</div>
+
+  <h3>Switchport Modes (Layer 2)</h3>
+  <div class="cmd-block">
+<span class="prompt">SW(config-if)#</span> switchport mode access         <span class="cmt">! single VLAN, end device</span>
+<span class="prompt">SW(config-if)#</span> switchport access vlan 10
+<span class="prompt">SW(config-if)#</span> switchport mode trunk          <span class="cmt">! carries multiple VLANs</span>
+<span class="prompt">SW(config-if)#</span> switchport trunk allowed vlan 10,20,30
+<span class="prompt">SW(config-if)#</span> spanning-tree portfast         <span class="cmt">! skip listening/learning on access ports</span>
+<span class="prompt">SW(config-if)#</span> spanning-tree bpduguard enable <span class="cmt">! shut port if a BPDU appears</span>
+  </div>
+
+  <h3>Verifying Interfaces — the Go-To Commands</h3>
+  <div class="cmd-block">
+<span class="prompt">R1#</span> show ip interface brief                <span class="cmt">! the #1 daily-driver command</span>
+<span class="prompt">R1#</span> show interfaces                        <span class="cmt">! full details — errors, duplex, etc.</span>
+<span class="prompt">R1#</span> show interfaces gi0/1                  <span class="cmt">! one interface</span>
+<span class="prompt">R1#</span> show interfaces status                 <span class="cmt">! switches: condensed port table</span>
+<span class="prompt">R1#</span> show interfaces description            <span class="cmt">! quickly find that one port</span>
+<span class="prompt">R1#</span> show interfaces counters errors        <span class="cmt">! who is dropping packets?</span>
+  </div>
+
+  <h3>Reading <code>show ip interface brief</code></h3>
+  <div class="tbl-wrap"><table>
+    <thead><tr><th>Status</th><th>Protocol</th><th>Meaning</th></tr></thead>
+    <tbody>
+    <tr><td>up</td><td>up</td><td>Working normally</td></tr>
+    <tr><td>up</td><td>down</td><td>Layer 1 OK, Layer 2 broken (clock issue, encapsulation mismatch, no keepalives)</td></tr>
+    <tr><td>down</td><td>down</td><td>Layer 1 issue — no cable, bad cable, other side off, speed/duplex mismatch</td></tr>
+    <tr><td>administratively down</td><td>down</td><td>Someone ran <code>shutdown</code> — bring up with <code>no shutdown</code></td></tr>
+    </tbody>
+  </table></div>
+
+  <div class="note tip"><span class="ico">🔍</span><div><b>Counter interpretation:</b> in <code>show interfaces</code>, <strong>input errors</strong> with <strong>CRCs</strong> = bad cable / EMI / duplex mismatch. <strong>Late collisions</strong> = duplex mismatch (full vs half) or cable too long. <strong>Runts/giants</strong> = malformed frames. A handful is normal over months; if counters climb during your test, you've got a problem.</div></div>
+</section>
+
+<!-- ============================================================ -->
+<!-- SECTION 04: VLANS & TRUNKING                                  -->
+<!-- ============================================================ -->
+<section id="s04" class="alt">
+  <h2><span class="secnum">04</span> VLANs &amp; Trunking</h2>
+
+  <p class="body">A switch with no VLANs is one big flat broadcast domain — every broadcast (ARP, DHCP, etc.) hits every port. VLANs are how we logically slice a switch into multiple broadcast domains so finance traffic doesn't see engineering traffic and a broadcast storm in one VLAN doesn't take everyone down.</p>
+
+  <h3>Key Concepts</h3>
+  <ul class="list">
+    <li>A <strong>VLAN</strong> = a Layer 2 broadcast domain. By default everyone is in VLAN 1.</li>
+    <li>An <strong>access port</strong> belongs to one VLAN. Frames leave it <em>untagged</em>. End devices plug into access ports.</li>
+    <li>A <strong>trunk port</strong> carries traffic for many VLANs between switches. Frames are <em>tagged</em> with a 4-byte 802.1Q header so the receiver knows which VLAN each frame belongs to.</li>
+    <li>The <strong>native VLAN</strong> on a trunk is the one VLAN whose frames are sent <em>untagged</em>. Default is VLAN 1. Must match on both ends.</li>
+  </ul>
+
+  <h3>Creating &amp; Assigning VLANs</h3>
+  <div class="cmd-block">
+<span class="prompt">SW(config)#</span> vlan 10
+<span class="prompt">SW(config-vlan)#</span> name SALES
+<span class="prompt">SW(config-vlan)#</span> exit
+<span class="prompt">SW(config)#</span> vlan 20
+<span class="prompt">SW(config-vlan)#</span> name ENGINEERING
+<span class="prompt">SW(config-vlan)#</span> exit
+
+<span class="prompt">SW(config)#</span> interface range fa0/1 - 12       <span class="cmt">! configure many ports at once</span>
+<span class="prompt">SW(config-if-range)#</span> switchport mode access
+<span class="prompt">SW(config-if-range)#</span> switchport access vlan 10
+  </div>
+
+  <div class="cmd-desc"><span class="lbl">RANGE TIP</span><code>interface range</code> saves enormous time. <code>interface range fa0/1 - 24, gi0/1 - 2</code> grabs everything in one shot. Use it for bulk PortFast, BPDU Guard, VLAN assignment, etc.</div>
+
+  <h3>Configuring a Trunk</h3>
+  <div class="cmd-block">
+<span class="prompt">SW(config)#</span> interface gi0/24
+<span class="prompt">SW(config-if)#</span> switchport mode trunk
+<span class="prompt">SW(config-if)#</span> switchport trunk encapsulation dot1q   <span class="cmt">! some IOS need this first</span>
+<span class="prompt">SW(config-if)#</span> switchport trunk native vlan 99        <span class="cmt">! security best practice</span>
+<span class="prompt">SW(config-if)#</span> switchport trunk allowed vlan 10,20,30 <span class="cmt">! limit which VLANs cross</span>
+<span class="prompt">SW(config-if)#</span> switchport nonegotiate                 <span class="cmt">! disable DTP</span>
+  </div>
+
+  <div class="why"><p>Changing the <strong>native VLAN to an unused one</strong> (and not VLAN 1) defeats a class of attack called <em>VLAN double-tagging</em>. <strong>Pruning the allowed VLAN list</strong> means a broadcast storm in VLAN 50 doesn't traverse a trunk that doesn't need it. Real defense-in-depth.</p></div>
+
+  <h3>DTP — Dynamic Trunking Protocol</h3>
+  <p class="body">DTP auto-negotiates trunks between Cisco switches. Useful for lab convenience, <em>dangerous</em> in production — an attacker plugging a laptop into an access port can negotiate a trunk and access every VLAN. <strong>Disable DTP</strong> on user-facing ports with <code>switchport nonegotiate</code>.</p>
+
+  <div class="tbl-wrap"><table>
+    <thead><tr><th>Mode</th><th>Behavior</th></tr></thead>
+    <tbody>
+    <tr><td><code>access</code></td><td>Hardcoded access; will not form trunk</td></tr>
+    <tr><td><code>trunk</code></td><td>Hardcoded trunk; still sends DTP unless nonegotiate</td></tr>
+    <tr><td><code>dynamic desirable</code></td><td>Actively asks to form a trunk</td></tr>
+    <tr><td><code>dynamic auto</code></td><td>Will trunk if asked but won't initiate</td></tr>
+    </tbody>
+  </table></div>
+
+  <h3>Verification</h3>
+  <div class="cmd-block">
+<span class="prompt">SW#</span> show vlan brief                      <span class="cmt">! VLAN table + assigned ports</span>
+<span class="prompt">SW#</span> show interfaces trunk                <span class="cmt">! trunks, allowed VLANs, native VLAN</span>
+<span class="prompt">SW#</span> show interfaces gi0/1 switchport     <span class="cmt">! per-port detail</span>
+  </div>
+
+  <div class="gotcha"><b>VLAN troubleshooting checklist:</b> Two hosts in the same VLAN on different switches can't ping each other? Check (1) the trunk is up, (2) the VLAN exists on <em>both</em> switches, (3) the VLAN is in the trunk's allowed list. All three must be true.</div>
+
+  <h3>Voice VLANs</h3>
+  <p class="body">Cisco IP phones need their own VLAN but also pass-through data for the PC plugged into them. The phone tags voice traffic; the PC traffic stays untagged.</p>
+  <div class="cmd-block">
+<span class="prompt">SW(config-if)#</span> switchport mode access
+<span class="prompt">SW(config-if)#</span> switchport access vlan 10        <span class="cmt">! data VLAN for the PC</span>
+<span class="prompt">SW(config-if)#</span> switchport voice vlan 110        <span class="cmt">! voice VLAN for the phone</span>
+  </div>
+</section>
+
+<!-- ============================================================ -->
+<!-- SECTION 05: INTER-VLAN ROUTING                                -->
+<!-- ============================================================ -->
+<section id="s05">
+  <h2><span class="secnum">05</span> Inter-VLAN Routing</h2>
+
+  <p class="body">VLANs isolate broadcast domains, which is great for security but bad if Sales <em>does</em> need to print to a printer in Engineering. The traffic has to leave Layer 2 and be <strong>routed</strong> between VLANs. Three ways to do this.</p>
+
+  <h3>Method 1: Router-on-a-Stick</h3>
+  <p class="body">A single router link to the switch is configured as a trunk. The router has <strong>subinterfaces</strong>, one per VLAN, each with its own IP — that IP becomes the default gateway for hosts in that VLAN.</p>
+  <div class="cmd-block">
+<span class="prompt">SW(config)#</span> interface gi0/24
+<span class="prompt">SW(config-if)#</span> switchport mode trunk
+<span class="prompt">SW(config-if)#</span> switchport trunk allowed vlan 10,20
+
+<span class="prompt">R(config)#</span> interface gi0/0
+<span class="prompt">R(config-if)#</span> no shutdown                       <span class="cmt">! parent interface must be up</span>
+<span class="prompt">R(config)#</span> interface gi0/0.10                  <span class="cmt">! subinterface for VLAN 10</span>
+<span class="prompt">R(config-subif)#</span> encapsulation dot1q 10
+<span class="prompt">R(config-subif)#</span> ip address 192.168.10.1 255.255.255.0
+<span class="prompt">R(config)#</span> interface gi0/0.20
+<span class="prompt">R(config-subif)#</span> encapsulation dot1q 20
+<span class="prompt">R(config-subif)#</span> ip address 192.168.20.1 255.255.255.0
+  </div>
+
+  <div class="gotcha"><b>Easy to forget:</b> the parent interface (<code>gi0/0</code>) needs <code>no shutdown</code> — subinterfaces inherit its state. If the parent is shut, none of the subinterfaces work.</div>
+
+  <h3>Method 2: Layer 3 Switch with SVIs</h3>
+  <p class="body">The faster, scalable approach. Modern campus networks use this almost universally. A Layer 3 switch can do routing in hardware (ASICs) — far faster than a router CPU.</p>
+  <div class="cmd-block">
+<span class="prompt">SW(config)#</span> ip routing                        <span class="cmt">! enable L3 functionality</span>
+<span class="prompt">SW(config)#</span> interface vlan 10                 <span class="cmt">! SVI = Switch Virtual Interface</span>
+<span class="prompt">SW(config-if)#</span> ip address 192.168.10.1 255.255.255.0
+<span class="prompt">SW(config-if)#</span> no shutdown
+<span class="prompt">SW(config)#</span> interface vlan 20
+<span class="prompt">SW(config-if)#</span> ip address 192.168.20.1 255.255.255.0
+<span class="prompt">SW(config-if)#</span> no shutdown
+  </div>
+
+  <div class="why"><p>An SVI comes up only when (1) the VLAN exists on the switch and (2) at least one access port in that VLAN is up <em>or</em> a trunk carries it. Otherwise the SVI shows "up/down." This is the #1 SVI gotcha.</p></div>
+
+  <h3>Method 3: Routed Ports on a Layer 3 Switch</h3>
+  <p class="body">Convert a switch port into a pure routed port (like a router interface).</p>
+  <div class="cmd-block">
+<span class="prompt">SW(config-if)#</span> no switchport                    <span class="cmt">! becomes a routed port</span>
+<span class="prompt">SW(config-if)#</span> ip address 10.0.0.1 255.255.255.252
+  </div>
+</section>
+
+<!-- ============================================================ -->
+<!-- SECTION 06: SPANNING TREE                                     -->
+<!-- ============================================================ -->
+<section id="s06" class="alt">
+  <h2><span class="secnum">06</span> Spanning Tree Protocol</h2>
+
+  <p class="body">Ethernet has <strong>no Time-To-Live field</strong>. A broadcast frame on a Layer 2 loop circles forever and multiplies — within seconds you get a <em>broadcast storm</em> that takes down the whole network. STP exists to <strong>detect and block</strong> redundant paths automatically, leaving only loop-free paths active.</p>
+
+  <h3>How STP Builds a Loop-Free Topology</h3>
+  <ol class="list">
+    <li><strong>Elect the Root Bridge.</strong> The switch with the lowest <em>Bridge ID</em> (priority + MAC) wins. Default priority is 32768 — so the switch with the oldest (lowest) MAC tends to win by accident. <em>You should choose your root deliberately.</em></li>
+    <li><strong>Each non-root switch picks one Root Port.</strong> The port with the lowest <em>cumulative cost</em> back to the root.</li>
+    <li><strong>Each segment picks one Designated Port.</strong> The single port on a segment that advertises the lowest cost.</li>
+    <li><strong>Remaining ports are blocked.</strong> They still receive BPDUs but discard everything else — breaking the loop.</li>
+  </ol>
+
+  <h3>STP Port Costs</h3>
+  <div class="tbl-wrap"><table>
+    <thead><tr><th>Link Speed</th><th>Cost (IEEE)</th></tr></thead>
+    <tbody>
+    <tr><td>10 Mbps</td><td>100</td></tr>
+    <tr><td>100 Mbps</td><td>19</td></tr>
+    <tr><td>1 Gbps</td><td>4</td></tr>
+    <tr><td>10 Gbps</td><td>2</td></tr>
+    </tbody>
+  </table></div>
+
+  <h3>Port States (Classic 802.1D)</h3>
+  <div class="tbl-wrap"><table>
+    <thead><tr><th>State</th><th>Forwards?</th><th>Learns MACs?</th><th>Duration</th></tr></thead>
+    <tbody>
+    <tr><td>Disabled</td><td>No</td><td>No</td><td>Until enabled</td></tr>
+    <tr><td>Blocking</td><td>No</td><td>No</td><td>Indefinite</td></tr>
+    <tr><td>Listening</td><td>No</td><td>No</td><td>15 sec (forward delay)</td></tr>
+    <tr><td>Learning</td><td>No</td><td>Yes</td><td>15 sec</td></tr>
+    <tr><td>Forwarding</td><td>Yes</td><td>Yes</td><td>Normal operation</td></tr>
+    </tbody>
+  </table></div>
+
+  <p class="body">Classic STP convergence is <strong>30–50 seconds</strong>. Rapid STP (RSTP / 802.1w) reduces this to a few seconds and is the default on modern Cisco switches as <strong>Rapid PVST+</strong>.</p>
+
+  <h3>Setting the Root Bridge Deliberately</h3>
+  <div class="cmd-block">
+<span class="prompt">SW(config)#</span> spanning-tree vlan 1-100 root primary    <span class="cmt">! macro: priority 24576</span>
+<span class="prompt">SW(config)#</span> spanning-tree vlan 1-100 root secondary  <span class="cmt">! priority 28672 (backup root)</span>
+<span class="prompt">SW(config)#</span> spanning-tree vlan 10 priority 4096       <span class="cmt">! manual (must be multiple of 4096)</span>
+<span class="prompt">SW(config)#</span> spanning-tree mode rapid-pvst             <span class="cmt">! use RSTP per VLAN</span>
+  </div>
+
+  <div class="why"><p><strong>Always pick your root manually.</strong> The default behavior elects whichever switch has the lowest MAC — usually the oldest, slowest, most beat-up switch in the closet. You want your <em>core / distribution</em> switch to be root because that's where traffic naturally converges.</p></div>
+
+  <h3>PortFast &amp; BPDU Guard — The Edge-Port Combo</h3>
+  <div class="cmd-block">
+<span class="prompt">SW(config-if)#</span> spanning-tree portfast             <span class="cmt">! skip listening/learning, go to forwarding</span>
+<span class="prompt">SW(config-if)#</span> spanning-tree bpduguard enable     <span class="cmt">! shut port if a BPDU shows up</span>
+<span class="prompt">SW(config)#</span> spanning-tree portfast default        <span class="cmt">! globally enable on all access ports</span>
+<span class="prompt">SW(config)#</span> spanning-tree portfast bpduguard default  <span class="cmt">! globally enable BPDU Guard with PortFast</span>
+  </div>
+
+  <p class="body"><strong>PortFast</strong> lets an access port skip the 30-second STP wait and go straight to forwarding — DHCP requests succeed, Windows doesn't time out. <strong>BPDU Guard</strong> protects you: if someone plugs a rogue switch into a PortFast port, BPDUs will arrive and BPDU Guard <strong>err-disables</strong> the port instantly.</p>
+
+  <div class="gotcha"><b>Never enable PortFast on a switch-to-switch link.</b> You'll create a temporary loop during convergence. PortFast is <em>only</em> for end devices.</div>
+
+  <h3>Root Guard</h3>
+  <p class="body">Prevents a connected switch from becoming root. Apply on ports facing switches you don't control — partner connections, customer ports. If a superior BPDU arrives, the port goes into a <em>root-inconsistent</em> blocking state until BPDUs stop.</p>
+  <div class="cmd-block">
+<span class="prompt">SW(config-if)#</span> spanning-tree guard root
+  </div>
+
+  <h3>Verification</h3>
+  <div class="cmd-block">
+<span class="prompt">SW#</span> show spanning-tree                       <span class="cmt">! per-VLAN root, your role, port states</span>
+<span class="prompt">SW#</span> show spanning-tree vlan 10
+<span class="prompt">SW#</span> show spanning-tree summary               <span class="cmt">! mode, root by VLAN, features</span>
+<span class="prompt">SW#</span> show spanning-tree interface gi0/1 detail
+  </div>
+</section>
+
+<!-- ============================================================ -->
+<!-- SECTION 07: ETHERCHANNEL                                      -->
+<!-- ============================================================ -->
+<section id="s07">
+  <h2><span class="secnum">07</span> EtherChannel</h2>
+
+  <p class="body">EtherChannel bundles 2–8 physical links into one logical link (the "Port-Channel"). Benefits: <strong>aggregated bandwidth</strong>, <strong>automatic failover</strong> if a member dies, and <strong>STP sees the bundle as one link</strong> — so you don't lose half your capacity to blocking.</p>
+
+  <h3>Negotiation Protocols</h3>
+  <div class="tbl-wrap"><table>
+    <thead><tr><th>Protocol</th><th>Type</th><th>Active/Init Mode</th><th>Passive Mode</th></tr></thead>
+    <tbody>
+    <tr><td>LACP (802.3ad)</td><td>Open standard</td><td>active</td><td>passive</td></tr>
+    <tr><td>PAgP</td><td>Cisco proprietary</td><td>desirable</td><td>auto</td></tr>
+    <tr><td>Static</td><td>None</td><td>on</td><td>on</td></tr>
+    </tbody>
+  </table></div>
+
+  <p class="body"><strong>Forming rules:</strong> at least one side must <em>initiate</em>. LACP needs <em>active</em> on at least one side; PAgP needs <em>desirable</em>. <code>on / on</code> works (static). <code>auto / auto</code> never forms. Never mix protocols — LACP and PAgP can't talk to each other.</p>
+
+  <h3>Configuration</h3>
+  <div class="cmd-block">
+<span class="prompt">SW(config)#</span> interface range gi0/1 - 2
+<span class="prompt">SW(config-if-range)#</span> channel-group 1 mode active     <span class="cmt">! creates Po1, uses LACP</span>
+<span class="prompt">SW(config)#</span> interface port-channel 1
+<span class="prompt">SW(config-if)#</span> switchport mode trunk                <span class="cmt">! configure logical interface</span>
+<span class="prompt">SW(config-if)#</span> switchport trunk allowed vlan 10,20,30
+  </div>
+
+  <div class="gotcha"><b>Consistency is mandatory.</b> All bundle members must match: speed, duplex, switchport mode, allowed VLAN list, native VLAN. A mismatch on any of these = the channel won't form, or it forms partially. Configure the Port-Channel interface for trunking; the bundle inherits to members.</div>
+
+  <h3>Verification</h3>
+  <div class="cmd-block">
+<span class="prompt">SW#</span> show etherchannel summary             <span class="cmt">! the daily-driver command</span>
+<span class="prompt">SW#</span> show etherchannel port-channel
+<span class="prompt">SW#</span> show interfaces port-channel 1
+  </div>
+  <p class="body">In <code>show etherchannel summary</code>, look for the flags after the Po name: <strong>SU</strong> = "Layer 2, in use" — what you want. <strong>P</strong> next to a port = it's bundled and in use. <strong>I</strong> = stand-alone (didn't bundle).</p>
+</section>
+
+<!-- ============================================================ -->
+<!-- SECTION 08: ROUTING FUNDAMENTALS                              -->
+<!-- ============================================================ -->
+<section id="s08" class="alt">
+  <h2><span class="secnum">08</span> Routing Fundamentals</h2>
+
+  <p class="body">A router's job is simple: receive a packet, look at the destination IP, decide where to send it, and forward. The "deciding" part is what we call <em>routing</em>, and it's driven by the <strong>routing table</strong>.</p>
+
+  <h3>How a Router Decides — Three Tiebreakers, In Order</h3>
+  <ol class="list">
+    <li><strong>Longest prefix match</strong> — if multiple routes match the destination, the <em>most specific</em> (longest mask) wins. A /30 beats a /24 every time, no matter the source.</li>
+    <li><strong>Administrative Distance (AD)</strong> — if same prefix length, the router prefers the route source with the lowest AD. AD is a measure of <em>trust</em> in the route source.</li>
+    <li><strong>Metric</strong> — if AD ties (same routing protocol giving two paths), the lowest metric wins. Metric is protocol-specific (OSPF cost, EIGRP composite, etc.).</li>
+  </ol>
+
+  <h3>Administrative Distance Values</h3>
+  <div class="tbl-wrap"><table>
+    <thead><tr><th>Source</th><th>AD</th><th>Why</th></tr></thead>
+    <tbody>
+    <tr><td>Connected</td><td>0</td><td>Directly attached — the router knows for sure</td></tr>
+    <tr><td>Static</td><td>1</td><td>An admin explicitly configured it</td></tr>
+    <tr><td>eBGP</td><td>20</td><td>External BGP — generally inter-AS</td></tr>
+    <tr><td>EIGRP (internal)</td><td>90</td><td>Cisco's advanced distance-vector protocol</td></tr>
+    <tr><td>OSPF</td><td>110</td><td>Link-state, fast, open standard</td></tr>
+    <tr><td>RIPv2</td><td>120</td><td>Old distance-vector, hop-count metric</td></tr>
+    <tr><td>EIGRP (external)</td><td>170</td><td>Routes redistributed into EIGRP</td></tr>
+    <tr><td>iBGP</td><td>200</td><td>Internal BGP</td></tr>
+    <tr><td>Unknown / Unreachable</td><td>255</td><td>Don't trust at all — won't be used</td></tr>
+    </tbody>
+  </table></div>
+
+  <h3>Reading the Routing Table</h3>
+  <div class="cmd-block">
+<span class="prompt">R1#</span> show ip route
+Codes: C - connected, S - static, R - RIP, O - OSPF, D - EIGRP, B - BGP
+
+C    10.0.0.0/24 is directly connected, GigabitEthernet0/0
+S    192.168.5.0/24 [1/0] via 10.0.0.2
+O    172.16.10.0/24 [110/2] via 10.0.0.2, GigabitEthernet0/0
+S*   0.0.0.0/0     [1/0] via 10.0.0.1     <span class="cmt">! gateway of last resort</span>
+  </div>
+
+  <p class="body">Inside the brackets <code>[110/2]</code>: the first number is <strong>AD (110 = OSPF)</strong>, the second is the <strong>metric (cost 2)</strong>. The <code>S*</code> means it's the candidate default route.</p>
+
+  <h3>Key show Commands</h3>
+  <div class="cmd-block">
+<span class="prompt">R1#</span> show ip route                          <span class="cmt">! full table</span>
+<span class="prompt">R1#</span> show ip route 192.168.5.55             <span class="cmt">! which route matches this IP?</span>
+<span class="prompt">R1#</span> show ip route ospf                     <span class="cmt">! only OSPF-learned routes</span>
+<span class="prompt">R1#</span> show ip route connected                <span class="cmt">! directly connected only</span>
+<span class="prompt">R1#</span> show ip protocols                      <span class="cmt">! what protocols, what networks, timers</span>
+<span class="prompt">R1#</span> show ip cef                            <span class="cmt">! CEF table — actual forwarding info</span>
+  </div>
+
+  <div class="why"><p><code>show ip route X.X.X.X</code> is a lifesaver. Instead of scanning a 500-line routing table for the most specific match, the router tells you exactly which route it would use. Master this command.</p></div>
+</section>
+
+<!-- ============================================================ -->
+<!-- SECTION 09: STATIC ROUTING                                    -->
+<!-- ============================================================ -->
+<section id="s09">
+  <h2><span class="secnum">09</span> Static Routing</h2>
+
+  <p class="body">A static route is one you type in. They're simple, predictable, and add zero CPU overhead — but they don't react to topology changes. Use them for: stub networks, default routes, and as floating backups.</p>
+
+  <h3>The Four Ways to Specify a Static Route</h3>
+  <div class="cmd-block">
+<span class="prompt">R1(config)#</span> ip route 192.168.5.0 255.255.255.0 10.0.0.2          <span class="cmt">! next-hop IP (most common)</span>
+<span class="prompt">R1(config)#</span> ip route 192.168.5.0 255.255.255.0 gi0/0              <span class="cmt">! exit interface only</span>
+<span class="prompt">R1(config)#</span> ip route 192.168.5.0 255.255.255.0 gi0/0 10.0.0.2      <span class="cmt">! fully specified</span>
+<span class="prompt">R1(config)#</span> ip route 0.0.0.0 0.0.0.0 10.0.0.1                     <span class="cmt">! default route</span>
+  </div>
+
+  <div class="tbl-wrap"><table>
+    <thead><tr><th>Form</th><th>Pros</th><th>Cons</th></tr></thead>
+    <tbody>
+    <tr><td>Next-hop only</td><td>Survives interface re-numbering</td><td>Requires recursive lookup</td></tr>
+    <tr><td>Exit interface only</td><td>No recursive lookup</td><td>On multi-access links, router ARPs for every destination — wasteful</td></tr>
+    <tr><td>Fully specified</td><td>Best of both — no ARP issues, explicit</td><td>Slightly more typing</td></tr>
+    </tbody>
+  </table></div>
+
+  <h3>Default Route — the One You'll Use Most</h3>
+  <p class="body">A default route matches anything not in the table. On a branch router pointed at the corporate office, this is usually all you need — one default plus a routing protocol back to corp.</p>
+
+  <h3>Floating Static Routes — Manual Failover</h3>
+  <p class="body">Add an artificial AD higher than your primary protocol's AD. The router prefers the protocol-learned route; if that disappears, the floating static takes over.</p>
+  <div class="cmd-block">
+<span class="prompt">R1(config)#</span> ip route 192.168.5.0 255.255.255.0 10.0.0.2          <span class="cmt">! AD 1 — preferred</span>
+<span class="prompt">R1(config)#</span> ip route 192.168.5.0 255.255.255.0 10.0.99.2 <span class="num">150</span>     <span class="cmt">! AD 150 — backup</span>
+  </div>
+
+  <div class="why"><p>Floating statics are the cleanest way to do <strong>primary/backup WAN failover</strong>. Primary = OSPF route (AD 110). Backup = static with AD 150 over the secondary ISP. OSPF dies → static kicks in seconds later.</p></div>
+
+  <h3>IPv6 Static Routes</h3>
+  <div class="cmd-block">
+<span class="prompt">R1(config)#</span> ipv6 unicast-routing
+<span class="prompt">R1(config)#</span> ipv6 route 2001:db8:5::/64 2001:db8:0::2
+<span class="prompt">R1(config)#</span> ipv6 route ::/0 2001:db8:0::1          <span class="cmt">! default route in v6</span>
+  </div>
+</section>
+
+<!-- ============================================================ -->
+<!-- SECTION 10: OSPF                                              -->
+<!-- ============================================================ -->
+<section id="s10" class="alt">
+  <h2><span class="secnum">10</span> OSPF — Open Shortest Path First</h2>
+
+  <p class="body">OSPF is the routing protocol the CCNA tests heaviest. It's a <strong>link-state IGP</strong> — every router floods info about its directly connected links, every router builds an identical map (the LSDB), and each independently runs <strong>Dijkstra's algorithm</strong> to calculate the shortest path. The CCNA covers single-area OSPFv2.</p>
+
+  <h3>How OSPF Forms a Neighbor Relationship</h3>
+  <ol class="list">
+    <li>OSPF sends <strong>Hello packets</strong> every 10 seconds (broadcast network) to multicast 224.0.0.5.</li>
+    <li>If a neighbor's Hello matches on the required parameters, they advance through states: <em>Down → Init → 2-Way → ExStart → Exchange → Loading → Full</em>.</li>
+    <li>Once <strong>Full</strong>, they exchange LSAs and have identical topology databases.</li>
+  </ol>
+
+  <h3>Parameters That MUST Match for Adjacency</h3>
+  <ul class="list">
+    <li>Area number</li>
+    <li>Hello and Dead timers (10/40 by default on broadcast)</li>
+    <li>Subnet mask &amp; subnet (must be on the same IP subnet)</li>
+    <li>Authentication (if used, same type and key)</li>
+    <li>MTU (Cisco-specific check — both sides must agree)</li>
+    <li>Stub area flag (both must have the same area type)</li>
+  </ul>
+
+  <div class="gotcha"><b>The classic "stuck in EXSTART/EXCHANGE" symptom = MTU mismatch.</b> If you see this, check interface MTUs on both ends — they must match. As a workaround, <code>ip ospf mtu-ignore</code> on the interface disables the check.</div>
+
+  <h3>Router ID — How OSPF Identifies Itself</h3>
+  <p class="body">Selected in this order: (1) <code>router-id</code> command (manual); (2) highest loopback IP at OSPF start time; (3) highest active interface IP. The Router ID is <em>set once</em> when OSPF starts — change it and you need to <code>clear ip ospf process</code> for it to take effect.</p>
+
+  <h3>Configuration — Two Ways</h3>
+  <div class="cmd-block">
+<span class="cmt">! Method 1: classic network statement</span>
+<span class="prompt">R1(config)#</span> router ospf 1                            <span class="cmt">! "1" is process ID, locally significant</span>
+<span class="prompt">R1(config-router)#</span> router-id 1.1.1.1
+<span class="prompt">R1(config-router)#</span> network 10.0.0.0 0.0.0.255 area 0   <span class="cmt">! wildcard mask = inverse subnet mask</span>
+<span class="prompt">R1(config-router)#</span> passive-interface gi0/2             <span class="cmt">! don't send Hellos on this interface</span>
+<span class="prompt">R1(config-router)#</span> default-information originate       <span class="cmt">! advertise the default route to peers</span>
+
+<span class="cmt">! Method 2: per-interface (modern, cleaner)</span>
+<span class="prompt">R1(config-if)#</span> ip ospf 1 area 0
+  </div>
+
+  <h3>Wildcard Masks (the Inverse of Subnet Masks)</h3>
+  <div class="tbl-wrap"><table>
+    <thead><tr><th>Subnet Mask</th><th>Wildcard Mask</th><th>Matches</th></tr></thead>
+    <tbody>
+    <tr><td>255.255.255.255</td><td>0.0.0.0</td><td>One single host</td></tr>
+    <tr><td>255.255.255.0  (/24)</td><td>0.0.0.255</td><td>Any host in the /24</td></tr>
+    <tr><td>255.255.0.0  (/16)</td><td>0.0.255.255</td><td>Any host in the /16</td></tr>
+    <tr><td>255.0.0.0  (/8)</td><td>0.255.255.255</td><td>Any host in the /8</td></tr>
+    <tr><td>(none — all 1s)</td><td>255.255.255.255</td><td>Any address</td></tr>
+    </tbody>
+  </table></div>
+
+  <h3>DR/BDR Election on Multi-Access Networks</h3>
+  <p class="body">On a broadcast network (Ethernet), OSPF would have every router form a full mesh — N*(N-1)/2 adjacencies. Instead it elects a <strong>Designated Router (DR)</strong> and <strong>Backup DR (BDR)</strong>. All other routers form a full adjacency only with the DR/BDR, drastically reducing LSA flooding.</p>
+  <ul class="list">
+    <li>Highest <strong>interface priority</strong> wins (default 1; priority 0 = never DR/BDR).</li>
+    <li>Tie → highest <strong>Router ID</strong>.</li>
+    <li>Election is <strong>non-preemptive</strong> — a new high-priority router doesn't kick out the existing DR.</li>
+  </ul>
+  <div class="cmd-block">
+<span class="prompt">R1(config-if)#</span> ip ospf priority 100        <span class="cmt">! make this router prefer being DR</span>
+<span class="prompt">R1(config-if)#</span> ip ospf priority 0          <span class="cmt">! never become DR (good for stub routers)</span>
+  </div>
+
+  <h3>OSPF Cost — the Metric</h3>
+  <p class="body">Cost = <strong>reference bandwidth ÷ interface bandwidth</strong>. Default reference bandwidth is 100 Mbps. That means anything 100 Mbps or faster has cost 1 by default — which makes 1 Gbps and 10 Gbps look identical. <strong>Fix this</strong> with:</p>
+  <div class="cmd-block">
+<span class="prompt">R1(config-router)#</span> auto-cost reference-bandwidth 10000   <span class="cmt">! reference = 10 Gbps</span>
+<span class="prompt">R1(config-if)#</span> ip ospf cost 25                          <span class="cmt">! or set it manually</span>
+  </div>
+
+  <div class="why"><p>Always set the reference bandwidth to match or exceed the fastest link in your network — and set it the <em>same on every router</em>. Otherwise OSPF picks dumb paths through slow links.</p></div>
+
+  <h3>Passive Interfaces</h3>
+  <p class="body">Stops a router from sending Hellos out an interface (still advertises the subnet, just doesn't try to form a neighbor relationship). <strong>Always make user-facing LAN interfaces passive</strong> — they don't have OSPF neighbors, and you don't want OSPF Hellos leaking out where a malicious user could see them and inject routes.</p>
+  <div class="cmd-block">
+<span class="prompt">R1(config-router)#</span> passive-interface default              <span class="cmt">! all interfaces passive by default</span>
+<span class="prompt">R1(config-router)#</span> no passive-interface gi0/0              <span class="cmt">! except the ones facing peers</span>
+  </div>
+
+  <h3>Verification</h3>
+  <div class="cmd-block">
+<span class="prompt">R1#</span> show ip ospf neighbor                  <span class="cmt">! who am I peered with?</span>
+<span class="prompt">R1#</span> show ip ospf interface gi0/0           <span class="cmt">! cost, timers, state, area</span>
+<span class="prompt">R1#</span> show ip ospf interface brief
+<span class="prompt">R1#</span> show ip ospf database                   <span class="cmt">! the LSDB</span>
+<span class="prompt">R1#</span> show ip protocols                       <span class="cmt">! process ID, router ID, networks</span>
+  </div>
+</section>
+
+<!-- ============================================================ -->
+<!-- SECTION 11: FHRP                                              -->
+<!-- ============================================================ -->
+<section id="s11">
+  <h2><span class="secnum">11</span> First Hop Redundancy Protocols</h2>
+
+  <p class="body">A host has <em>one</em> default gateway. If that router dies, the host's traffic dies with it — unless the gateway is virtualized across multiple routers. That's what FHRPs do. Hosts point at a <strong>virtual IP</strong>; the real routers behind it negotiate which one is currently answering.</p>
+
+  <h3>The Three FHRPs</h3>
+  <div class="tbl-wrap"><table>
+    <thead><tr><th>Protocol</th><th>Standard?</th><th>Active Router</th><th>Load Balance?</th></tr></thead>
+    <tbody>
+    <tr><td>HSRP</td><td>Cisco proprietary</td><td>Active/Standby</td><td>Per-VLAN trick only</td></tr>
+    <tr><td>VRRP</td><td>Open (RFC)</td><td>Master/Backup</td><td>Per-VLAN trick only</td></tr>
+    <tr><td>GLBP</td><td>Cisco proprietary</td><td>AVG + multiple AVFs</td><td>Yes, natively</td></tr>
+    </tbody>
+  </table></div>
+
+  <p class="body">CCNA leans heavily on <strong>HSRP</strong>. Know it cold.</p>
+
+  <h3>HSRP Configuration</h3>
+  <div class="cmd-block">
+<span class="cmt">! R1 — primary</span>
+<span class="prompt">R1(config-if)#</span> ip address 192.168.10.2 255.255.255.0
+<span class="prompt">R1(config-if)#</span> standby 1 ip 192.168.10.1                <span class="cmt">! virtual IP (hosts' gateway)</span>
+<span class="prompt">R1(config-if)#</span> standby 1 priority 110                   <span class="cmt">! default is 100; higher wins</span>
+<span class="prompt">R1(config-if)#</span> standby 1 preempt                        <span class="cmt">! take Active back when recovered</span>
+<span class="prompt">R1(config-if)#</span> standby 1 authentication md5 key-string ourkey
+
+<span class="cmt">! R2 — backup, default priority 100, becomes Standby</span>
+<span class="prompt">R2(config-if)#</span> ip address 192.168.10.3 255.255.255.0
+<span class="prompt">R2(config-if)#</span> standby 1 ip 192.168.10.1
+<span class="prompt">R2(config-if)#</span> standby 1 preempt
+  </div>
+
+  <p class="body">The <strong>virtual IP must be in the same subnet</strong> as the real interfaces and <em>cannot</em> equal any real interface IP. HSRP uses virtual MAC <code>0000.0c07.acXX</code> where XX is the group number in hex.</p>
+
+  <div class="gotcha"><b>Forgetting <code>preempt</code></b> is a classic mistake. Without it, even if R1 (higher priority) comes back online, R2 stays Active forever. Always configure preempt on the router you <em>want</em> to be Active.</div>
+
+  <h3>Interface Tracking — Smarter Failover</h3>
+  <p class="body">What if R1 is up but its <em>uplink</em> to the core is down? You want R1 to surrender Active to R2. Tracking does this — decrement the priority if a tracked interface goes down.</p>
+  <div class="cmd-block">
+<span class="prompt">R1(config)#</span> track 1 interface gi0/2 line-protocol
+<span class="prompt">R1(config-if)#</span> standby 1 track 1 decrement 20
+  </div>
+  <p class="body">If gi0/2 goes down, priority drops from 110 to 90 → R2 (still at 100) preempts → traffic fails over even though R1 itself is "up." Smart.</p>
+
+  <h3>Verification</h3>
+  <div class="cmd-block">
+<span class="prompt">R1#</span> show standby                <span class="cmt">! state, virtual IP/MAC, peer, timers</span>
+<span class="prompt">R1#</span> show standby brief          <span class="cmt">! one-line per group</span>
+  </div>
+</section>
+
+<!-- ============================================================ -->
+<!-- SECTION 12: DHCP                                              -->
+<!-- ============================================================ -->
+<section id="s12" class="alt">
+  <h2><span class="secnum">12</span> DHCP</h2>
+
+  <p class="body">Hosts need: an IP, a mask, a default gateway, and DNS servers. DHCP delivers all four (and more) automatically. Without DHCP, you'd be statically configuring every laptop, phone, and printer by hand.</p>
+
+  <h3>The DORA Process — Detailed</h3>
+  <ol class="list">
+    <li><strong>Discover</strong> — client (no IP yet) broadcasts a DHCPDISCOVER to 255.255.255.255. UDP source 68 → dest 67.</li>
+    <li><strong>Offer</strong> — server replies (unicast or broadcast) with DHCPOFFER containing a proposed IP and lease info.</li>
+    <li><strong>Request</strong> — client broadcasts DHCPREQUEST formally requesting that offer (broadcast so any other servers know their offer was passed over).</li>
+    <li><strong>Acknowledge</strong> — server replies with DHCPACK confirming the lease.</li>
+  </ol>
+
+  <p class="body">After half the lease expires, the client tries to renew (unicast directly to the server). If renewal fails, it tries again at 87.5% (rebinding, broadcast). After lease expiration with no renewal, it must DORA from scratch.</p>
+
+  <h3>Cisco Router as DHCP Server</h3>
+  <div class="cmd-block">
+<span class="prompt">R1(config)#</span> ip dhcp excluded-address 192.168.10.1 192.168.10.10  <span class="cmt">! reserve for static / infra</span>
+<span class="prompt">R1(config)#</span> ip dhcp pool USERS
+<span class="prompt">R1(dhcp-config)#</span> network 192.168.10.0 255.255.255.0
+<span class="prompt">R1(dhcp-config)#</span> default-router 192.168.10.1
+<span class="prompt">R1(dhcp-config)#</span> dns-server 8.8.8.8 1.1.1.1
+<span class="prompt">R1(dhcp-config)#</span> domain-name corp.local
+<span class="prompt">R1(dhcp-config)#</span> lease 7                                <span class="cmt">! 7-day lease</span>
+  </div>
+
+  <div class="why"><p>You <strong>must</strong> exclude addresses you've used for static assignments — router interfaces, printers, servers. Otherwise DHCP will happily hand someone else's static IP to a laptop, and you'll get a duplicate IP outage that's miserable to diagnose.</p></div>
+
+  <h3>DHCP Relay (ip helper-address)</h3>
+  <p class="body">A real network has the DHCP server in a data center — not in every branch closet. But DHCP Discover is a <em>broadcast</em>, and routers don't forward broadcasts. The fix: <code>ip helper-address</code> on the router interface facing the clients. The router catches the broadcast, rewrites it as a unicast to your DHCP server, and forwards it.</p>
+  <div class="cmd-block">
+<span class="prompt">R1(config)#</span> interface gi0/0           <span class="cmt">! the LAN-facing interface</span>
+<span class="prompt">R1(config-if)#</span> ip helper-address 10.50.0.10
+  </div>
+
+  <h3>Cisco Switch as DHCP Client</h3>
+  <p class="body">Sometimes you want a switch's management IP to come from DHCP.</p>
+  <div class="cmd-block">
+<span class="prompt">SW(config)#</span> interface vlan 1
+<span class="prompt">SW(config-if)#</span> ip address dhcp
+<span class="prompt">SW(config-if)#</span> no shutdown
+  </div>
+
+  <h3>Verification</h3>
+  <div class="cmd-block">
+<span class="prompt">R1#</span> show ip dhcp binding              <span class="cmt">! who has what lease</span>
+<span class="prompt">R1#</span> show ip dhcp pool                 <span class="cmt">! addresses in use vs available</span>
+<span class="prompt">R1#</span> show ip dhcp conflict             <span class="cmt">! duplicate IPs detected</span>
+<span class="prompt">R1#</span> debug ip dhcp server packet       <span class="cmt">! watch DORA happen live</span>
+  </div>
+</section>
+
+<!-- ============================================================ -->
+<!-- SECTION 13: NAT & PAT                                         -->
+<!-- ============================================================ -->
+<section id="s13">
+  <h2><span class="secnum">13</span> NAT &amp; PAT</h2>
+
+  <p class="body">NAT translates private IPs to public ones. Two big reasons it exists: (1) IPv4 address exhaustion — millions of hosts behind one public IP, and (2) hides internal addressing from the outside.</p>
+
+  <h3>NAT Address Terminology — Memorize</h3>
+  <div class="tbl-wrap"><table>
+    <thead><tr><th>Term</th><th>Whose IP?</th><th>Where seen from?</th></tr></thead>
+    <tbody>
+    <tr><td>Inside Local</td><td>Inside host</td><td>From the inside (the real private IP)</td></tr>
+    <tr><td>Inside Global</td><td>Inside host</td><td>From the outside (the public IP it appears as)</td></tr>
+    <tr><td>Outside Global</td><td>Outside host</td><td>From the outside (its real public IP)</td></tr>
+    <tr><td>Outside Local</td><td>Outside host</td><td>From the inside (rarely different from global)</td></tr>
+    </tbody>
+  </table></div>
+
+  <p class="body">Mnemonic: <em>local</em> = where the address <em>actually lives</em>, <em>global</em> = how it's seen on the public internet. <em>Inside</em> vs <em>outside</em> = which side of NAT the host is on.</p>
+
+  <h3>Static NAT — 1:1 Fixed Mapping</h3>
+  <p class="body">Use case: making an internal server reachable from the internet on a fixed public IP.</p>
+  <div class="cmd-block">
+<span class="prompt">R1(config)#</span> ip nat inside source static 192.168.1.10 203.0.113.10
+<span class="prompt">R1(config)#</span> interface gi0/0
+<span class="prompt">R1(config-if)#</span> ip nat inside
+<span class="prompt">R1(config)#</span> interface gi0/1
+<span class="prompt">R1(config-if)#</span> ip nat outside
+  </div>
+
+  <h3>Dynamic NAT — Pool of Public IPs</h3>
+  <p class="body">Inside hosts get translated to one of N public IPs from a pool. Rare today (still uses too many publics) but you should know it.</p>
+  <div class="cmd-block">
+<span class="prompt">R1(config)#</span> ip nat pool MYPOOL 203.0.113.10 203.0.113.20 netmask 255.255.255.0
+<span class="prompt">R1(config)#</span> access-list 1 permit 192.168.1.0 0.0.0.255
+<span class="prompt">R1(config)#</span> ip nat inside source list 1 pool MYPOOL
+  </div>
+
+  <h3>PAT (NAT Overload) — the Universal Choice</h3>
+  <p class="body">Many private hosts share one public IP, distinguished by source port. This is what every home router does, what every business edge does — virtually all NAT in the world is PAT.</p>
+  <div class="cmd-block">
+<span class="prompt">R1(config)#</span> access-list 1 permit 192.168.1.0 0.0.0.255
+<span class="prompt">R1(config)#</span> ip nat inside source list 1 interface gi0/1 overload
+<span class="prompt">R1(config)#</span> interface gi0/0
+<span class="prompt">R1(config-if)#</span> ip nat inside
+<span class="prompt">R1(config)#</span> interface gi0/1
+<span class="prompt">R1(config-if)#</span> ip nat outside
+  </div>
+
+  <div class="why"><p>The <code>overload</code> keyword is the <em>only</em> thing that turns NAT into PAT. Forget it and you have a one-IP dynamic pool that only one host can use at a time. Everyone else gets dropped.</p></div>
+
+  <h3>Verification &amp; Troubleshooting</h3>
+  <div class="cmd-block">
+<span class="prompt">R1#</span> show ip nat translations          <span class="cmt">! every active translation</span>
+<span class="prompt">R1#</span> show ip nat statistics            <span class="cmt">! totals, hits, misses</span>
+<span class="prompt">R1#</span> debug ip nat                       <span class="cmt">! see translations as they happen (verbose!)</span>
+<span class="prompt">R1#</span> clear ip nat translation *        <span class="cmt">! wipe NAT table (forces re-creation)</span>
+  </div>
+</section>
+
+<!-- ============================================================ -->
+<!-- SECTION 14: NTP DNS SYSLOG SNMP                               -->
+<!-- ============================================================ -->
+<section id="s14" class="alt">
+  <h2><span class="secnum">14</span> NTP, DNS, Syslog, SNMP</h2>
+
+  <h3>NTP — Network Time Protocol</h3>
+  <p class="body">Accurate clocks aren't optional. If two devices disagree on the time, log correlation during an outage becomes impossible, and certificate validation breaks. NTP uses UDP 123 and a hierarchy of <strong>strata</strong> — stratum 1 = atomic clock; each hop up is +1 stratum.</p>
+  <div class="cmd-block">
+<span class="prompt">R1(config)#</span> ntp server 0.pool.ntp.org
+<span class="prompt">R1(config)#</span> ntp server 192.168.1.1                <span class="cmt">! internal NTP source</span>
+<span class="prompt">R1(config)#</span> clock timezone PST -8                 <span class="cmt">! configure local timezone</span>
+<span class="prompt">R1(config)#</span> clock summer-time PDT recurring        <span class="cmt">! DST</span>
+
+<span class="prompt">R1#</span> show ntp associations                    <span class="cmt">! who am I peering with?</span>
+<span class="prompt">R1#</span> show ntp status                          <span class="cmt">! am I synchronized?</span>
+<span class="prompt">R1#</span> show clock                                <span class="cmt">! what time do I think it is?</span>
+  </div>
+
+  <h3>DNS Resolution on a Device</h3>
+  <div class="cmd-block">
+<span class="prompt">R1(config)#</span> ip name-server 8.8.8.8 1.1.1.1
+<span class="prompt">R1(config)#</span> ip domain-lookup                  <span class="cmt">! enable DNS lookups (on by default)</span>
+<span class="prompt">R1(config)#</span> ip domain-name corp.local
+<span class="prompt">R1(config)#</span> no ip domain-lookup                <span class="cmt">! prevent typos from triggering DNS hangs</span>
+  </div>
+
+  <div class="cmd-desc"><span class="lbl">CLASSIC ANNOYANCE</span>Mistype a command in EXEC mode and the router tries to <em>DNS-resolve</em> it as a hostname, hanging your session for 30 seconds. <strong>Always</strong> run <code>no ip domain-lookup</code> on devices that don't need DNS.</div>
+
+  <h3>Syslog — Logging</h3>
+  <p class="body">The single most important thing for troubleshooting: every device should send logs to a central server.</p>
+  <div class="cmd-block">
+<span class="prompt">R1(config)#</span> logging host 10.50.0.20            <span class="cmt">! syslog server IP</span>
+<span class="prompt">R1(config)#</span> logging trap informational         <span class="cmt">! severity 6 and lower (more severe)</span>
+<span class="prompt">R1(config)#</span> logging buffered 16384             <span class="cmt">! 16KB local log buffer</span>
+<span class="prompt">R1(config)#</span> service timestamps log datetime msec localtime show-timezone
+
+<span class="prompt">R1#</span> show logging                           <span class="cmt">! local log buffer</span>
+  </div>
+
+  <h3>Syslog Severity Levels — Memorize</h3>
+  <div class="tbl-wrap"><table>
+    <thead><tr><th>Level</th><th>Name</th><th>Use Case</th></tr></thead>
+    <tbody>
+    <tr><td>0</td><td>Emergency</td><td>System unusable</td></tr>
+    <tr><td>1</td><td>Alert</td><td>Immediate action required</td></tr>
+    <tr><td>2</td><td>Critical</td><td>Critical condition</td></tr>
+    <tr><td>3</td><td>Error</td><td>Error messages</td></tr>
+    <tr><td>4</td><td>Warning</td><td>Warning conditions</td></tr>
+    <tr><td>5</td><td>Notification</td><td>Normal but significant (link up/down)</td></tr>
+    <tr><td>6</td><td>Informational</td><td>Routine info</td></tr>
+    <tr><td>7</td><td>Debugging</td><td>Verbose debug output</td></tr>
+    </tbody>
+  </table></div>
+  <p class="body">Lower number = more severe. Mnemonic: <em>"Every Awesome Cisco Engineer Will Need Ice cream Daily."</em></p>
+
+  <h3>SNMP — Monitoring</h3>
+  <p class="body">SNMP lets a Network Management System (Nagios, PRTG, SolarWinds, etc.) poll your devices for stats and receive traps.</p>
+  <div class="cmd-block">
+<span class="cmt">! SNMPv2c — community-string based (use only on trusted networks)</span>
+<span class="prompt">R1(config)#</span> snmp-server community ROCorp RO         <span class="cmt">! read-only community</span>
+<span class="prompt">R1(config)#</span> snmp-server host 10.50.0.30 ROCorp
+<span class="prompt">R1(config)#</span> snmp-server contact netadmin@corp.local
+<span class="prompt">R1(config)#</span> snmp-server location DC1-Rack-7
+
+<span class="cmt">! SNMPv3 — adds authentication and encryption</span>
+<span class="prompt">R1(config)#</span> snmp-server group ADMINS v3 priv
+<span class="prompt">R1(config)#</span> snmp-server user netmon ADMINS v3 auth sha SecretAuth priv aes 128 SecretPriv
+  </div>
+
+  <div class="note danger"><span class="ico">🔒</span><div><b>Real-world security:</b> SNMPv2c sends community strings in <em>clear text</em>. Anyone sniffing your network can read them. <strong>Always use SNMPv3 with authPriv</strong> (auth + encryption) for any device outside a fully trusted segment.</div></div>
+</section>
+
+<!-- ============================================================ -->
+<!-- SECTION 15: DEVICE HARDENING                                  -->
+<!-- ============================================================ -->
+<section id="s15">
+  <h2><span class="secnum">15</span> Device Hardening Checklist</h2>
+
+  <p class="body">A baseline every device should pass before it goes into production. These commands work in concert — none is sufficient alone.</p>
+
+  <div class="cmd-block">
+<span class="cmt">! 1. Strong privileged-mode password</span>
+<span class="prompt">R1(config)#</span> enable secret StrongP@ss123
+<span class="prompt">R1(config)#</span> service password-encryption
+
+<span class="cmt">! 2. Local user database with strong passwords</span>
+<span class="prompt">R1(config)#</span> username admin privilege 15 secret AdminPass789
+<span class="prompt">R1(config)#</span> username readonly privilege 1 secret ReadOnly456
+
+<span class="cmt">! 3. SSH only, no Telnet</span>
+<span class="prompt">R1(config)#</span> ip domain-name corp.local
+<span class="prompt">R1(config)#</span> crypto key generate rsa modulus 2048
+<span class="prompt">R1(config)#</span> ip ssh version 2
+<span class="prompt">R1(config)#</span> line vty 0 4
+<span class="prompt">R1(config-line)#</span> transport input ssh
+<span class="prompt">R1(config-line)#</span> login local
+<span class="prompt">R1(config-line)#</span> exec-timeout 5 0           <span class="cmt">! 5 min idle timeout</span>
+
+<span class="cmt">! 4. Restrict management access by source IP (ACL)</span>
+<span class="prompt">R1(config)#</span> access-list 10 permit 10.50.0.0 0.0.0.255   <span class="cmt">! mgmt network</span>
+<span class="prompt">R1(config)#</span> line vty 0 4
+<span class="prompt">R1(config-line)#</span> access-class 10 in
+
+<span class="cmt">! 5. Brute force mitigation</span>
+<span class="prompt">R1(config)#</span> login block-for 120 attempts 3 within 60
+<span class="prompt">R1(config)#</span> security passwords min-length 10
+
+<span class="cmt">! 6. Legal banner</span>
+<span class="prompt">R1(config)#</span> banner motd # Authorized access only — activity is monitored. #
+
+<span class="cmt">! 7. Disable unused services</span>
+<span class="prompt">R1(config)#</span> no ip http server
+<span class="prompt">R1(config)#</span> no ip http secure-server         <span class="cmt">! unless you use the web UI</span>
+<span class="prompt">R1(config)#</span> no cdp run                       <span class="cmt">! disable globally if not needed</span>
+<span class="prompt">R1(config)#</span> no service finger
+<span class="prompt">R1(config)#</span> no service config
+
+<span class="cmt">! 8. Shut unused interfaces</span>
+<span class="prompt">R1(config)#</span> interface range gi0/10 - 24
+<span class="prompt">R1(config-if-range)#</span> shutdown
+<span class="prompt">R1(config-if-range)#</span> switchport mode access
+<span class="prompt">R1(config-if-range)#</span> switchport access vlan 999     <span class="cmt">! "parking lot" VLAN</span>
+  </div>
+
+  <div class="why"><p>The parking-lot VLAN idea: if someone accidentally enables an unused port (or you forget to <code>shutdown</code> one), it lands in VLAN 999 — a black-hole VLAN with no SVI, no DHCP, no routing. Defense in depth.</p></div>
+</section>
+
+<!-- ============================================================ -->
+<!-- SECTION 16: SSH AAA                                           -->
+<!-- ============================================================ -->
+<section id="s16" class="alt">
+  <h2><span class="secnum">16</span> SSH &amp; AAA</h2>
+
+  <h3>SSH — Always Replace Telnet</h3>
+  <p class="body">Telnet sends everything (including passwords) in plain text. SSH encrypts the whole session. <strong>No legitimate reason</strong> to use Telnet on production.</p>
+  <div class="cmd-block">
+<span class="prompt">R1(config)#</span> hostname R1
+<span class="prompt">R1(config)#</span> ip domain-name corp.local              <span class="cmt">! required for key generation</span>
+<span class="prompt">R1(config)#</span> username admin secret StrongPass1
+<span class="prompt">R1(config)#</span> crypto key generate rsa modulus 2048   <span class="cmt">! 2048+ bit key</span>
+<span class="prompt">R1(config)#</span> ip ssh version 2                       <span class="cmt">! SSHv2 only — v1 is insecure</span>
+<span class="prompt">R1(config)#</span> ip ssh time-out 60                     <span class="cmt">! login timeout in seconds</span>
+<span class="prompt">R1(config)#</span> ip ssh authentication-retries 3
+<span class="prompt">R1(config)#</span> line vty 0 15
+<span class="prompt">R1(config-line)#</span> transport input ssh
+<span class="prompt">R1(config-line)#</span> login local
+  </div>
+
+  <div class="gotcha"><b>Pre-requisites for crypto key generation:</b> hostname must not be default ("Router" or "Switch"), and an IP domain name must be set. Without both, <code>crypto key generate rsa</code> fails.</div>
+
+  <h3>AAA — Authentication, Authorization, Accounting</h3>
+  <p class="body">For more than ~10 devices, local user databases become unmanageable. AAA centralizes it — every device asks a RADIUS or TACACS+ server "is this user allowed?"</p>
+
+  <div class="tbl-wrap"><table>
+    <thead><tr><th>—</th><th>RADIUS</th><th>TACACS+</th></tr></thead>
+    <tbody>
+    <tr><td>Standard</td><td>IETF open</td><td>Cisco proprietary</td></tr>
+    <tr><td>Transport</td><td>UDP 1812/1813</td><td>TCP 49</td></tr>
+    <tr><td>Encryption</td><td>Only the password</td><td>Entire packet</td></tr>
+    <tr><td>AAA model</td><td>Combines authn + authz</td><td>Separates all three</td></tr>
+    <tr><td>Typical use</td><td>End-user network access (802.1X, Wi-Fi)</td><td>Network device admin login</td></tr>
+    </tbody>
+  </table></div>
+
+  <div class="cmd-block">
+<span class="prompt">R1(config)#</span> aaa new-model                              <span class="cmt">! turn on AAA</span>
+<span class="prompt">R1(config)#</span> tacacs server CORE-TACACS
+<span class="prompt">R1(config-server-tacacs)#</span> address ipv4 10.50.0.40
+<span class="prompt">R1(config-server-tacacs)#</span> key SharedSecret123
+<span class="prompt">R1(config)#</span> aaa group server tacacs+ TACGROUP
+<span class="prompt">R1(config-sg-tacacs+)#</span> server name CORE-TACACS
+<span class="prompt">R1(config)#</span> aaa authentication login default group TACGROUP local
+<span class="prompt">R1(config)#</span> aaa authorization exec default group TACGROUP local if-authenticated
+  </div>
+
+  <div class="why"><p>The keyword <code>local</code> at the end is your <strong>fallback</strong>. If the TACACS+ server is unreachable, the device falls back to local authentication — otherwise a server outage locks <em>everyone</em> out of every device. Always configure a fallback.</p></div>
+</section>
+
+<!-- ============================================================ -->
+<!-- SECTION 17: ACL                                               -->
+<!-- ============================================================ -->
+<section id="s17">
+  <h2><span class="secnum">17</span> Access Control Lists</h2>
+
+  <p class="body">ACLs are ordered lists of <em>permit</em> and <em>deny</em> rules. The router walks them <strong>top-to-bottom</strong>, takes the action of the <em>first match</em>, and stops checking. There is an <strong>implicit <code>deny any</code></strong> at the end of every ACL — anything not explicitly permitted is dropped.</p>
+
+  <h3>ACL Types</h3>
+  <div class="tbl-wrap"><table>
+    <thead><tr><th>Type</th><th>Number Range</th><th>Matches On</th></tr></thead>
+    <tbody>
+    <tr><td>Standard numbered</td><td>1–99, 1300–1999</td><td>Source IP only</td></tr>
+    <tr><td>Extended numbered</td><td>100–199, 2000–2699</td><td>Source IP, dest IP, protocol, ports, flags</td></tr>
+    <tr><td>Standard named</td><td>any name</td><td>Source IP only</td></tr>
+    <tr><td>Extended named</td><td>any name</td><td>Everything extended numbered does</td></tr>
+    </tbody>
+  </table></div>
+
+  <h3>Placement Rules — Critical for the Exam</h3>
+  <ul class="list">
+    <li><strong>Standard ACL</strong> → place as close to the <em>destination</em> as possible. Reason: a standard ACL only sees source IP, so placing it close to source might block traffic to legitimate destinations.</li>
+    <li><strong>Extended ACL</strong> → place as close to the <em>source</em> as possible. Reason: drop unwanted traffic immediately, before it eats bandwidth across your network.</li>
+  </ul>
+
+  <h3>Standard ACL — Block a Subnet</h3>
+  <div class="cmd-block">
+<span class="prompt">R1(config)#</span> access-list 10 deny 192.168.50.0 0.0.0.255
+<span class="prompt">R1(config)#</span> access-list 10 permit any
+<span class="prompt">R1(config)#</span> interface gi0/1
+<span class="prompt">R1(config-if)#</span> ip access-group 10 out
+  </div>
+
+  <div class="gotcha"><b>The number-one ACL mistake:</b> writing only deny statements. Because of the implicit <code>deny any</code>, an ACL like "deny X" then nothing else <strong>blocks everything</strong>. Always end with an explicit <code>permit</code> for traffic you want to allow.</div>
+
+  <h3>Extended ACL — Real-World Example</h3>
+  <p class="body">Allow inside users to browse the web; allow them to ping; block everything else inbound from the internet (except established sessions).</p>
+  <div class="cmd-block">
+<span class="prompt">R1(config)#</span> ip access-list extended FROM-INTERNET
+<span class="prompt">R1(config-ext-nacl)#</span> permit tcp any any established                <span class="cmt">! return traffic for our sessions</span>
+<span class="prompt">R1(config-ext-nacl)#</span> permit icmp any any echo-reply                 <span class="cmt">! allow ping replies</span>
+<span class="prompt">R1(config-ext-nacl)#</span> permit tcp any host 203.0.113.10 eq 443        <span class="cmt">! external can reach web server</span>
+<span class="prompt">R1(config-ext-nacl)#</span> deny ip any any log                            <span class="cmt">! log denies for visibility</span>
+<span class="prompt">R1(config)#</span> interface gi0/1
+<span class="prompt">R1(config-if)#</span> ip access-group FROM-INTERNET in
+  </div>
+
+  <h3>The <code>established</code> Keyword — Underrated</h3>
+  <p class="body">Matches TCP segments with <strong>ACK or RST flag set</strong> — i.e. anything that's part of an existing session (not a fresh SYN). Lets you permit replies to your users' outbound connections without permitting new inbound connections. Stateless but useful.</p>
+
+  <h3>Wildcard Mask Shortcuts</h3>
+  <div class="tbl-wrap"><table>
+    <thead><tr><th>You Want</th><th>Use</th></tr></thead>
+    <tbody>
+    <tr><td>One specific host</td><td><code>host 10.1.1.1</code> (= <code>10.1.1.1 0.0.0.0</code>)</td></tr>
+    <tr><td>Any host</td><td><code>any</code> (= <code>0.0.0.0 255.255.255.255</code>)</td></tr>
+    <tr><td>A /24 subnet</td><td><code>10.1.1.0 0.0.0.255</code></td></tr>
+    <tr><td>A /16 subnet</td><td><code>10.1.0.0 0.0.255.255</code></td></tr>
+    </tbody>
+  </table></div>
+
+  <h3>Editing Named ACLs — Use Sequence Numbers</h3>
+  <p class="body">Numbered ACLs are append-only — you can't insert into the middle. <strong>Named</strong> ACLs let you use sequence numbers to insert lines anywhere.</p>
+  <div class="cmd-block">
+<span class="prompt">R1(config)#</span> ip access-list extended FROM-INTERNET
+<span class="prompt">R1(config-ext-nacl)#</span> 15 permit tcp any host 203.0.113.20 eq 25     <span class="cmt">! insert line 15</span>
+<span class="prompt">R1(config-ext-nacl)#</span> no 30                                          <span class="cmt">! delete line 30</span>
+
+<span class="prompt">R1#</span> show access-lists                          <span class="cmt">! see numbered lines + hit counts</span>
+<span class="prompt">R1#</span> show ip access-lists FROM-INTERNET
+<span class="prompt">R1#</span> show ip interface gi0/1 | include access   <span class="cmt">! verify what's applied</span>
+  </div>
+
+  <div class="note tip"><span class="ico">📊</span><div><b>Hit counters tell a story.</b> <code>show access-lists</code> shows how many packets matched each line. Zero hits on a line for weeks = either nobody is generating that traffic, or the order is wrong and an earlier line is catching it first.</div></div>
+</section>
+
+<!-- ============================================================ -->
+<!-- SECTION 18: L2 SECURITY                                       -->
+<!-- ============================================================ -->
+<section id="s18" class="alt">
+  <h2><span class="secnum">18</span> Layer 2 Security</h2>
+
+  <p class="body">Most security focuses on Layer 3/4, but Layer 2 attacks (right at the switch port) can bypass everything above. These three features lock it down: <strong>Port Security</strong>, <strong>DHCP Snooping</strong>, <strong>Dynamic ARP Inspection</strong>.</p>
+
+  <h3>Port Security</h3>
+  <p class="body">Limits which and how many MAC addresses can use a switch port. Stops MAC flooding, rogue switches, and someone unplugging the receptionist's PC to plug in their own laptop.</p>
+  <div class="cmd-block">
+<span class="prompt">SW(config-if)#</span> switchport mode access                       <span class="cmt">! port-security requires access mode</span>
+<span class="prompt">SW(config-if)#</span> switchport port-security
+<span class="prompt">SW(config-if)#</span> switchport port-security maximum 2            <span class="cmt">! allow up to 2 MACs (PC + phone)</span>
+<span class="prompt">SW(config-if)#</span> switchport port-security mac-address sticky   <span class="cmt">! learn dynamically, save to config</span>
+<span class="prompt">SW(config-if)#</span> switchport port-security violation shutdown   <span class="cmt">! action on violation</span>
+<span class="prompt">SW(config-if)#</span> switchport port-security aging time 60        <span class="cmt">! optional: expire learned MACs</span>
+  </div>
+
+  <h3>Violation Modes</h3>
+  <div class="tbl-wrap"><table>
+    <thead><tr><th>Mode</th><th>Drops?</th><th>Logs?</th><th>Counter?</th><th>Disables Port?</th></tr></thead>
+    <tbody>
+    <tr><td>protect</td><td>Yes</td><td>No</td><td>No</td><td>No</td></tr>
+    <tr><td>restrict</td><td>Yes</td><td>Yes (syslog/SNMP)</td><td>Yes</td><td>No</td></tr>
+    <tr><td>shutdown <em>(default)</em></td><td>Yes</td><td>Yes</td><td>Yes</td><td>Yes (err-disable)</td></tr>
+    </tbody>
+  </table></div>
+
+  <p class="body">If a port goes <em>err-disabled</em>: <code>shutdown</code> then <code>no shutdown</code> on the interface to re-enable. Or configure auto-recovery:</p>
+  <div class="cmd-block">
+<span class="prompt">SW(config)#</span> errdisable recovery cause psecure-violation
+<span class="prompt">SW(config)#</span> errdisable recovery interval 300       <span class="cmt">! auto-recover after 5 min</span>
+  </div>
+
+  <h3>DHCP Snooping</h3>
+  <p class="body">Rogue DHCP servers (intentional or accidental — somebody's home router plugged in) hand out wrong gateways and DNS. DHCP Snooping classifies ports as <strong>trusted</strong> (uplinks to your DHCP server) or <strong>untrusted</strong> (everything else). DHCPOFFER packets are dropped on untrusted ports.</p>
+  <div class="cmd-block">
+<span class="prompt">SW(config)#</span> ip dhcp snooping
+<span class="prompt">SW(config)#</span> ip dhcp snooping vlan 10,20,30
+<span class="prompt">SW(config)#</span> interface gi0/24                          <span class="cmt">! uplink to DHCP server</span>
+<span class="prompt">SW(config-if)#</span> ip dhcp snooping trust
+  </div>
+
+  <h3>Dynamic ARP Inspection (DAI)</h3>
+  <p class="body">Validates every ARP packet against the DHCP Snooping binding table. Stops ARP-poisoning man-in-the-middle attacks. <strong>Requires DHCP Snooping</strong> to be configured first.</p>
+  <div class="cmd-block">
+<span class="prompt">SW(config)#</span> ip arp inspection vlan 10,20,30
+<span class="prompt">SW(config-if)#</span> ip arp inspection trust              <span class="cmt">! on uplinks/trunk</span>
+  </div>
+
+  <h3>The L2 Security Stack — Why You Want All Three</h3>
+  <div class="why"><p>Port Security stops MAC flooding and unauthorized devices. DHCP Snooping stops rogue DHCP servers from hijacking client config. DAI stops ARP poisoning, which is the most common gateway-MITM attack. Together they make a switch <em>actually</em> defensible at Layer 2 — and they're all free features.</p></div>
+</section>
+
+<!-- ============================================================ -->
+<!-- SECTION 19: TROUBLESHOOTING                                   -->
+<!-- ============================================================ -->
+<section id="s19">
+  <h2><span class="secnum">19</span> Troubleshooting Methodology</h2>
+
+  <p class="body">A good admin doesn't guess. They follow a method. Work from Layer 1 up, or from Layer 7 down — but always systematically.</p>
+
+  <h3>The Layered Approach (Bottom Up)</h3>
+  <ol class="list">
+    <li><strong>Layer 1 — Physical:</strong> Cable plugged in? Link light? Other end up? Right cable type? Use <code>show interface gi0/1</code> — if status is "down/down," it's L1.</li>
+    <li><strong>Layer 2 — Data Link:</strong> Right VLAN? Trunk allowing the VLAN? Same encapsulation both sides? Native VLAN matches? Use <code>show vlan brief</code>, <code>show interfaces trunk</code>.</li>
+    <li><strong>Layer 3 — Network:</strong> IP/mask correct? Default gateway right? Routing table has a path? ACL blocking? Use <code>show ip route X.X.X.X</code>, <code>ping</code>, <code>traceroute</code>.</li>
+    <li><strong>Layer 4 — Transport:</strong> Is the port open? Firewall in the path? Use <code>telnet x.x.x.x 80</code> to test TCP reachability (irony noted).</li>
+    <li><strong>Layer 7 — Application:</strong> DNS resolving? Service running? Wrong URL? Check the app itself.</li>
+  </ol>
+
+  <h3>ping — Interpret the Output</h3>
+  <div class="cmd-block">
+<span class="prompt">R1#</span> ping 8.8.8.8
+Sending 5, 100-byte ICMP Echos to 8.8.8.8:
+!!!!!     <span class="cmt">! all succeeded</span>
+.....     <span class="cmt">! all timed out — no reply</span>
+U.U.U     <span class="cmt">! Unreachable from a router along the way</span>
+.!!.!     <span class="cmt">! partial loss — investigate further</span>
+  </div>
+  <div class="tbl-wrap"><table>
+    <thead><tr><th>Char</th><th>Meaning</th></tr></thead>
+    <tbody>
+    <tr><td>!</td><td>Success (echo reply received)</td></tr>
+    <tr><td>.</td><td>Timeout (no reply within timeout window)</td></tr>
+    <tr><td>U</td><td>Destination unreachable (ICMP unreachable from a router)</td></tr>
+    <tr><td>Q</td><td>Source quench (congestion)</td></tr>
+    <tr><td>M</td><td>Could not fragment</td></tr>
+    </tbody>
+  </table></div>
+
+  <h3>Extended Ping — Source from an Interface</h3>
+  <p class="body">Default <code>ping</code> uses the exit interface's IP as source. Sometimes you want to ping <em>from</em> a specific interface to verify return routing for that subnet.</p>
+  <div class="cmd-block">
+<span class="prompt">R1#</span> ping
+Protocol [ip]:
+Target IP address: 8.8.8.8
+Repeat count [5]: 100
+Datagram size [100]: 1500
+Source address or interface: gi0/0
+Type escape sequence to abort.
+...
+  </div>
+
+  <h3>traceroute</h3>
+  <p class="body">Shows the path packets take by manipulating TTL. Each hop sends back an ICMP TTL-exceeded. Where it stops responding = where the problem starts.</p>
+  <div class="cmd-block">
+<span class="prompt">R1#</span> traceroute 8.8.8.8
+  1  10.0.0.1      4 ms
+  2  192.168.1.1   8 ms
+  3  * * *           <span class="cmt">! something blocked here — firewall? Wrong route?</span>
+  4  8.8.8.8       22 ms
+  </div>
+
+  <h3>The Daily-Driver Show Commands</h3>
+  <div class="cmd-block">
+<span class="prompt">R1#</span> show ip interface brief                  <span class="cmt">! interface status at a glance</span>
+<span class="prompt">R1#</span> show ip route                            <span class="cmt">! routing table</span>
+<span class="prompt">R1#</span> show cdp neighbors detail                <span class="cmt">! what's on the other end of each port</span>
+<span class="prompt">R1#</span> show mac address-table                   <span class="cmt">! switches: where is MAC X?</span>
+<span class="prompt">R1#</span> show arp                                 <span class="cmt">! IP-to-MAC bindings this router knows</span>
+<span class="prompt">R1#</span> show logging                             <span class="cmt">! recent log messages</span>
+<span class="prompt">R1#</span> show version                             <span class="cmt">! IOS, uptime, model</span>
+<span class="prompt">R1#</span> show processes cpu sorted | exclude 0.00 <span class="cmt">! what's eating CPU?</span>
+<span class="prompt">R1#</span> show memory summary                      <span class="cmt">! memory usage</span>
+  </div>
+
+  <h3>Debug — Power Tool, Treat With Respect</h3>
+  <p class="body"><strong>Debug commands can crash a production router.</strong> They generate massive CPU and console traffic. Use them sparingly, never on a busy device without thinking, and always have <code>undebug all</code> ready.</p>
+  <div class="cmd-block">
+<span class="prompt">R1#</span> debug ip ospf events
+<span class="prompt">R1#</span> debug ip dhcp server packet
+<span class="prompt">R1#</span> undebug all                          <span class="cmt">! "u all" — turn off ALL debug</span>
+<span class="prompt">R1#</span> show debugging                       <span class="cmt">! what debugs are currently on?</span>
+  </div>
+
+  <h3>Useful Filters with the Pipe</h3>
+  <div class="cmd-block">
+<span class="prompt">R1#</span> show running-config | include ospf       <span class="cmt">! lines containing "ospf"</span>
+<span class="prompt">R1#</span> show running-config | exclude !          <span class="cmt">! hide comment-only lines</span>
+<span class="prompt">R1#</span> show running-config | section interface  <span class="cmt">! just interface sections</span>
+<span class="prompt">R1#</span> show running-config | begin router       <span class="cmt">! start at "router"</span>
+<span class="prompt">R1#</span> show ip route | count 0.0.0.0            <span class="cmt">! count matching lines</span>
+  </div>
+</section>
+
+<!-- ============================================================ -->
+<!-- SECTION 20: BEST PRACTICES                                    -->
+<!-- ============================================================ -->
+<section id="s20" class="alt">
+  <h2><span class="secnum">20</span> Network Admin Best Practices</h2>
+
+  <p class="body">The exam doesn't test these directly, but they separate a junior admin from someone who can run a network. Adopt these habits from day one.</p>
+
+  <h3>Documentation Is Non-Negotiable</h3>
+  <ul class="list">
+    <li><strong>Network diagrams</strong> — physical + logical. Update them when anything changes.</li>
+    <li><strong>IP address management (IPAM)</strong> — at minimum a spreadsheet, ideally a tool like phpIPAM or NetBox. Reserve a /24 → it's used → mark it used.</li>
+    <li><strong>VLAN database</strong> — which VLAN is for what, what subnet, where it lives, who owns it.</li>
+    <li><strong>Cabling records</strong> — which switch port connects to which patch panel, which goes to which wall jack.</li>
+    <li><strong>Device inventory</strong> — model, serial, location, IOS version, maintenance contract.</li>
+  </ul>
+
+  <h3>Change Management</h3>
+  <ol class="list">
+    <li>Document what you're going to change <em>before</em> you do it.</li>
+    <li>Have a back-out plan. "If this breaks at step 4, here is how I revert."</li>
+    <li>Save the current config before changing: <code>copy running-config flash:pre-change-2026-05-27</code>.</li>
+    <li>Make the change during a maintenance window if possible.</li>
+    <li>Verify the change. Then verify it worked end-to-end (don't just verify the device — verify the user's actual experience).</li>
+    <li>Save the new config: <code>wr</code>. Update documentation.</li>
+  </ol>
+
+  <h3>Saving Yourself: <code>reload in</code></h3>
+  <p class="body">About to make a risky change remotely? Schedule a reboot in 10 minutes <em>before</em> you start. If you lock yourself out, the reboot reloads the last saved config and you're back in.</p>
+  <div class="cmd-block">
+<span class="prompt">R1#</span> reload in 10                <span class="cmt">! reload in 10 minutes</span>
+<span class="prompt">R1#</span> <span class="cmt">! ... make your changes ...</span>
+<span class="prompt">R1#</span> <span class="cmt">! ... verify they work ...</span>
+<span class="prompt">R1#</span> reload cancel               <span class="cmt">! if all is good, cancel the reload</span>
+<span class="prompt">R1#</span> wr                          <span class="cmt">! save</span>
+  </div>
+
+  <div class="why"><p>Every senior network admin has a story of locking themselves out of a remote device. The ones who lived to tell it had <code>reload in</code> running. This single habit will save your job at some point.</p></div>
+
+  <h3>Naming &amp; IP Conventions</h3>
+  <ul class="list">
+    <li><strong>Hostnames:</strong> SITE-FUNCTION-NUMBER, e.g. <code>NYC-CORE-01</code>, <code>LAX-DIST-02</code>. Consistent across the company.</li>
+    <li><strong>Interface descriptions:</strong> what's on the other end. <code>To: LAX-CORE-01 gi0/24</code>.</li>
+    <li><strong>Subnetting:</strong> reserve ranges by purpose. e.g. /24 per VLAN, even numbers = data, odd = voice. Whatever you pick, be consistent.</li>
+  </ul>
+
+  <h3>Backup Configs</h3>
+  <p class="body">Every config should be backed up off the device. TFTP/SFTP to a server, version-controlled in Git, or via a tool like RANCID/Oxidized that pulls daily.</p>
+  <div class="cmd-block">
+<span class="prompt">R1#</span> copy running-config tftp:
+<span class="prompt">R1#</span> copy running-config scp://user@10.50.0.50/configs/R1.cfg
+  </div>
+
+  <h3>Monitor Proactively</h3>
+  <ul class="list">
+    <li>Syslog → central server, with alerting on severity ≤ 4 (Warning and worse).</li>
+    <li>SNMP polling for interface utilization, errors, CPU, memory, environment (temp, power, fans).</li>
+    <li>NetFlow / sFlow for traffic visibility — what protocols, who's talking to whom.</li>
+    <li>Synthetic monitoring — actually ping/curl from a probe to detect outages before users do.</li>
+  </ul>
+
+  <h3>The Mindset</h3>
+  <p class="body">Two skills separate good admins from great ones:</p>
+  <ol class="list">
+    <li><strong>Lab everything first.</strong> Free tools — Cisco Packet Tracer, GNS3, EVE-NG, CML — let you test changes in a virtual replica before touching production. Always lab. Always.</li>
+    <li><strong>Read the actual output, not what you expect.</strong> Your brain will fill in what it expects to see. Force yourself to read every line of <code>show interface</code>, every digit of an IP. Half of troubleshooting is just <em>actually looking</em>.</li>
+  </ol>
+
+  <footer>CCNA DEEP DIVE · 20 SECTIONS · BUILT FOR THE EXAM AND THE JOB</footer>
+</section>
+
+</main>
+</div>
+
+<script>
+/* mobile menu */
+const sidebar=document.getElementById('sidebar');
+document.getElementById('menuBtn').addEventListener('click',()=>sidebar.classList.toggle('show'));
+document.querySelectorAll('nav.side a').forEach(a=>{
+  a.addEventListener('click',()=>sidebar.classList.remove('show'));
+});
+
+/* theme toggle */
+document.getElementById('themeBtn').addEventListener('click',()=>{
+  const h=document.documentElement;
+  h.setAttribute('data-theme',h.getAttribute('data-theme')==='light'?'dark':'light');
+});
+
+/* scrollspy + progress */
+const secs=[...document.querySelectorAll('section')];
+const links=[...document.querySelectorAll('nav.side a')];
+window.addEventListener('scroll',()=>{
+  const sc=window.scrollY,h=document.body.scrollHeight-window.innerHeight;
+  document.getElementById('progress').style.width=(sc/h*100)+'%';
+  let cur=secs[0].id;
+  secs.forEach(s=>{if(s.offsetTop-120<=sc) cur=s.id;});
+  links.forEach(l=>{
+    const href=l.getAttribute('href').slice(1);
+    l.classList.toggle('active',href===cur);
+  });
+});
+
+/* search filter */
+document.getElementById('search').addEventListener('input',e=>{
+  const q=e.target.value.toLowerCase().trim();
+  document.querySelectorAll('section').forEach(s=>{
+    if(!q){s.classList.remove('hide');return;}
+    s.classList.toggle('hide',!s.textContent.toLowerCase().includes(q));
+  });
+});
+</script>
+</body>
+</html>

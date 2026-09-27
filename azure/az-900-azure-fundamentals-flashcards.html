@@ -1,0 +1,256 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>AZ-900 Flashcards</title>
+<style>
+  :root{--bg:#eef2f7;--ink:#12263a;--muted:#5f6d7a;--line:#dbe3ec;--blue:#0067c0;--navy:#12263a;--c1:#0067c0;--c2:#0a8f6f;--c3:#8a5cd1;--shadow:0 10px 30px rgba(18,38,58,.14);}
+  *{box-sizing:border-box}
+  body{margin:0;background:var(--bg);color:var(--ink);font-family:'Segoe UI',system-ui,-apple-system,Arial,sans-serif;}
+  .wrap{max-width:720px;margin:0 auto;padding:20px 16px 50px;}
+  .head{text-align:center;margin-bottom:14px;}
+  .kick{font-size:12px;font-weight:800;letter-spacing:3px;color:var(--blue);text-transform:uppercase;}
+  .head h1{margin:6px 0 2px;font-size:24px;color:var(--navy);}
+  .head p{margin:0;color:var(--muted);font-size:13px;}
+  .filters{display:flex;gap:7px;justify-content:center;flex-wrap:wrap;margin:14px 0;}
+  .chip{font-size:12.5px;font-weight:700;padding:7px 13px;border-radius:20px;border:1.5px solid var(--line);background:#fff;color:var(--muted);cursor:pointer;font-family:inherit;}
+  .chip.on{background:var(--navy);color:#fff;border-color:var(--navy);}
+  .chip .dot{display:inline-block;width:8px;height:8px;border-radius:50%;margin-right:5px;vertical-align:middle;}
+  .meta{display:flex;align-items:center;justify-content:space-between;font-size:12.5px;color:var(--muted);margin:6px 4px 10px;}
+  .meta b{color:var(--navy);}
+  .progress{height:5px;background:#dde5ec;border-radius:4px;overflow:hidden;margin:0 4px 14px;}
+  .progress>div{height:100%;background:var(--blue);transition:width .2s;}
+
+  .scene{perspective:1600px;margin-bottom:16px;}
+  .card{position:relative;width:100%;min-height:340px;cursor:pointer;}
+  .inner{position:relative;width:100%;min-height:340px;transition:transform .5s cubic-bezier(.2,.7,.2,1);transform-style:preserve-3d;}
+  .inner.flip{transform:rotateY(180deg);}
+  .face{position:absolute;inset:0;min-height:340px;backface-visibility:hidden;-webkit-backface-visibility:hidden;border-radius:18px;box-shadow:var(--shadow);padding:30px 30px;display:flex;flex-direction:column;}
+  .front{background:#fff;border:1px solid var(--line);align-items:center;justify-content:center;text-align:center;}
+  .back{background:linear-gradient(160deg,#12263a,#1c3d5c);color:#eaf1f8;transform:rotateY(180deg);}
+  .domtag{font-size:11px;font-weight:800;letter-spacing:.6px;text-transform:uppercase;padding:4px 11px;border-radius:20px;color:#fff;position:absolute;top:18px;left:18px;}
+  .side{font-size:11px;font-weight:700;letter-spacing:1px;text-transform:uppercase;color:#b9c6d3;position:absolute;top:20px;right:20px;}
+  .front .side{color:#c2ccd6;}
+  .term{font-size:27px;font-weight:800;color:var(--navy);line-height:1.25;}
+  .front .hint{position:absolute;bottom:20px;left:0;right:0;text-align:center;font-size:12px;color:#9aa6b2;}
+  .back .btitle{font-size:16px;font-weight:800;color:#8fd0ff;margin:14px 0 12px;letter-spacing:.3px;}
+  .back .body{font-size:16px;line-height:1.62;color:#e7eef6;overflow-y:auto;}
+  .back .body b{color:#fff;}
+  .back .body .k{color:#ffd48a;font-weight:700;}
+
+  .controls{display:flex;gap:10px;align-items:center;justify-content:center;flex-wrap:wrap;}
+  .btn{border:none;border-radius:10px;padding:12px 18px;font-size:14.5px;font-weight:700;cursor:pointer;font-family:inherit;background:#fff;color:var(--navy);border:1.5px solid var(--line);}
+  .btn:hover{background:#f4f8fc;}
+  .btn.p{background:var(--blue);color:#fff;border-color:var(--blue);} .btn.p:hover{background:#0057a3;}
+  .btn:disabled{opacity:.4;cursor:not-allowed;}
+  .btn.wide{min-width:120px;}
+  .row2{display:flex;gap:10px;justify-content:center;margin-top:10px;flex-wrap:wrap;}
+  .small{font-size:12.5px;color:var(--muted);background:none;border:none;cursor:pointer;font-family:inherit;text-decoration:underline;padding:4px;}
+  .foot{text-align:center;font-size:11.5px;color:#9aa6b2;margin-top:20px;line-height:1.5;}
+  .kbd{display:inline-block;background:#fff;border:1px solid var(--line);border-radius:5px;padding:1px 6px;font-size:11px;color:var(--muted);font-weight:700;}
+  @media(max-width:520px){.term{font-size:23px}.face{padding:26px 22px}.back .body{font-size:15px}}
+</style>
+</head>
+<body>
+<div class="wrap">
+  <div class="head">
+    <div class="kick">Microsoft Azure Fundamentals</div>
+    <h1>AZ-900 Flashcards</h1>
+    <p>Only what you need to pass. Tap a card to flip.</p>
+  </div>
+  <div class="filters" id="filters"></div>
+  <div class="meta"><span id="counter">Card 1 of 1</span><span id="domlabel"></span></div>
+  <div class="progress"><div id="pbar" style="width:0"></div></div>
+
+  <div class="scene">
+    <div class="card" id="card" onclick="flip()">
+      <div class="inner" id="inner">
+        <div class="face front">
+          <span class="domtag" id="ftag">—</span>
+          <span class="side">Term</span>
+          <div class="term" id="front">—</div>
+          <div class="hint">Tap to reveal · <span class="kbd">Space</span></div>
+        </div>
+        <div class="face back">
+          <span class="side">Explanation</span>
+          <div class="btitle" id="bterm">—</div>
+          <div class="body" id="back">—</div>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <div class="controls">
+    <button class="btn wide" id="prev" onclick="prev()">‹ Previous</button>
+    <button class="btn p wide" onclick="flip()">Flip</button>
+    <button class="btn wide" id="next" onclick="next()">Next ›</button>
+  </div>
+  <div class="row2">
+    <button class="small" onclick="shuffle()">🔀 Shuffle</button>
+    <button class="small" onclick="resetOrder()">↕ Original order</button>
+    <button class="small" onclick="restart()">↺ Back to start</button>
+  </div>
+
+  <div class="foot">
+    <span class="kbd">Space</span> flip · <span class="kbd">←</span> <span class="kbd">→</span> navigate · <span class="kbd">S</span> shuffle<br>
+    Covers the full AZ-900 skills outline. Not affiliated with Microsoft.
+  </div>
+</div>
+
+<script>
+const D1="Cloud Concepts",D2="Architecture & Services",D3="Management & Governance";
+const DCOL={[D1]:"#0067c0",[D2]:"#0a8f6f",[D3]:"#8a5cd1"};
+/* front = term, back = concise "what you need to know" */
+const CARDS=[
+ // ---------------- DOMAIN 1: CLOUD CONCEPTS ----------------
+ {d:D1,f:"CapEx vs OpEx",b:"<b>CapEx</b> = large upfront <span class='k'>capital</span> spend on hardware you own (on-prem servers). <b>OpEx</b> = ongoing <span class='k'>pay-as-you-go</span> spend on services you consume (cloud). Moving to cloud shifts CapEx → OpEx."},
+ {d:D1,f:"Consumption-based pricing",b:"You pay <span class='k'>only for what you use</span>, with no upfront hardware cost and no long-term commitment. Scale up when busy, down when idle, and the bill follows."},
+ {d:D1,f:"Shared Responsibility Model",b:"Security duties are split between you and the provider. Provider always owns the <b>physical</b> layer (datacenter, network, hosts). Your share shrinks as you go IaaS → PaaS → SaaS."},
+ {d:D1,f:"Always the customer's responsibility",b:"No matter the model (IaaS/PaaS/SaaS), <span class='k'>you</span> always own your <b>data</b>, <b>accounts/identities</b>, and <b>devices</b>. The provider never takes those over."},
+ {d:D1,f:"IaaS (Infrastructure as a Service)",b:"You rent the <b>infrastructure</b> (VMs, storage, networking) and manage the OS and everything above it. <span class='k'>Most control</span>, most responsibility. Example: Azure Virtual Machines."},
+ {d:D1,f:"PaaS (Platform as a Service)",b:"Provider manages the OS and runtime; <span class='k'>you just deploy your app and data</span>. No OS patching. Example: Azure App Service, Azure SQL Database."},
+ {d:D1,f:"SaaS (Software as a Service)",b:"Ready-to-use software; the provider manages <span class='k'>everything</span> from infrastructure to the app. You just sign in and use it. Example: Microsoft 365, Dynamics 365."},
+ {d:D1,f:"Serverless",b:"The provider allocates compute automatically, you're billed <span class='k'>per execution</span>, and it can scale to zero when idle. No servers to manage. Example: Azure Functions."},
+ {d:D1,f:"Public cloud",b:"Services delivered over the internet and shared across many customers (multi-tenant). No hardware to own. Example: Azure itself."},
+ {d:D1,f:"Private cloud",b:"Cloud infrastructure used by a <span class='k'>single organization</span> — more control and isolation, often on-premises. Higher cost/maintenance."},
+ {d:D1,f:"Hybrid cloud",b:"Combines <b>public + private</b> cloud so workloads can span both — e.g., keep sensitive data on-prem while bursting to public cloud for scale."},
+ {d:D1,f:"Scalability",b:"The ability to <span class='k'>increase capacity</span> to handle load. <b>Vertical</b> = scale up/down (bigger VM). <b>Horizontal</b> = scale out/in (more instances)."},
+ {d:D1,f:"Elasticity",b:"Resources are added/removed <span class='k'>automatically and in near real time</span> to match demand. Elasticity = scalability done <b>automatically</b>."},
+ {d:D1,f:"Agility",b:"Rapidly <span class='k'>provision and deprovision</span> resources to develop, test, and release quickly — speed to market."},
+ {d:D1,f:"High Availability (HA)",b:"Keeping an application running with <span class='k'>minimal downtime</span> using redundancy. Usually stated as an uptime % (e.g., 99.99%)."},
+ {d:D1,f:"Disaster Recovery (DR)",b:"The plan to <span class='k'>restore service after a major outage</span> or region loss. HA = stay up during small faults; DR = recover from big failures."},
+ {d:D1,f:"Reliability",b:"The system's ability to <span class='k'>recover from failures</span> and keep functioning (fault tolerance) — achieved through redundancy across zones/regions."},
+ {d:D1,f:"Predictability",b:"Two kinds: <b>cost</b> predictability (forecast spend, e.g., reservations) and <b>performance</b> predictability (consistent, autoscaled performance)."},
+ {d:D1,f:"Economies of scale",b:"Cloud providers buy compute and storage at <span class='k'>massive scale</span>, driving down per-unit cost and passing savings to customers."},
+
+ // ---------------- DOMAIN 2: ARCHITECTURE & SERVICES ----------------
+ {d:D2,f:"Region",b:"A set of datacenters in one geographic area connected by a low-latency network. You deploy resources <span class='k'>into a region</span>."},
+ {d:D2,f:"Region pair",b:"Two regions in the <span class='k'>same geography</span> (300+ miles apart) paired for replication and staggered updates — used for DR and data residency."},
+ {d:D2,f:"Availability Zones",b:"<span class='k'>Physically separate datacenters within a region</span>, each with independent power, cooling, and network. Protect against a datacenter-level failure."},
+ {d:D2,f:"Geography",b:"A discrete market (often a country) containing one or more regions, ensuring <span class='k'>data residency and compliance</span> boundaries."},
+ {d:D2,f:"Resource",b:"A single manageable Azure item — a VM, database, storage account, etc."},
+ {d:D2,f:"Resource Group",b:"A <span class='k'>logical container</span> holding related resources that share a lifecycle. Deleting the group deletes everything in it."},
+ {d:D2,f:"Subscription",b:"A billing and access boundary that contains resource groups. Links resources to an account for billing and limits."},
+ {d:D2,f:"Management Group",b:"A container <span class='k'>above subscriptions</span> to apply governance (policy, RBAC) across many subscriptions at once. Hierarchy: Management group → Subscription → Resource group → Resource."},
+ {d:D2,f:"Azure Resource Manager (ARM)",b:"The <span class='k'>deployment and management layer</span> for Azure. All requests go through it. <b>ARM templates</b> (JSON) define resources as code."},
+ {d:D2,f:"Azure Virtual Machines (VMs)",b:"IaaS compute — <span class='k'>full OS control</span>. Best for lift-and-shift and workloads needing OS-level configuration."},
+ {d:D2,f:"Virtual Machine Scale Sets",b:"A group of <span class='k'>identical, load-balanced VMs</span> that can autoscale in/out based on demand."},
+ {d:D2,f:"Availability Set",b:"Groups VMs across <b>fault domains</b> (separate hardware/power) and <b>update domains</b> (staggered maintenance) to avoid single points of failure."},
+ {d:D2,f:"Azure App Service",b:"PaaS for hosting <span class='k'>web apps and APIs</span> without managing the OS. Built-in scaling, deployment, and patching."},
+ {d:D2,f:"Azure Container Instances (ACI)",b:"Run a <span class='k'>single container quickly</span> without managing servers or orchestration. Good for simple/burst jobs."},
+ {d:D2,f:"Azure Kubernetes Service (AKS)",b:"Managed <span class='k'>Kubernetes</span> for orchestrating containers at scale (scaling, self-healing, rollouts). Control plane is free; you pay for nodes."},
+ {d:D2,f:"Azure Functions",b:"<span class='k'>Serverless</span>, event-driven compute. Runs code on a trigger, bills per execution, scales to zero when idle."},
+ {d:D2,f:"Azure Virtual Desktop (AVD)",b:"Delivers <span class='k'>virtual Windows desktops and apps</span> to remote users from Azure."},
+ {d:D2,f:"Virtual Network (VNet)",b:"Your <span class='k'>private, isolated network</span> in Azure. Resources inside communicate securely; divided into subnets."},
+ {d:D2,f:"VPN Gateway",b:"Creates an <span class='k'>encrypted connection</span> (site-to-site / point-to-site) between on-prem and Azure over the <b>public internet</b>."},
+ {d:D2,f:"ExpressRoute",b:"A <span class='k'>private, dedicated</span> connection from on-prem to Azure that does <b>not</b> use the public internet — higher reliability and speed."},
+ {d:D2,f:"VNet Peering",b:"Connects two virtual networks so resources communicate over the Azure backbone as if on one network — low latency, no gateway needed."},
+ {d:D2,f:"Azure Load Balancer",b:"Distributes traffic across resources at <span class='k'>Layer 4</span> (TCP/UDP) within a region for high availability."},
+ {d:D2,f:"Blob Storage",b:"Stores massive amounts of <span class='k'>unstructured object data</span> — images, video, backups, logs. Tiers: Hot, Cool, Cold, Archive."},
+ {d:D2,f:"Blob Access Tiers",b:"<b>Hot</b> = frequent access. <b>Cool/Cold</b> = infrequent. <b>Archive</b> = rarely accessed, <span class='k'>cheapest storage / highest retrieval cost</span>, offline (180-day min)."},
+ {d:D2,f:"Azure Files",b:"Fully managed <span class='k'>file shares</span> (SMB/NFS) that can be mounted by cloud and on-prem machines at the same time."},
+ {d:D2,f:"Queue Storage / Table Storage",b:"<b>Queue</b> = messaging between app components. <b>Table</b> = NoSQL key-value structured data store."},
+ {d:D2,f:"Storage Redundancy (LRS/ZRS/GRS/GZRS)",b:"<b>LRS</b> = 3 copies in one datacenter. <b>ZRS</b> = across zones in one region. <b>GRS</b> = <span class='k'>replicated to a second region</span>. <b>GZRS</b> = zones + second region (most durable)."},
+ {d:D2,f:"Azure Migrate / Data Box",b:"<b>Azure Migrate</b> = assess and migrate on-prem workloads to Azure. <b>Data Box</b> = a <span class='k'>physical appliance</span> to ship huge datasets when the network is too slow."},
+ {d:D2,f:"Azure SQL Database",b:"Fully managed (PaaS) <span class='k'>relational database</span> with built-in HA and automated backups — no infrastructure to manage."},
+ {d:D2,f:"Azure Cosmos DB",b:"Globally distributed, multi-model <span class='k'>NoSQL</span> database with single-digit-millisecond latency and tunable consistency."},
+ {d:D2,f:"Azure AI services",b:"Prebuilt AI you add to apps — <span class='k'>vision, speech, language</span>, and generative AI (Azure OpenAI). Formerly Cognitive Services."},
+ {d:D2,f:"Microsoft Copilot",b:"An <span class='k'>AI assistant</span> integrated across Microsoft products (365, Azure, etc.) to draft content, summarize, and answer questions."},
+ {d:D2,f:"Azure Arc",b:"Extends Azure <span class='k'>management and governance</span> to resources <b>outside</b> Azure — on-prem, other clouds, and edge."},
+ {d:D2,f:"Azure Portal / Cloud Shell",b:"<b>Portal</b> = web GUI to manage Azure. <b>Cloud Shell</b> = browser-based command line (Bash or PowerShell) with tools preinstalled."},
+ {d:D2,f:"Azure CLI vs Azure PowerShell",b:"Two <span class='k'>command-line</span> ways to manage Azure. CLI = cross-platform commands; PowerShell = cmdlets. Both automate resource management."},
+
+ // ---------------- DOMAIN 3: MANAGEMENT & GOVERNANCE ----------------
+ {d:D3,f:"Factors affecting cost",b:"Resource type, <span class='k'>region</span>, usage/consumption, and outbound data transfer (egress). Ingress is usually free; egress is billed."},
+ {d:D3,f:"Pricing Calculator",b:"<span class='k'>Estimates the cost</span> of a <b>proposed</b> Azure deployment <b>before</b> you build it."},
+ {d:D3,f:"TCO (Total Cost of Ownership) Calculator",b:"Compares the cost of running workloads <span class='k'>on-premises vs in Azure</span> — used to build a migration business case."},
+ {d:D3,f:"Microsoft Cost Management",b:"Tracks your <span class='k'>actual spending</span>, allocates costs, sets <b>budgets</b>, and triggers alerts (does not stop resources)."},
+ {d:D3,f:"Azure Reservations",b:"Commit to 1- or 3-year usage for a big <span class='k'>discount</span> on steady, predictable workloads."},
+ {d:D3,f:"Azure Hybrid Benefit",b:"Reuse existing on-prem <span class='k'>Windows Server / SQL licenses</span> to reduce Azure costs. Can combine with reservations."},
+ {d:D3,f:"Spot Virtual Machines",b:"Deeply discounted unused capacity for <span class='k'>interruptible</span> workloads — can be evicted when Azure needs the capacity."},
+ {d:D3,f:"Tags",b:"Name/value <span class='k'>metadata</span> (e.g., costcenter=finance) attached to resources to organize them and analyze billing."},
+ {d:D3,f:"Azure Policy",b:"<span class='k'>Enforces organizational rules</span> and assesses compliance at scale — can <b>deny</b> creation of non-compliant resources (e.g., disallow a region)."},
+ {d:D3,f:"Azure Blueprints",b:"Package <span class='k'>policies + RBAC + templates</span> to deploy governed environments repeatably to new subscriptions."},
+ {d:D3,f:"Resource Locks",b:"Prevent accidental changes. <b>CanNotDelete</b> = read/modify but no delete. <b>ReadOnly</b> = <span class='k'>no changes or deletion</span>. Overrides RBAC permissions."},
+ {d:D3,f:"Microsoft Purview",b:"<span class='k'>Data governance</span> — discover, classify, and manage data across on-prem, multicloud, and SaaS (catalog + lineage)."},
+ {d:D3,f:"Microsoft Entra ID",b:"Cloud <span class='k'>identity and access management</span> (formerly Azure Active Directory). Handles sign-in, users, groups, and app access."},
+ {d:D3,f:"Microsoft Entra Domain Services",b:"Managed domain services (<span class='k'>domain join, LDAP, Kerberos</span>) in Azure <b>without</b> deploying/managing domain controllers."},
+ {d:D3,f:"Authentication vs Authorization",b:"<b>Authentication</b> = proving <span class='k'>who you are</span> (sign-in). <b>Authorization</b> = what you're <span class='k'>allowed to do</span> (permissions/RBAC)."},
+ {d:D3,f:"Single Sign-On (SSO)",b:"Sign in <span class='k'>once</span> to access many applications — fewer passwords, easier management, better security."},
+ {d:D3,f:"Multifactor Authentication (MFA)",b:"Requires <span class='k'>two or more</span> verification factors (something you know / have / are) — strongly reduces account compromise."},
+ {d:D3,f:"Conditional Access",b:"Enforces access decisions based on <span class='k'>signals</span> — user, device, location, risk. E.g., require MFA when signing in from an untrusted network."},
+ {d:D3,f:"Role-Based Access Control (RBAC)",b:"Grants users <span class='k'>specific permissions</span> on a specific scope by assigning roles — controls <b>who can do what</b> (authorization)."},
+ {d:D3,f:"Zero Trust",b:"Security model: <span class='k'>never trust, always verify</span>. Assume breach and verify every request explicitly, regardless of network location."},
+ {d:D3,f:"Defense in Depth",b:"<span class='k'>Layered</span> security (physical → identity → perimeter → network → compute → app → <b>data</b>) so no single failure exposes everything."},
+ {d:D3,f:"Microsoft Defender for Cloud",b:"<span class='k'>Cloud security posture management</span> + threat protection across Azure/hybrid, with a <b>Secure Score</b>."},
+ {d:D3,f:"Microsoft Sentinel",b:"Cloud-native <span class='k'>SIEM/SOAR</span> — collects security signals across the org to detect, investigate, and respond to threats."},
+ {d:D3,f:"Azure Key Vault",b:"Securely stores and controls access to <span class='k'>secrets, keys, and certificates</span>."},
+ {d:D3,f:"Azure DDoS Protection",b:"Defends Azure resources against <span class='k'>distributed denial-of-service</span> (traffic flooding) attacks."},
+ {d:D3,f:"Azure Monitor",b:"The umbrella service for <span class='k'>collecting telemetry</span> (metrics, logs) from resources, with alerts and dashboards."},
+ {d:D3,f:"Log Analytics",b:"The Azure Monitor tool to <span class='k'>query log data</span> using Kusto Query Language (KQL)."},
+ {d:D3,f:"Application Insights",b:"Azure Monitor's <span class='k'>application performance monitoring</span> (APM) — tracks app requests, failures, and usage."},
+ {d:D3,f:"Azure Advisor",b:"Personalized <span class='k'>best-practice recommendations</span> across cost, security, reliability, operational excellence, and performance."},
+ {d:D3,f:"Azure Service Health",b:"A <span class='k'>personalized</span> view of Azure outages, maintenance, and advisories affecting <b>your</b> resources (vs the generic public status page)."},
+ {d:D3,f:"Azure Resource Health",b:"Shows the current health of an <span class='k'>individual resource</span> (is this specific VM healthy right now?)."},
+ {d:D3,f:"Support Plans",b:"<b>Basic</b> (free, no tech support) → <b>Developer</b> (business hours) → <b>Standard</b> (<span class='k'>first plan with 24×7</span>) → <b>Professional Direct</b> (proactive guidance)."},
+ {d:D3,f:"Service Level Agreement (SLA)",b:"A commitment to a <span class='k'>% uptime</span> (e.g., 99.9%). Dependent services in series <b>multiply</b> (composite SLA), lowering the combined number."},
+ {d:D3,f:"Preview features & SLA",b:"Services in <span class='k'>preview</span> and free tiers have <b>no financially backed SLA</b>. Only paid, generally-available services do."},
+ {d:D3,f:"Service Trust Portal",b:"Where you get Microsoft's <span class='k'>audit reports and compliance certifications</span> (ISO, SOC, etc.)."}
+];
+
+let order=CARDS.map((_,i)=>i);
+let pos=0, flipped=false, filter="all";
+const seen=new Set();
+
+const el=id=>document.getElementById(id);
+function activeList(){return order.filter(i=>filter==="all"||CARDS[i].d===filter);}
+
+function renderFilters(){
+  const doms=[["all","All",null],[D1,"Cloud Concepts",DCOL[D1]],[D2,"Architecture",DCOL[D2]],[D3,"Governance",DCOL[D3]]];
+  el("filters").innerHTML=doms.map(([v,label,col])=>{
+    const count=v==="all"?CARDS.length:CARDS.filter(c=>c.d===v).length;
+    const dot=col?`<span class="dot" style="background:${col}"></span>`:"";
+    return `<button class="chip ${filter===v?"on":""}" onclick="setFilter('${v}')">${dot}${label} (${count})</button>`;
+  }).join("");
+}
+function setFilter(v){filter=v;pos=0;flipped=false;renderFilters();renderCard();}
+
+function renderCard(){
+  const list=activeList();
+  if(list.length===0)return;
+  if(pos>=list.length)pos=0;
+  const idx=list[pos],c=CARDS[idx];seen.add(idx);
+  const col=DCOL[c.d];
+  el("ftag").textContent=c.d;el("ftag").style.background=col;
+  el("front").innerHTML=c.f;
+  el("bterm").innerHTML=c.f;
+  el("back").innerHTML=c.b;
+  el("counter").textContent=`Card ${pos+1} of ${list.length}`;
+  const seenInList=list.filter(i=>seen.has(i)).length;
+  el("domlabel").innerHTML=`<b>${seenInList}</b> seen`;
+  el("pbar").style.width=(seenInList/list.length*100)+"%";
+  flipped=false;el("inner").classList.remove("flip");
+  el("prev").disabled=pos===0;el("next").disabled=pos===list.length-1;
+}
+function flip(){flipped=!flipped;el("inner").classList.toggle("flip",flipped);}
+function next(){const list=activeList();if(pos<list.length-1){pos++;renderCard();}}
+function prev(){if(pos>0){pos--;renderCard();}}
+function shuffle(){
+  for(let i=order.length-1;i>0;i--){const j=Math.floor(Math.random()*(i+1));[order[i],order[j]]=[order[j],order[i]];}
+  pos=0;renderCard();
+}
+function resetOrder(){order=CARDS.map((_,i)=>i);pos=0;renderCard();}
+function restart(){pos=0;renderCard();}
+
+document.addEventListener("keydown",e=>{
+  if(e.code==="Space"){e.preventDefault();flip();}
+  else if(e.code==="ArrowRight")next();
+  else if(e.code==="ArrowLeft")prev();
+  else if(e.key.toLowerCase()==="s")shuffle();
+});
+
+renderFilters();renderCard();
+</script>
+</body>
+</html>
