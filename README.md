@@ -2,6 +2,8 @@
 
 Interactive study guides, flashcards, quizzes, and labs for Brandon Stevenson and colleagues.
 
+Visit Link for study materials ACCESS: https://programmer-stevenson.github.io/IT-Study-Material/
+
 ## Open the Study Dashboard
 
 [**Launch all study materials →**](https://programmer-stevenson.github.io/IT-Study-Material/)
