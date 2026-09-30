@@ -64,7 +64,7 @@
 
     .grid {
       display: grid;
-      grid-template-columns: repeat(auto-fit, minmax(280px, 1fr));
+      grid-template-columns: repeat(auto-fit, minmax(min(280px, 100%), 1fr));
       gap: 18px;
     }
 
@@ -124,6 +124,16 @@
     [hidden] {
       display: none !important;
     }
+
+    @media (prefers-reduced-motion: reduce) {
+      .card {
+        transition: none;
+      }
+
+      .card:hover {
+        transform: none;
+      }
+    }
   </style>
 </head>
 
@@ -149,7 +159,7 @@
     <input
       id="search"
       type="search"
-      placeholder="Try subnetting, Azure, Intune, Security+, or firewall…"
+      placeholder="Try Linux+, subnetting, Azure, Intune, Security+, or firewall…"
     >
 
     <div class="grid">
@@ -158,7 +168,7 @@
         class="card"
         href="azure/az-900-azure-fundamentals-flashcards.html"
       >
-        <span>azure</span>
+        <span>Azure</span>
         <h2>Azure Fundamentals Flashcards</h2>
         <p>
           Standalone flip-card deck covering cloud concepts, Azure
@@ -171,7 +181,7 @@
         class="card"
         href="azure/az-900-azure-fundamentals-study-guide.html"
       >
-        <span>azure</span>
+        <span>Azure</span>
         <h2>Azure Fundamentals Study Guide</h2>
         <p>
           Three-domain guide with service comparisons, exam tips, and a
@@ -184,7 +194,7 @@
         class="card"
         href="networking/security+-interactive-study.html"
       >
-        <span>security</span>
+        <span>Security</span>
         <h2>Security+ SY0-701 Interactive Study</h2>
         <p>
           Interactive Security+ study tool covering core terminology,
@@ -198,7 +208,7 @@
         class="card"
         href="networking/ccna-network-fundamentals-quiz-01.html"
       >
-        <span>networking</span>
+        <span>Networking</span>
         <h2>CCNA Fundamentals Quiz 1</h2>
         <p>
           30 questions on networking models, addressing, switching, and
@@ -211,7 +221,7 @@
         class="card"
         href="networking/ccna-network-fundamentals-quiz-02-scenarios.html"
       >
-        <span>networking</span>
+        <span>Networking</span>
         <h2>CCNA Fundamentals Quiz 2: Scenarios</h2>
         <p>
           30 questions emphasizing troubleshooting tickets, subnetting,
@@ -224,7 +234,7 @@
         class="card"
         href="networking/ccna-guided-troubleshooting-lab-04-scenarios.html"
       >
-        <span>networking</span>
+        <span>Networking</span>
         <h2>CCNA Guided Troubleshooting: 4 Scenarios</h2>
         <p>
           Introductory decision-based cases: single-user connectivity,
@@ -237,7 +247,7 @@
         class="card"
         href="networking/ccna-guided-troubleshooting-lab-20-scenarios.html"
       >
-        <span>networking</span>
+        <span>Networking</span>
         <h2>CCNA Guided Troubleshooting: 20 Scenarios</h2>
         <p>
           Expanded decision-based cases covering DHCP, VLANs, Wi-Fi,
@@ -250,7 +260,7 @@
         class="card"
         href="networking/ccna-cisco-ios-commands-and-theory-reference.html"
       >
-        <span>networking</span>
+        <span>Networking</span>
         <h2>Cisco IOS Commands &amp; Theory Reference</h2>
         <p>
           20 sections of configuration examples, protocol explanations,
@@ -263,7 +273,7 @@
         class="card"
         href="networking/ccna-master-class-and-exam.html"
       >
-        <span>networking</span>
+        <span>Networking</span>
         <h2>CCNA Master Class + Exam</h2>
         <p>
           Six-domain study tool with an eight-week plan, lab walkthroughs,
@@ -276,7 +286,7 @@
         class="card"
         href="cloud-architecture/azure-cloud-systems-design-study-guide.html"
       >
-        <span>cloud architecture</span>
+        <span>Cloud architecture</span>
         <h2>Azure Cloud Systems Design</h2>
         <p>
           Azure-focused beginner-to-intermediate architecture guide with
@@ -290,7 +300,7 @@
         class="card"
         href="it-administration/it-administration-glossary-and-flashcards.html"
       >
-        <span>it administration</span>
+        <span>IT administration</span>
         <h2>IT Administration Glossary &amp; Flashcards</h2>
         <p>
           Searchable terms across networking, identity, servers, storage,
@@ -302,9 +312,23 @@
 
       <a
         class="card"
+        href="it-admin/linux+-study.html"
+      >
+        <span>IT administration · Linux</span>
+        <h2>Linux+ XK0-006 Study Guide &amp; Flashcards</h2>
+        <p>
+          30 detailed chapters, 120 searchable flashcards, and 10 guided
+          labs covering Linux administration, networking, security,
+          scripting, containers, and troubleshooting.
+        </p>
+        <b>Open material →</b>
+      </a>
+
+      <a
+        class="card"
         href="endpoint-management/md-102-endpoint-administrator-field-guide.html"
       >
-        <span>endpoint management</span>
+        <span>Endpoint management</span>
         <h2>MD-102 Endpoint Administrator Field Guide</h2>
         <p>
           Windows deployment, Autopilot, Intune, Entra identity,
@@ -318,7 +342,7 @@
         class="card"
         href="network-security/palo-alto-ngfw-pan-os-study-guide-and-labs.html"
       >
-        <span>network security</span>
+        <span>Network security</span>
         <h2>Palo Alto NGFW / PAN-OS Study Guide &amp; Labs</h2>
         <p>
           24-section reference covering firewall fundamentals, policy and
@@ -330,44 +354,43 @@
 
     </div>
 
-    <p id="empty" hidden>
+    <p id="empty" role="status" hidden>
       No materials match your search.
     </p>
 
     <footer>
-      13 study tools ·
+      <span id="tool-count">14</span> study tools ·
       <a href="README.md">Collection guide</a> ·
       <a href="RENAMED-FILES.md">Filename mapping</a>
     </footer>
   </main>
 
   <script>
-    document
-      .getElementById('search')
-      .addEventListener('input', function () {
-        const q = this.value
-          .trim()
+    const search = document.getElementById('search');
+    const cards = document.querySelectorAll('.card');
+    const empty = document.getElementById('empty');
+    const toolCount = document.getElementById('tool-count');
+
+    toolCount.textContent = cards.length;
+
+    search.addEventListener('input', function () {
+      const query = this.value.trim().toLowerCase();
+      let visibleCount = 0;
+
+      cards.forEach((card) => {
+        const text = card.textContent
+          .replace(/\s+/g, ' ')
           .toLowerCase();
 
-        let n = 0;
+        card.hidden = !text.includes(query);
 
-        document
-          .querySelectorAll('.card')
-          .forEach((card) => {
-            card.hidden =
-              !card.textContent
-                .toLowerCase()
-                .includes(q);
-
-            if (!card.hidden) {
-              n++;
-            }
-          });
-
-        document
-          .getElementById('empty')
-          .hidden = n !== 0;
+        if (!card.hidden) {
+          visibleCount++;
+        }
       });
+
+      empty.hidden = visibleCount !== 0;
+    });
   </script>
 </body>
 </html>
