@@ -17,4 +17,4 @@ Paths below are relative to the repository root. This table includes the origina
 | `md102-study-guide.html` | [endpoint-management/md-102-endpoint-administrator-field-guide.html](./endpoint-management/md-102-endpoint-administrator-field-guide.html) |
 | `palo-alto-study-guide (1).html` | [network-security/palo-alto-ngfw-pan-os-study-guide-and-labs.html](./network-security/palo-alto-ngfw-pan-os-study-guide-and-labs.html) |
 | `security+-interactive-study.html` | [networking/security+-interactive-study.html](./networking/security+-interactive-study.html) |
-| `linux+-study.html` | [it-admin/linux+-study.html](./it-admin/linux+-study.html) |
+| `linux+-study.html` | [it-administration/linux+-study.html](./it-administration/linux+-study.html) |
