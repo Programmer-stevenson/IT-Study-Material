@@ -16,3 +16,4 @@ All 12 original HTML files are retained with byte-for-byte unchanged contents. P
 | `it-admin-terms.html` | [`it-administration/it-administration-glossary-and-flashcards.html`](./it-administration/it-administration-glossary-and-flashcards.html) |
 | `md102-study-guide.html` | [`endpoint-management/md-102-endpoint-administrator-field-guide.html`](./endpoint-management/md-102-endpoint-administrator-field-guide.html) |
 | `palo-alto-study-guide (1).html` | [`network-security/palo-alto-ngfw-pan-os-study-guide-and-labs.html`](./network-security/palo-alto-ngfw-pan-os-study-guide-and-labs.html) |
+|`security+-interactive-study.html`| [`networking/security+-interactive-study.html`](./networking/security+-interactive-study.html.html) |
