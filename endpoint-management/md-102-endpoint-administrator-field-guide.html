@@ -1,3 +1,4 @@
+
 <!DOCTYPE html>
 <html lang="en">
 
@@ -1029,23 +1030,24 @@
 
         .scenario-choices {
             display: grid;
-            gap: 9px;
-            margin: 4px 0 20px
+            gap: 10px;
+            margin: 2px 0 20px
         }
 
         .scenario-choice {
-            display: flex;
-            gap: 10px;
-            align-items: flex-start;
             width: 100%;
+            display: flex;
+            align-items: flex-start;
+            gap: 11px;
             text-align: left;
-            background: var(--surface-2);
-            border: 1px solid var(--border);
-            color: var(--text);
             padding: 12px 14px;
             border-radius: 10px;
+            border: 1px solid var(--border);
+            background: var(--surface-2);
+            color: var(--text);
             cursor: pointer;
-            transition: .15s
+            transition: .15s;
+            font: inherit
         }
 
         .scenario-choice:hover {
@@ -1069,10 +1071,10 @@
         }
 
         .choice-letter {
+            flex: 0 0 22px;
             font-family: var(--mono);
             font-weight: 700;
-            color: var(--text-faint);
-            min-width: 20px
+            color: var(--text-faint)
         }
 
         .scenario-choice.correct .choice-letter {
@@ -1081,13 +1083,6 @@
 
         .scenario-choice.incorrect .choice-letter {
             color: var(--red)
-        }
-
-        .scenario-feedback {
-            font-family: var(--mono);
-            font-size: 11px;
-            color: var(--text-faint);
-            margin-top: 2px
         }
     </style>
 </head>
@@ -2693,8 +2688,8 @@
 
             <div class="domain-head" id="practice" style="--accent:var(--red)">
                 <div class="tag"><span class="sq"></span>Scenario practice</div>
-                <h2>150 multiple-choice reasoning drills</h2>
-                <div class="weight">One multiple-choice scenario at a time. Pick an answer, then reveal the correct choice and reasoning. Shuffle whenever the order becomes familiar.</div>
+                <h2>150 enterprise multiple-choice reasoning drills</h2>
+                <div class="weight">One enterprise scenario at a time. Choose from four answers directly under the question, check your answer, review the reasoning, then move forward. Shuffle whenever the order becomes familiar.</div>
                 <hr class="rule">
             </div>
             <section class="topic" style="--accent:var(--red);border-bottom:none">
@@ -2714,7 +2709,7 @@
                             <div class="scenario-kicker">Reasoning drill</div>
                             <h3 id="scenarioQuestion"></h3>
                             <div class="scenario-choices" id="scenarioChoices"></div>
-                            <button class="reveal-btn" id="revealScenario">Reveal answer</button>
+                            <button class="reveal-btn" id="revealScenario">Check answer</button>
                             <div class="scenario-answer" id="scenarioAnswer">
                                 <div class="answer-label">Best answer</div>
                                 <strong id="scenarioBestAnswer"></strong>
@@ -3054,754 +3049,754 @@
         }];
         const scenarios = [{
             "q": "A personal iPhone needs Outlook protected, but IT must not enroll the entire phone.",
-            "choices": ["App Protection Policy (MAM)", "Wipe", "Settings Catalog", "Win32 detection rule"],
+            "choices": ["App Protection Policy (MAM)", "Corporate-owned work profile (COPE)", "Enrollment restrictions", "Apple Automated Device Enrollment (ADE)"],
             "a": 0,
             "why": "MAM protects organizational app data without requiring full MDM enrollment."
         }, {
             "q": "A device is noncompliant but still accesses Microsoft 365.",
-            "choices": ["Conditional Access requiring a compliant device", "Win32 requirement rule", "Conditional Access", "Microsoft Entra joined"],
-            "a": 0,
+            "choices": ["Report-only Conditional Access", "Conditional Access requiring a compliant device", "App Protection Policy (MAM)", "Compliance policy"],
+            "a": 1,
             "why": "Compliance evaluates posture; CA enforces access."
         }, {
             "q": "A shared Windows kiosk has no assigned user and should provision automatically.",
-            "choices": ["Conditional Access", "Autopilot self-deploying mode", "Feature update policy", "Enterprise App Catalog"],
+            "choices": ["Autopilot Reset", "Autopilot self-deploying mode", "Windows Autopilot", "Autopilot pre-provisioning"],
             "a": 1,
             "why": "This mode is designed for no-user shared/kiosk deployment."
         }, {
             "q": "IT should preload required apps before handing an Autopilot PC to the user.",
-            "choices": ["Win32 requirement rule", "App configuration policy", "Autopilot pre-provisioning", "Personally owned work profile"],
+            "choices": ["Autopilot user-driven mode", "Autopilot Reset", "Autopilot pre-provisioning", "Autopilot self-deploying mode"],
             "a": 2,
             "why": "Technician phase stages required content before user completion."
         }, {
             "q": "A support tech needs one installer elevated while the user remains standard user.",
-            "choices": ["Feature update policy", "Endpoint Privilege Management", "Endpoint Analytics", "Service health"],
+            "choices": ["Controlled Folder Access", "Endpoint Privilege Management", "Windows LAPS", "FileVault"],
             "a": 1,
             "why": "EPM allows controlled elevation without permanent local-admin membership."
         }, {
             "q": "A Win32 app keeps reinstalling even though it exists.",
-            "choices": ["Personally owned work profile", "Autopilot self-deploying mode", "Microsoft Tunnel for MAM", "Check the detection rule"],
+            "choices": ["Line-of-business app", "Required", "Available", "Check the detection rule"],
             "a": 3,
             "why": "Bad detection logic makes Intune think the app isn't installed."
         }, {
             "q": "A Win32 app should install only on x64 Windows 11.",
-            "choices": ["Requirement rules", "Expedited quality update", "App Control for Business", "Conditional Access"],
+            "choices": ["Requirement rules", "Requirement rule", "Line-of-business app", "Detection rule"],
             "a": 0,
             "why": "Requirements determine whether a device is eligible."
         }, {
             "q": "App B must install before App A.",
-            "choices": ["Win32 requirement rule", "Security baseline", "Win32 dependency", "Conditional Access"],
+            "choices": ["Detection rule", "Enterprise App Catalog", "Win32 dependency", "Requirement rule"],
             "a": 2,
             "why": "Dependencies establish prerequisite installation order."
         }, {
             "q": "New App v2 should replace App v1 and optionally remove it.",
-            "choices": ["Endpoint Privilege Management", "Supersedence", "Remote Help", "Apple Automated Device Enrollment (ADE)"],
+            "choices": ["Requirement rule", "Supersedence", "Win32 dependency", "Available"],
             "a": 1,
             "why": "Supersedence controls replacement/update relationships."
         }, {
             "q": "A device was lost and must be factory reset.",
-            "choices": ["App Control for Business", "Delete", "Wipe", "Autopilot user-driven mode"],
+            "choices": ["Sync", "Remote Help", "Wipe", "Device query"],
             "a": 2,
             "why": "Wipe is the destructive reset action."
         }, {
             "q": "An employee leaves but must keep personal photos on a BYOD device.",
-            "choices": ["Microsoft Tunnel for MAM", "Endpoint Analytics", "Retire / selective corporate data removal", "Win32 requirement rule"],
+            "choices": ["Remote Help", "Autopilot Reset", "Retire / selective corporate data removal", "Retire"],
             "a": 2,
             "why": "Do not factory-reset the user's personal device."
         }, {
             "q": "A retrieved BitLocker recovery key should no longer remain valid.",
-            "choices": ["Windows Hello for Business", "Rotate the recovery key", "Win32 dependency", "Remote Help"],
-            "a": 1,
+            "choices": ["Rotate the recovery key", "Endpoint Privilege Management", "App Control for Business", "FileVault"],
+            "a": 0,
             "why": "Rotation replaces exposed recovery material."
         }, {
             "q": "Help desk needs visibility only into devices tagged for the West region.",
-            "choices": ["Scope tags", "Scope groups", "Microsoft Entra registered", "Attack Surface Reduction rules"],
-            "a": 0,
+            "choices": ["Multi-admin approval", "Scope tags", "Conditional Access", "Scope groups"],
+            "a": 1,
             "why": "Scope tags restrict visibility of tagged Intune objects."
         }, {
             "q": "A company wants to assess old GPOs for migration to Intune.",
-            "choices": ["App Protection Policy (MAM)", "Win32 dependency", "Group Policy analytics", "Attack Surface Reduction rules"],
-            "a": 2,
+            "choices": ["Group Policy analytics", "Trusted CA and identity certificate profiles", "App configuration policy targeting/channel", "Custom OMA-URI"],
+            "a": 0,
             "why": "It maps/analyzes GPO settings for modern management support."
         }, {
             "q": "A profile should apply only to devices matching a property at assignment time.",
-            "choices": ["Assignment filter", "Retire", "Settings Catalog", "Scope groups"],
+            "choices": ["Assignment filter", "Microsoft Cloud PKI", "Settings Catalog", "App configuration policy targeting/channel"],
             "a": 0,
             "why": "Filters dynamically include/exclude devices from an assignment."
         }, {
             "q": "Users need cloud Wi-Fi auth with certificates and no on-prem CA.",
-            "choices": ["Microsoft Cloud PKI", "App Protection Policy (MAM)", "Microsoft Graph application permissions", "Advanced Analytics"],
-            "a": 0,
+            "choices": ["Group Policy analytics", "Trusted CA and identity certificate profiles", "Custom OMA-URI", "Microsoft Cloud PKI"],
+            "a": 3,
             "why": "Cloud PKI supplies cloud-managed certificate authority capability."
         }, {
             "q": "A user needs internal app access from an unenrolled MAM-protected phone.",
-            "choices": ["Microsoft Tunnel for MAM", "Multi-admin approval", "Windows LAPS", "Conditional Access"],
+            "choices": ["Microsoft Tunnel for MAM", "Windows Autopilot", "Intune MDM user scope", "Enrollment restrictions"],
             "a": 0,
             "why": "It provides per-app private access in MAM scenarios."
         }, {
             "q": "The SOC wants endpoint threat risk to affect Microsoft 365 access.",
-            "choices": ["Autopilot pre-provisioning", "MDE risk \u2192 compliance \u2192 Conditional Access", "Microsoft Graph delegated permissions", "FileVault"],
-            "a": 1,
+            "choices": ["Report-only Conditional Access", "Conditional Access requiring a compliant device", "App Protection Policy (MAM)", "MDE risk \u2192 compliance \u2192 Conditional Access"],
+            "a": 3,
             "why": "Risk feeds compliance; CA enforces the access decision."
         }, {
             "q": "You need to keep Windows devices on a chosen feature release.",
-            "choices": ["Enterprise App Catalog", "Endpoint Analytics", "Win32 detection rule", "Feature update policy"],
+            "choices": ["Windows Autopatch", "Hotpatch", "Expedited quality update", "Feature update policy"],
             "a": 3,
             "why": "It targets/pins the Windows feature version."
         }, {
             "q": "You need to control restart deadlines and update UX.",
-            "choices": ["Microsoft Entra joined", "Service health", "Assignment filter", "Update ring"],
-            "a": 3,
+            "choices": ["Hotpatch", "Update ring", "Delivery Optimization", "Feature update policy"],
+            "a": 1,
             "why": "Update rings control deployment behavior rather than target feature version."
         }, {
             "q": "A critical monthly security fix must deploy urgently.",
-            "choices": ["Expedite quality update", "Feature update policy", "Attack Surface Reduction rules", "App configuration policy"],
-            "a": 0,
+            "choices": ["Hotpatch", "Feature update policy", "Update ring", "Expedite quality update"],
+            "a": 3,
             "why": "Expedite is designed to bypass normal deferral timing for urgent quality updates."
         }, {
             "q": "A branch needs to reduce WAN usage during updates.",
-            "choices": ["Win32 supersedence", "Delivery Optimization", "Remote Help", "Autopilot pre-provisioning"],
+            "choices": ["Update ring", "Delivery Optimization", "Expedited quality update", "Hotpatch"],
             "a": 1,
             "why": "Peers/cache content to avoid every device downloading separately."
         }, {
             "q": "You need to query a running service on a managed Windows device without remote desktop.",
-            "choices": ["Device query", "Microsoft Entra hybrid joined", "Security baseline", "Compliance policy"],
-            "a": 0,
+            "choices": ["Retire", "Device query", "Sync", "Remote Help"],
+            "a": 1,
             "why": "Use supported KQL-style device query for near-real-time endpoint data."
         }, {
             "q": "A recurring registry issue should be detected and fixed every day.",
-            "choices": ["Wipe", "App Control for Business", "Remediations", "Retire"],
-            "a": 2,
+            "choices": ["Endpoint Analytics", "Check service health / tenant status", "Delegated permissions", "Remediations"],
+            "a": 3,
             "why": "Use detection + remediation PowerShell scripts on a schedule."
         }, {
             "q": "You need to measure slow boot and app reliability across the fleet.",
-            "choices": ["Endpoint Analytics", "Expedited quality update", "Settings Catalog", "Autopilot Reset"],
+            "choices": ["Endpoint Analytics", "Delegated permissions", "Application permissions", "Custom compliance"],
             "a": 0,
             "why": "It focuses on endpoint/user experience metrics."
         }, {
             "q": "Many unrelated devices suddenly stop checking in at the same time.",
-            "choices": ["Feature update policy", "Check service health / tenant status", "Corporate-owned work profile (COPE)", "Windows Hello for Business"],
-            "a": 1,
+            "choices": ["Check service health / tenant status", "Delegated permissions", "Application permissions", "Endpoint Analytics"],
+            "a": 0,
             "why": "Widespread simultaneous issues may be service-side."
         }, {
             "q": "Graph script can read devices but remote actions fail.",
-            "choices": ["Review Graph permissions, consent and Intune RBAC", "Assignment filter", "Expedited quality update", "Personally owned work profile"],
-            "a": 0,
+            "choices": ["Scope tags", "Review Graph permissions, consent and Intune RBAC", "Conditional Access", "Scope groups"],
+            "a": 1,
             "why": "Authentication alone does not grant every administrative operation."
         }, {
             "q": "Company-owned Android allows personal use while work data stays isolated.",
-            "choices": ["Wipe", "Settings Catalog", "Expedited quality update", "COPE"],
+            "choices": ["Corporate-owned work profile (COPE)", "Enrollment restrictions", "Apple Automated Device Enrollment (ADE)", "COPE"],
             "a": 3,
             "why": "Corporate-owned work profile is the correct ownership/use model."
         }, {
             "q": "Corporate Android is a single-purpose warehouse scanner.",
-            "choices": ["Windows Autopatch", "Custom compliance", "Security baseline", "Dedicated enrollment"],
+            "choices": ["Apple Automated Device Enrollment (ADE)", "Corporate-owned work profile (COPE)", "Enrollment restrictions", "Dedicated enrollment"],
             "a": 3,
             "why": "Dedicated is the shared/single-purpose corporate model."
         }, {
             "q": "A Windows policy and security baseline set the same option differently.",
-            "choices": ["Collect diagnostics", "Compliance policy", "Controlled Folder Access", "Investigate policy conflict"],
+            "choices": ["Assignment filter", "Settings Catalog", "App configuration policy targeting/channel", "Investigate policy conflict"],
             "a": 3,
             "why": "Overlapping settings can conflict; identify every source configuring the setting."
         }, {
             "q": "A company wants all Windows devices enrolled automatically after users join them to Entra ID. What setting should be configured?",
-            "choices": ["Intune MDM user scope", "Win32 detection rule", "App Protection Policy (MAM)", "Service health"],
+            "choices": ["Intune MDM user scope", "Microsoft Entra hybrid joined", "Cloud Kerberos trust", "Microsoft Entra joined"],
             "a": 0,
             "why": "Automatic Windows enrollment depends on the appropriate MDM user scope for targeted users."
         }, {
             "q": "A user's personal Windows device only needs SSO to company apps and should remain personally owned. Which identity state fits?",
-            "choices": ["App configuration policy", "Scope groups", "Windows Autopatch", "Microsoft Entra registered"],
+            "choices": ["Windows Hello for Business", "Cloud Kerberos trust", "Microsoft Entra hybrid joined", "Microsoft Entra registered"],
             "a": 3,
             "why": "Registered devices are commonly BYOD devices with a work account added for organizational access."
         }, {
             "q": "A corporate Windows device must use cloud identity only and should not depend on on-prem AD. Which join state fits?",
-            "choices": ["App Control for Business", "Custom compliance", "Microsoft Graph application permissions", "Microsoft Entra joined"],
+            "choices": ["Microsoft Entra hybrid joined", "Cloud Kerberos trust", "Dynamic membership rule", "Microsoft Entra joined"],
             "a": 3,
             "why": "Entra join is the cloud-first corporate identity model."
         }, {
             "q": "A corporate Windows device still needs on-prem AD Group Policy and cloud management. Which join state fits?",
-            "choices": ["Microsoft Entra hybrid joined", "Personally owned work profile", "Dedicated Android enrollment", "Settings Catalog"],
-            "a": 0,
+            "choices": ["Microsoft Entra joined", "Microsoft Entra hybrid joined", "Windows Hello for Business", "Microsoft Entra registered"],
+            "a": 1,
             "why": "Hybrid join preserves on-prem AD membership while representing the device in Entra ID."
         }, {
             "q": "A dynamic group should contain only Windows 11 devices. What feature is required?",
-            "choices": ["Fresh Start", "Controlled Folder Access", "Dynamic membership rule", "Microsoft Tunnel for MAM"],
-            "a": 2,
+            "choices": ["Assignment filter", "Group Policy analytics", "Trusted CA and identity certificate profiles", "Dynamic membership rule"],
+            "a": 3,
             "why": "Dynamic device groups automatically evaluate supported device attributes to control membership."
         }, {
             "q": "Users can join devices to Entra ID but enrollment into Intune never starts. What should you check first?",
-            "choices": ["Expedited quality update", "MDM user scope and Intune licensing", "Personally owned work profile", "Compliance policy"],
+            "choices": ["Microsoft Entra joined", "MDM user scope and Intune licensing", "Dynamic membership rule", "Microsoft Entra registered"],
             "a": 1,
             "why": "Automatic MDM enrollment requires both eligibility/licensing and correct MDM scope."
         }, {
             "q": "A company wants corporate iPhones to enroll automatically during Setup Assistant. What enrollment method should be used?",
-            "choices": ["Win32 detection rule", "Apple Automated Device Enrollment (ADE)", "Advanced Analytics", "Security baseline"],
+            "choices": ["Personally owned work profile", "Apple Automated Device Enrollment (ADE)", "Corporate-owned work profile (COPE)", "Enrollment restrictions"],
             "a": 1,
             "why": "ADE through Apple Business Manager is the corporate zero-touch Apple enrollment method."
         }, {
             "q": "Apple device management suddenly stops after a yearly deadline. What should you suspect?",
-            "choices": ["Dedicated Android enrollment", "Expired APNs certificate", "Feature update policy", "Compliance policy"],
+            "choices": ["Dedicated device", "Expired APNs certificate", "Enrollment restrictions", "Intune MDM user scope"],
             "a": 1,
             "why": "A valid Apple MDM push certificate is required for Intune to manage Apple devices."
         }, {
             "q": "A company wants to prevent personal iPhones from enrolling into Intune. What should be configured?",
-            "choices": ["Microsoft Cloud PKI", "Feature update policy", "Fresh Start", "Enrollment restrictions"],
+            "choices": ["Corporate-owned work profile (COPE)", "Apple Automated Device Enrollment (ADE)", "Dedicated device", "Enrollment restrictions"],
             "a": 3,
             "why": "Platform/ownership enrollment restrictions can block personally owned devices."
         }, {
             "q": "A company owns Android phones but allows personal apps while isolating work data. Which enrollment mode fits?",
-            "choices": ["Corporate-owned work profile (COPE)", "Remote Help", "Settings Catalog", "Cloud Kerberos trust"],
-            "a": 0,
+            "choices": ["Personally owned work profile", "Corporate-owned work profile (COPE)", "Apple Automated Device Enrollment (ADE)", "Enrollment restrictions"],
+            "a": 1,
             "why": "COPE is designed for corporate ownership with allowed personal use and work-profile separation."
         }, {
             "q": "A corporate Android kiosk should run one line-of-business app and have no personal profile. Which enrollment model fits?",
-            "choices": ["Controlled Folder Access", "Windows Autopatch", "Dedicated device", "Conditional Access"],
+            "choices": ["Enrollment restrictions", "Apple Automated Device Enrollment (ADE)", "Dedicated device", "Intune MDM user scope"],
             "a": 2,
             "why": "Dedicated Android Enterprise enrollment is for shared or single-purpose corporate devices."
         }, {
             "q": "A personal Android phone needs company apps separated from personal apps. Which enrollment mode fits?",
-            "choices": ["Security baseline", "Remediations", "Personally owned work profile", "Autopilot user-driven mode"],
+            "choices": ["Enrollment restrictions", "Corporate-owned work profile (COPE)", "Personally owned work profile", "Windows Autopilot"],
             "a": 2,
             "why": "The work profile isolates managed work data on a personal device."
         }, {
             "q": "A help desk admin should manage devices but not security policies. What principle should guide the role assignment?",
-            "choices": ["Least privilege with Intune RBAC", "Microsoft Entra joined", "FileVault", "App Control for Business"],
-            "a": 0,
+            "choices": ["Scope tags", "Assignment filter", "Conditional Access", "Least privilege with Intune RBAC"],
+            "a": 3,
             "why": "Assign the narrowest role that provides only the required management capabilities."
         }, {
             "q": "Regional admins should manage only West Coast users and devices. What should be used with RBAC?",
-            "choices": ["Attack Surface Reduction rules", "Group Policy analytics", "Scope groups and scope tags", "Scope tags"],
-            "a": 2,
+            "choices": ["Scope groups and scope tags", "Conditional Access", "Scope tags", "Multi-admin approval"],
+            "a": 0,
             "why": "Scope groups limit managed objects, while scope tags limit visibility of tagged Intune objects."
         }, {
             "q": "A sensitive Intune configuration change should require approval by another admin. Which feature fits?",
-            "choices": ["Multi-admin approval", "Feature update policy", "Assignment filter", "Microsoft Entra registered"],
-            "a": 0,
+            "choices": ["Intune RBAC", "Conditional Access", "Scope groups", "Multi-admin approval"],
+            "a": 3,
             "why": "Multi-admin approval requires a second authorized administrator before protected changes take effect."
         }, {
             "q": "A device has no assigned compliance policy. The organization wants it treated as noncompliant. Where is that behavior controlled?",
-            "choices": ["Win32 supersedence", "Tenant compliance settings", "Autopilot self-deploying mode", "Cloud Kerberos trust"],
-            "a": 1,
-            "why": "Intune tenant compliance settings control how devices with no policy assigned are evaluated."
+            "choices": ["Compliance policy", "App Protection Policy (MAM)", "Set devices with no compliance policy assigned to Not compliant", "Report-only Conditional Access"],
+            "a": 2,
+            "why": "The tenant compliance setting controls whether unassigned devices are treated as compliant or not compliant."
         }, {
             "q": "A device should have seven days to fix a compliance issue before losing access. What should be configured?",
-            "choices": ["Retire", "Compliance grace period/action timing", "Group Policy analytics", "Win32 requirement rule"],
-            "a": 1,
-            "why": "Actions for noncompliance can be scheduled so enforcement occurs after a defined period."
+            "choices": ["Delay the Mark device noncompliant action for 7 days, then enforce with Conditional Access", "Microsoft Defender for Endpoint integration with Intune", "Conditional Access requiring a compliant device", "Compliance policy"],
+            "a": 0,
+            "why": "Actions for noncompliance can delay the noncompliant state; Conditional Access then blocks access when compliance is required."
         }, {
             "q": "A company wants only phishing-resistant sign-in for admins. Which control area should be used?",
-            "choices": ["Fresh Start", "Conditional Access with authentication strength", "App configuration policy", "Win32 dependency"],
+            "choices": ["Microsoft Defender for Endpoint integration with Intune", "Conditional Access with authentication strength", "Conditional Access requiring a compliant device", "App Protection Policy (MAM)"],
             "a": 1,
             "why": "Conditional Access can require stronger authentication methods for selected users and resources."
         }, {
             "q": "A user needs passwordless Windows sign-in and access to on-prem resources without user certificates. Which WHfB model fits best?",
-            "choices": ["Windows LAPS", "Autopilot user-driven mode", "Win32 requirement rule", "Cloud Kerberos trust"],
+            "choices": ["Settings Catalog", "Microsoft Cloud PKI", "Custom OMA-URI", "Cloud Kerberos trust"],
             "a": 3,
             "why": "Cloud Kerberos trust is a modern hybrid WHfB model that avoids deploying user certificates."
         }, {
             "q": "Local admin passwords are reused across hundreds of Windows devices. What should be deployed?",
-            "choices": ["Assignment filter", "Autopilot pre-provisioning", "Windows LAPS", "Wipe"],
+            "choices": ["FileVault", "Controlled Folder Access", "Windows LAPS", "Rotate the recovery key"],
             "a": 2,
             "why": "LAPS generates unique rotating local administrator passwords and stores them securely."
         }, {
             "q": "A support technician retrieved a LAPS password. What security action can follow?",
-            "choices": ["Service health", "Rotate the LAPS password", "Remote Help", "Update ring"],
+            "choices": ["Controlled Folder Access", "Rotate the LAPS password", "App Control for Business", "Endpoint Privilege Management"],
             "a": 1,
             "why": "Rotation replaces the exposed local administrator password with a new one."
         }, {
             "q": "An Autopilot device has the correct profile but ESP hangs while installing one required application. What should you investigate?",
-            "choices": ["Wipe", "Endpoint Analytics", "Multi-admin approval", "The blocking application's deployment and detection"],
+            "choices": ["Autopilot Reset", "Autopilot pre-provisioning", "Autopilot self-deploying mode", "The blocking application's deployment and detection"],
             "a": 3,
             "why": "A failing required/blocking app can prevent ESP from completing."
         }, {
             "q": "A remote employee should receive a corporate laptop directly from the OEM with minimal IT touch. Which Windows deployment approach fits?",
-            "choices": ["Apple Automated Device Enrollment (ADE)", "Advanced Analytics", "Windows Autopilot", "Win32 supersedence"],
+            "choices": ["Enrollment Status Page", "Autopilot pre-provisioning", "Windows Autopilot", "Autopilot Reset"],
             "a": 2,
             "why": "Autopilot supports modern OEM-to-user provisioning without maintaining a custom image."
         }, {
             "q": "A shared meeting-room PC should redeploy without an assigned user. Which Autopilot mode fits?",
-            "choices": ["Windows LAPS", "Multi-admin approval", "Cloud Kerberos trust", "Self-deploying mode"],
+            "choices": ["Windows Autopilot", "Autopilot self-deploying mode", "Autopilot pre-provisioning", "Self-deploying mode"],
             "a": 3,
             "why": "Self-deploying mode is intended for zero-user shared/kiosk scenarios."
         }, {
             "q": "Technicians want to reduce first-login wait time by staging apps before shipment. Which Autopilot mode should they use?",
-            "choices": ["Win32 dependency", "Pre-provisioned deployment", "Remote Help", "Win32 supersedence"],
+            "choices": ["Autopilot user-driven mode", "Pre-provisioned deployment", "Autopilot self-deploying mode", "Autopilot Reset"],
             "a": 1,
             "why": "Pre-provisioning splits deployment into technician and user phases."
         }, {
             "q": "A new Autopilot device never receives a deployment profile. What should you check?",
-            "choices": ["Device registration and group/profile assignment", "Autopilot Reset", "Autopilot user-driven mode", "Device query"],
+            "choices": ["Device registration and group/profile assignment", "Autopilot Reset", "Enrollment Status Page", "Autopilot pre-provisioning"],
             "a": 0,
             "why": "The device must be recognized and targeted before the correct profile can apply."
         }, {
             "q": "A Cloud PC user needs a completely rebuilt Windows 365 environment. Which action is appropriate?",
-            "choices": ["Reprovision the Cloud PC", "Settings Catalog", "App Protection Policy (MAM)", "Enterprise App Catalog"],
+            "choices": ["Reprovision the Cloud PC", "Settings Catalog", "Custom OMA-URI", "Group Policy analytics"],
             "a": 0,
             "why": "Reprovisioning rebuilds the Cloud PC and is intentionally disruptive."
         }, {
             "q": "A Windows 365 provisioning failure affects users connected through a customer-managed network. What dependency should be checked?",
-            "choices": ["Network connectivity and DNS", "Microsoft Entra hybrid joined", "Wipe", "BitLocker recovery key rotation"],
+            "choices": ["Validate the Azure network connection, DNS, routing, and required endpoints", "Trusted CA and identity certificate profiles", "Assignment filter", "Microsoft Cloud PKI"],
             "a": 0,
-            "why": "Customer-managed networking depends on reachable network services and correct DNS/connectivity."
+            "why": "Customer-managed Windows 365 networking depends on a healthy Azure network connection plus working DNS, routing, and access to required Microsoft endpoints."
         }, {
             "q": "You need one granular Windows policy setting and want the modern Microsoft-recommended policy surface. What should you use?",
-            "choices": ["App configuration policy", "Fresh Start", "Settings Catalog", "Corporate-owned work profile (COPE)"],
+            "choices": ["Group Policy analytics", "Microsoft Cloud PKI", "Settings Catalog", "Trusted CA and identity certificate profiles"],
             "a": 2,
             "why": "Settings Catalog is the primary modern granular configuration surface in Intune."
         }, {
             "q": "A supported CSP setting is not exposed in Settings Catalog or templates. What policy type may be required?",
-            "choices": ["Feature update policy", "Compliance policy", "Custom OMA-URI", "BitLocker recovery key rotation"],
+            "choices": ["App configuration policy targeting/channel", "Settings Catalog", "Custom OMA-URI", "Group Policy analytics"],
             "a": 2,
             "why": "Custom OMA-URI allows direct configuration of supported CSP settings when they are not surfaced normally."
         }, {
             "q": "An imported ADMX exposes a custom application setting in Intune. What capability is being used?",
-            "choices": ["Autopilot pre-provisioning", "Microsoft Entra registered", "Assignment filter", "Imported administrative templates"],
+            "choices": ["Assignment filter", "Microsoft Cloud PKI", "Trusted CA and identity certificate profiles", "Imported administrative templates"],
             "a": 3,
             "why": "Imported ADMX/ADML can expose supported policy-backed settings for cloud management."
         }, {
             "q": "You need a Wi-Fi profile that uses client certificates. What should usually be deployed first?",
-            "choices": ["Delivery Optimization", "Trusted CA and identity certificate profiles", "Collect diagnostics", "Endpoint Analytics"],
+            "choices": ["Custom OMA-URI", "Trusted CA and identity certificate profiles", "Assignment filter", "Group Policy analytics"],
             "a": 1,
             "why": "The device must trust the CA and possess the identity certificate before certificate-based Wi-Fi can succeed."
         }, {
             "q": "A certificate-authenticated VPN fails on every new device, but the VPN profile exists. What should you inspect first?",
-            "choices": ["Certificate delivery and trust chain", "Endpoint Privilege Management", "Apple Automated Device Enrollment (ADE)", "Autopilot Reset"],
+            "choices": ["Certificate delivery and trust chain", "Settings Catalog", "Microsoft Cloud PKI", "Assignment filter"],
             "a": 0,
             "why": "The VPN profile can be correct while required certificates are missing or invalid."
         }, {
             "q": "A standard user needs approved elevation for PowerShell during a maintenance task. Which Intune Suite feature fits?",
-            "choices": ["Win32 dependency", "Endpoint Privilege Management", "Wipe", "Scope tags"],
+            "choices": ["Endpoint detection and response (EDR) policy", "Endpoint Privilege Management", "Rotate the recovery key", "FileVault"],
             "a": 1,
             "why": "EPM grants controlled elevation without adding the user to local Administrators."
         }, {
             "q": "A help desk technician needs an audited remote support session using organizational identities. What should be used?",
-            "choices": ["Remote Help", "Custom compliance", "Win32 requirement rule", "App Control for Business"],
+            "choices": ["Remote Help", "Autopilot Reset", "Retire", "Collect diagnostics"],
             "a": 0,
             "why": "Remote Help provides Intune-integrated, role-aware remote assistance with auditing."
         }, {
             "q": "A company wants simplified deployment of supported third-party Win32 applications. What can reduce packaging work?",
-            "choices": ["Microsoft Defender for Endpoint integration", "Group Policy analytics", "Enterprise App Catalog", "Dedicated Android enrollment"],
-            "a": 2,
+            "choices": ["Expedited quality update", "Enterprise App Catalog", "Delivery Optimization", "Hotpatch"],
+            "a": 1,
             "why": "The catalog provides managed application packages for supported third-party software."
         }, {
             "q": "A BYOD user needs per-app access to an internal web service without full MDM enrollment. What fits?",
-            "choices": ["Microsoft Tunnel for MAM", "Collect diagnostics", "Autopilot user-driven mode", "Windows Autopatch"],
+            "choices": ["Microsoft Tunnel for MAM", "Corporate-owned work profile (COPE)", "Dedicated device", "Apple Automated Device Enrollment (ADE)"],
             "a": 0,
             "why": "Tunnel for MAM provides secure per-app connectivity for supported MAM scenarios."
         }, {
             "q": "A device record is stale and should be removed from Intune, but no factory reset is required. Which action fits?",
-            "choices": ["Scope tags", "Delete", "Corporate-owned work profile (COPE)", "App Protection Policy (MAM)"],
+            "choices": ["Wipe", "Delete", "Collect diagnostics", "Autopilot Reset"],
             "a": 1,
             "why": "Delete removes the management record and does not equal a device wipe."
         }, {
             "q": "A BYOD device should leave management while preserving personal content. Which action fits?",
-            "choices": ["Cloud Kerberos trust", "Collect diagnostics", "Security baseline", "Retire"],
+            "choices": ["Remote Help", "Device query", "Sync", "Retire"],
             "a": 3,
             "why": "Retire removes organizational management/data while preserving personal content where supported."
         }, {
             "q": "A company-owned device must be erased before reassignment. Which action is appropriate?",
-            "choices": ["Microsoft Entra hybrid joined", "Windows LAPS", "Wipe", "FileVault"],
+            "choices": ["Sync", "Device query", "Wipe", "Collect diagnostics"],
             "a": 2,
             "why": "Wipe is the destructive reset action for clearing the device."
         }, {
             "q": "A shared corporate Windows device should be returned to a business-ready managed state. Which reset is designed for this?",
-            "choices": ["Autopilot self-deploying mode", "Autopilot Reset", "Win32 requirement rule", "Microsoft Defender for Endpoint integration"],
-            "a": 1,
+            "choices": ["Windows Autopilot", "Autopilot user-driven mode", "Autopilot Reset", "Autopilot pre-provisioning"],
+            "a": 2,
             "why": "Autopilot Reset prepares a managed Windows device for reuse while retaining organizational provisioning state."
         }, {
             "q": "A support team wants logs from a Windows device without asking the user to email screenshots. What should they use?",
-            "choices": ["Device query", "Collect diagnostics", "Enterprise App Catalog", "Remediations"],
+            "choices": ["Delete", "Collect diagnostics", "Wipe", "Autopilot Reset"],
             "a": 1,
             "why": "Intune can remotely gather supported diagnostic data for troubleshooting."
         }, {
             "q": "A support engineer needs near-real-time information about a managed Windows device's running services. What should be used?",
-            "choices": ["Windows LAPS", "Device query", "Scope groups", "App Protection Policy (MAM)"],
+            "choices": ["Fresh Start", "Device query", "Wipe", "Sync"],
             "a": 1,
             "why": "Device query supports KQL-style near-real-time endpoint investigation on supported devices."
         }, {
             "q": "A security baseline and Settings Catalog profile configure the same setting differently. What is the likely result?",
-            "choices": ["Compliance policy", "Remote Help", "Policy conflict", "Controlled Folder Access"],
+            "choices": ["Settings Catalog", "Microsoft Cloud PKI", "Policy conflict", "Group Policy analytics"],
             "a": 2,
             "why": "Multiple Intune policy surfaces can conflict when they configure the same underlying setting differently."
         }, {
             "q": "A company wants to onboard Windows endpoints to Microsoft Defender for Endpoint. Which Intune policy family is most direct?",
-            "choices": ["Autopilot user-driven mode", "FileVault", "Endpoint detection and response (EDR) policy", "Custom compliance"],
-            "a": 2,
+            "choices": ["Endpoint detection and response (EDR) policy", "Enrollment Status Page", "Autopilot pre-provisioning", "Autopilot user-driven mode"],
+            "a": 0,
             "why": "EDR policy is used to configure/onboard supported devices for Defender for Endpoint."
         }, {
             "q": "Security wants device threat risk to influence whether a device is compliant. Which integration is required?",
-            "choices": ["Update ring", "Microsoft Defender for Endpoint integration with Intune", "Device query", "Microsoft Cloud PKI"],
+            "choices": ["Compliance policy", "Microsoft Defender for Endpoint integration with Intune", "App Protection Policy (MAM)", "Conditional Access requiring a compliant device"],
             "a": 1,
             "why": "MDE supplies machine risk signals that Intune compliance can evaluate."
         }, {
             "q": "A policy should block Office apps from launching risky child processes. Which security feature fits?",
-            "choices": ["Attack Surface Reduction rule", "Remote Help", "Endpoint Analytics", "Device query"],
+            "choices": ["Attack Surface Reduction rule", "App configuration policy targeting/channel", "Group Policy analytics", "Assignment filter"],
             "a": 0,
             "why": "ASR rules target specific risky behaviors commonly abused by attackers."
         }, {
             "q": "An organization wants to control which code is allowed to execute on Windows. Which feature fits best?",
-            "choices": ["Microsoft Entra hybrid joined", "Delivery Optimization", "Device query", "App Control for Business"],
+            "choices": ["FileVault", "Endpoint detection and response (EDR) policy", "Attack Surface Reduction rule", "App Control for Business"],
             "a": 3,
             "why": "App Control for Business is designed to control trusted and permitted application/code execution."
         }, {
             "q": "A company needs to protect user document folders from unauthorized encryption by malware. Which control is relevant?",
-            "choices": ["Attack Surface Reduction rules", "Assignment filter", "Personally owned work profile", "Controlled Folder Access"],
-            "a": 3,
+            "choices": ["Rotate the recovery key", "Controlled Folder Access", "Security baseline", "Endpoint detection and response (EDR) policy"],
+            "a": 1,
             "why": "Controlled Folder Access protects designated folders from unauthorized app modifications."
         }, {
             "q": "A BitLocker policy is assigned but silent encryption never starts. What should you check?",
-            "choices": ["App Protection Policy (MAM)", "Device query", "Autopilot pre-provisioning", "Prerequisites and conflicting settings"],
+            "choices": ["Endpoint detection and response (EDR) policy", "FileVault", "App Control for Business", "Prerequisites and conflicting settings"],
             "a": 3,
             "why": "TPM readiness, supported edition/state, enrollment, and conflicting policy can prevent silent enablement."
         }, {
             "q": "A Mac must have full-disk encryption with recovery key escrow. What technology should be configured?",
-            "choices": ["Controlled Folder Access", "Retire", "Win32 requirement rule", "FileVault"],
+            "choices": ["Rotate the recovery key", "Security baseline", "Attack Surface Reduction rule", "FileVault"],
             "a": 3,
             "why": "FileVault is the macOS full-disk encryption technology managed through Intune."
         }, {
             "q": "A Windows update policy should only change restart behavior, not target a new Windows version. Which policy is correct?",
-            "choices": ["Enterprise App Catalog", "FileVault", "Update ring", "Custom compliance"],
+            "choices": ["Expedited quality update", "Delivery Optimization", "Update ring", "Windows Autopatch"],
             "a": 2,
             "why": "Update rings control deployment timing, deadlines, restart experience, and related behavior."
         }, {
             "q": "A fleet must stay on Windows 11 24H2. Which policy should control that requirement?",
-            "choices": ["App Control for Business", "Windows LAPS", "Feature update policy", "Scope tags"],
+            "choices": ["Hotpatch", "Update ring", "Feature update policy", "Delivery Optimization"],
             "a": 2,
             "why": "Feature update policies target a specific Windows feature release."
         }, {
             "q": "A critical quality update must bypass normal deferral settings. Which capability should be used?",
-            "choices": ["Expedited quality update", "Cloud Kerberos trust", "Remote Help", "Security baseline"],
-            "a": 0,
+            "choices": ["Windows Autopatch", "Expedited quality update", "Delivery Optimization", "Update ring"],
+            "a": 1,
             "why": "Expedite policies are designed for urgent security/quality fixes."
         }, {
             "q": "A company wants Microsoft to orchestrate Windows update deployment for eligible devices. Which service fits?",
-            "choices": ["Personally owned work profile", "Windows Autopatch", "BitLocker recovery key rotation", "Compliance policy"],
+            "choices": ["Delivery Optimization", "Windows Autopatch", "Expedited quality update", "Update ring"],
             "a": 1,
             "why": "Windows Autopatch provides Microsoft-managed update orchestration."
         }, {
             "q": "A supported device should receive eligible security fixes with fewer restarts. Which feature is relevant?",
-            "choices": ["Hotpatch", "Fresh Start", "Assignment filter", "Microsoft Cloud PKI"],
+            "choices": ["Hotpatch", "Windows Autopatch", "Delivery Optimization", "Expedited quality update"],
             "a": 0,
             "why": "Hotpatch reduces required reboots for supported update scenarios."
         }, {
             "q": "A Win32 installer runs interactively and pauses waiting for user input. What must be fixed for Intune deployment?",
-            "choices": ["Multi-admin approval", "Use a silent install command", "Microsoft Entra registered", "Conditional Access"],
-            "a": 1,
+            "choices": ["Use a silent install command", "Available", "Detection rule", "Requirement rule"],
+            "a": 0,
             "why": "Enterprise deployment requires unattended installation behavior with predictable exit codes."
         }, {
             "q": "A Win32 app is not offered because the device doesn't meet a custom prerequisite. Which rule likely blocked it?",
-            "choices": ["Advanced Analytics", "Delivery Optimization", "Microsoft Defender for Endpoint integration", "Requirement rule"],
+            "choices": ["Supersedence", "Win32 dependency", "Line-of-business app", "Requirement rule"],
             "a": 3,
             "why": "Requirement rules determine whether the device is eligible for installation."
         }, {
             "q": "A Win32 app is already installed, but Intune says Not installed. What should you inspect?",
-            "choices": ["Collect diagnostics", "Win32 detection rule", "Scope groups", "Detection rule"],
-            "a": 3,
+            "choices": ["Required", "Win32 dependency", "Detection rule", "Enterprise App Catalog"],
+            "a": 2,
             "why": "Detection logic tells Intune whether the app is present."
         }, {
             "q": "A user should choose whether to install an app from Company Portal. Which assignment intent fits?",
-            "choices": ["Microsoft Entra joined", "Autopilot Reset", "Microsoft Graph application permissions", "Available"],
-            "a": 3,
+            "choices": ["Available", "Required", "Enterprise App Catalog", "Supersedence"],
+            "a": 0,
             "why": "Available assignments let users install apps on demand through Company Portal."
         }, {
             "q": "An app must be installed automatically on every targeted device. Which assignment intent fits?",
-            "choices": ["Required", "Feature update policy", "Windows Autopatch", "Security baseline"],
+            "choices": ["Required", "App configuration policy targeting/channel", "Custom OMA-URI", "Settings Catalog"],
             "a": 0,
             "why": "Required assignments trigger automatic installation."
         }, {
             "q": "A custom in-house MSI needs simple direct deployment without complex Win32 logic. Which app type may fit?",
-            "choices": ["Line-of-business app", "Autopilot user-driven mode", "Win32 dependency", "Compliance policy"],
+            "choices": ["Line-of-business app", "Required", "Detection rule", "Requirement rule"],
             "a": 0,
-            "why": "LOB deployment can be appropriate for supported organization-provided packages."
+            "why": "A supported LOB MSI can be uploaded directly, although enterprise teams often choose Win32 when they need richer detection, dependencies, supersedence, or scripting."
         }, {
             "q": "An Outlook mobile policy should block Save As to personal storage. Which feature controls this?",
-            "choices": ["Retire", "Apple Automated Device Enrollment (ADE)", "App Protection Policy", "Fresh Start"],
+            "choices": ["Managed apps app configuration", "Conditional Access", "App Protection Policy", "Microsoft Tunnel for MAM"],
             "a": 2,
             "why": "APP/MAM controls organizational data movement inside supported apps."
         }, {
             "q": "A company wants to remove only work data from Outlook on a personal phone. Which action is relevant?",
-            "choices": ["Microsoft Graph application permissions", "Delete", "Multi-admin approval", "Selective wipe"],
-            "a": 3,
+            "choices": ["Device query", "Selective wipe", "Wipe", "Collect diagnostics"],
+            "a": 1,
             "why": "Selective wipe removes organizational app data while preserving personal data."
         }, {
             "q": "An app installs successfully but never receives its configured server URL. What should you troubleshoot?",
-            "choices": ["Conditional Access", "Multi-admin approval", "Endpoint Privilege Management", "App configuration policy targeting/channel"],
+            "choices": ["Microsoft Cloud PKI", "Trusted CA and identity certificate profiles", "Settings Catalog", "App configuration policy targeting/channel"],
             "a": 3,
             "why": "App deployment and app configuration are separate; the app can install while configuration targeting fails."
         }, {
             "q": "A mobile app should receive configuration without the device being fully enrolled. Which app configuration channel is relevant?",
-            "choices": ["Managed apps app configuration", "Remediations", "Retire", "Microsoft Entra joined"],
+            "choices": ["Managed apps app configuration", "Personally owned work profile", "Corporate-owned work profile (COPE)", "Dedicated device"],
             "a": 0,
             "why": "Managed-app configuration can work with supported app-management/MAM scenarios."
         }, {
             "q": "A Graph script runs as a service with no signed-in administrator. Which permission model applies?",
-            "choices": ["Application permissions", "Attack Surface Reduction rules", "Microsoft Graph delegated permissions", "Dedicated Android enrollment"],
-            "a": 0,
+            "choices": ["Custom compliance", "Endpoint Analytics", "Application permissions", "Advanced Analytics"],
+            "a": 2,
             "why": "Application permissions support app/service identities without an interactive user."
         }, {
             "q": "A Graph PowerShell script runs under a signed-in admin's authority. Which permission model applies?",
-            "choices": ["Endpoint Privilege Management", "Delegated permissions", "Personally owned work profile", "App configuration policy"],
-            "a": 1,
+            "choices": ["Advanced Analytics", "Application permissions", "Delegated permissions", "Remediations"],
+            "a": 2,
             "why": "Delegated permissions operate within the signed-in user's authority."
         }, {
             "q": "A Graph script authenticates successfully but returns authorization errors. What else must be checked?",
-            "choices": ["Graph scopes, consent, and Intune RBAC", "Service health", "App Protection Policy (MAM)", "Autopilot user-driven mode"],
-            "a": 0,
+            "choices": ["Assignment filter", "Intune RBAC", "Scope tags", "Graph scopes, consent, and Intune RBAC"],
+            "a": 3,
             "why": "Successful authentication does not imply sufficient permissions for the requested operation."
         }, {
             "q": "A detection script should trigger remediation when a problem exists. Which exit code pattern is commonly used?",
-            "choices": ["Exit 1 for issue detected", "Delete", "Microsoft Defender for Endpoint integration", "Attack Surface Reduction rules"],
-            "a": 0,
+            "choices": ["Requirement rule", "Exit 1 for issue detected", "Enterprise App Catalog", "Win32 dependency"],
+            "a": 1,
             "why": "Intune Remediations commonly use exit 1 from detection to indicate remediation is needed."
         }, {
-            "q": "A Windows device is corporate-owned, cloud-first, and users should sign in with their company account. Which identity state is most appropriate?",
-            "choices": ["Microsoft Entra registered", "Microsoft Entra joined", "Microsoft Entra hybrid joined", "Local workgroup only"],
-            "a": 1,
-            "why": "Entra joined is the cloud-first corporate identity model. Registered is usually BYOD; hybrid retains on-prem AD membership."
-        }, {
-            "q": "A BYOD Windows device should access company resources but remain primarily under the user's personal identity. Which state best fits?",
-            "choices": ["Microsoft Entra registered", "Microsoft Entra joined", "Microsoft Entra hybrid joined", "Windows 365 provisioned"],
+            "q": "A global company is moving 8,000 Windows devices from legacy GPO management to Intune. The endpoint team wants to identify which existing GPO settings have native MDM equivalents before migration. What should they use?",
+            "choices": ["Group Policy analytics", "Endpoint Analytics", "Security baselines", "Device query"],
             "a": 0,
-            "why": "Entra registered is commonly used for personal devices that add a work identity for organizational access."
+            "why": "Group Policy analytics is built for assessing imported GPOs and identifying modern management support before a phased migration."
         }, {
-            "q": "A corporate Windows device must still receive traditional Group Policy from on-prem AD while also being visible in Entra ID. Which join state fits?",
-            "choices": ["Entra registered", "Entra joined", "Entra hybrid joined", "Workgroup joined"],
-            "a": 2,
-            "why": "Hybrid join keeps the device joined to on-prem AD while also representing it in Entra ID."
-        }, {
-            "q": "An Intune admin wants policy targeting to update automatically as device attributes change. Which group type should be used?",
-            "choices": ["Static security group", "Dynamic device group", "Microsoft 365 distribution list", "Administrative unit only"],
-            "a": 1,
-            "why": "Dynamic device groups automatically recalculate membership based on supported device attributes."
-        }, {
-            "q": "A company wants to stop personally owned Android devices from enrolling while still allowing corporate Android enrollment. What should be configured?",
-            "choices": ["Conditional Access", "Enrollment restrictions", "App Protection Policy", "Update ring"],
-            "a": 1,
-            "why": "Enrollment restrictions can block personally owned devices while allowing corporate-owned enrollment."
-        }, {
-            "q": "A managed iPad no longer checks in after an annual certificate expiration. Which dependency is most likely?",
-            "choices": ["APNs certificate", "BitLocker key", "Windows LAPS password", "Cloud Kerberos trust"],
+            "q": "A pilot group of 100 laptops should receive a new security policy before the policy is expanded to the entire company. What is the best enterprise deployment approach?",
+            "choices": ["Assign to a pilot group first, validate results, then expand", "Assign to All devices immediately", "Use Wipe to force policy refresh", "Create a second tenant"],
             "a": 0,
-            "why": "Apple MDM communication depends on a valid APNs certificate."
+            "why": "Phased deployment through pilot rings reduces blast radius and is standard enterprise change-management practice."
         }, {
-            "q": "A company-owned Android device will be used only as a barcode scanner in a warehouse. Which enrollment mode is most appropriate?",
-            "choices": ["Personally owned work profile", "COPE", "Dedicated", "Entra registered"],
-            "a": 2,
-            "why": "Dedicated Android enrollment is intended for shared or single-purpose corporate devices."
-        }, {
-            "q": "A corporate-owned Android phone allows personal apps while separating company data. Which enrollment model should be chosen?",
-            "choices": ["Fully managed", "COPE", "Dedicated", "Personally owned work profile"],
-            "a": 1,
-            "why": "COPE is designed for corporate-owned devices that permit personal use while separating work data."
-        }, {
-            "q": "An Intune administrator should only see devices tagged for the Finance department. Which RBAC feature is designed for this?",
-            "choices": ["Scope tags", "Compliance policy", "Conditional Access", "Assignment filter"],
+            "q": "A production configuration profile is causing errors on only one hardware model. The policy must stay assigned broadly, but that model should be excluded temporarily. What should be used?",
+            "choices": ["Assignment filter", "Scope tag", "Dynamic user group only", "Conditional Access"],
             "a": 0,
-            "why": "Scope tags control which tagged Intune objects delegated admins can see and manage."
+            "why": "Assignment filters can exclude devices matching supported properties without redesigning the entire group structure."
         }, {
-            "q": "An administrator should be able to manage only devices in a specific business unit. Which RBAC concept controls the manageable population?",
-            "choices": ["Scope groups", "Scope tags", "App categories", "Device categories only"],
+            "q": "A security team wants to require BitLocker on corporate Windows laptops and block Microsoft 365 access when encryption is missing. Which design is correct?",
+            "choices": ["BitLocker policy + compliance policy + Conditional Access", "BitLocker policy only", "Conditional Access only", "Security baseline only"],
             "a": 0,
-            "why": "Scope groups define the users/devices an RBAC assignment can manage."
+            "why": "The security policy configures encryption, compliance evaluates the state, and Conditional Access enforces resource access."
         }, {
-            "q": "A high-impact configuration change must require approval from a second administrator. Which Intune capability fits?",
-            "choices": ["Multi-admin approval", "Scope tag", "Conditional Access", "Remote Help"],
+            "q": "A company is about to enforce a new Conditional Access policy for 12,000 employees. What should administrators do before turning it on?",
+            "choices": ["Run it in Report-only and exclude emergency access accounts", "Enable it for everyone immediately", "Disable MFA first", "Delete old device records"],
             "a": 0,
-            "why": "Multi-admin approval requires a second authorized administrator before protected changes take effect."
+            "why": "Report-only testing and protected emergency access accounts reduce the risk of an organization-wide lockout."
         }, {
-            "q": "A compliance policy marks a device unhealthy, but the device can still sign in to Microsoft 365. What is missing?",
-            "choices": ["Conditional Access", "Windows LAPS", "Device query", "App configuration"],
+            "q": "A Windows update rollout must begin with IT, then Finance, then the rest of the company. What is the best design?",
+            "choices": ["Use staged deployment rings/groups", "Use one All devices assignment", "Use only a feature update policy", "Use Remote Help"],
             "a": 0,
-            "why": "Compliance evaluates device state; Conditional Access enforces the access decision."
+            "why": "Enterprise update management commonly uses phased rings to detect issues before broad deployment."
         }, {
-            "q": "A company wants a passwordless Windows sign-in method that still supports on-prem resource access without user certificate deployment. Which model is best?",
-            "choices": ["Cloud Kerberos trust", "Certificate trust", "MAK activation", "App protection policy"],
-            "a": 0,
-            "why": "Cloud Kerberos trust is designed to simplify WHfB hybrid access without requiring user certificate deployment."
-        }, {
-            "q": "Hundreds of laptops share the same local administrator password. What should be deployed?",
-            "choices": ["Windows LAPS", "EPM", "Remote Help", "Conditional Access"],
-            "a": 0,
-            "why": "Windows LAPS generates and rotates unique local administrator passwords per device."
-        }, {
-            "q": "A user should remain a standard user but needs temporary elevation for an approved installer. Which feature is the best fit?",
-            "choices": ["Windows LAPS", "Endpoint Privilege Management", "Autopilot Reset", "Security baseline"],
-            "a": 1,
-            "why": "EPM provides controlled elevation without permanently adding the user to local Administrators."
-        }, {
-            "q": "A new Windows device should provision with no user interaction because it will be used as a kiosk. Which Autopilot mode should be used?",
-            "choices": ["User-driven", "Self-deploying", "Pre-provisioned", "Hybrid registered"],
-            "a": 1,
-            "why": "Self-deploying mode is designed for zero-user shared/kiosk scenarios."
-        }, {
-            "q": "A technician wants to stage large applications before a remote worker receives their Autopilot laptop. Which mode is appropriate?",
-            "choices": ["Self-deploying", "Pre-provisioned", "User-driven only", "Retire"],
-            "a": 1,
-            "why": "Pre-provisioning lets a technician stage apps and policies before the user completes setup."
-        }, {
-            "q": "A user cannot reach the desktop during Autopilot because a required app keeps failing. Which component is blocking progress?",
-            "choices": ["Enrollment Status Page", "Scope tag", "Update ring", "LAPS"],
-            "a": 0,
-            "why": "ESP can block device use until required apps and policies complete."
-        }, {
-            "q": "A Windows 365 Cloud PC must be completely rebuilt. Which action is most appropriate?",
-            "choices": ["Reprovision", "Retire", "Fresh Start local PC", "Rotate BitLocker key"],
-            "a": 0,
-            "why": "Reprovisioning rebuilds a Cloud PC and is intentionally disruptive."
-        }, {
-            "q": "You need one granular Windows setting that exists in Intune's modern policy catalog. Where should you start?",
-            "choices": ["Settings Catalog", "Custom OMA-URI", "Security baseline", "Remote Help"],
-            "a": 0,
-            "why": "Settings Catalog is the primary modern granular configuration surface."
-        }, {
-            "q": "A supported CSP setting is not exposed anywhere else in Intune. Which configuration method may be required?",
-            "choices": ["Custom OMA-URI", "Update ring", "Scope group", "App Protection Policy"],
-            "a": 0,
-            "why": "Custom OMA-URI allows direct configuration of supported CSP settings not surfaced elsewhere."
-        }, {
-            "q": "An organization wants to evaluate which existing GPO settings can move to Intune. Which tool should be used?",
-            "choices": ["Group Policy analytics", "Endpoint Analytics", "Advanced Analytics", "Device query"],
-            "a": 0,
-            "why": "Group Policy analytics evaluates imported GPOs and maps settings to modern management support."
-        }, {
-            "q": "A certificate-based Wi-Fi profile fails because the device does not trust the issuing CA. What should be deployed first?",
-            "choices": ["Trusted root certificate profile", "Update ring", "Conditional Access", "Remote Help"],
-            "a": 0,
-            "why": "Certificate authentication requires the client to trust the issuing CA chain."
-        }, {
-            "q": "A company wants cloud-hosted certificate authority functionality for Intune-managed devices. Which feature is designed for this?",
-            "choices": ["Microsoft Cloud PKI", "Windows LAPS", "App Control for Business", "Autopatch"],
-            "a": 0,
-            "why": "Microsoft Cloud PKI provides cloud-managed CA capabilities for supported Intune certificate scenarios."
-        }, {
-            "q": "A support engineer needs an audited remote-assistance session tied to organizational identity and Intune RBAC. Which feature fits?",
-            "choices": ["Remote Help", "RDP port forwarding", "Windows LAPS", "Device query"],
-            "a": 0,
-            "why": "Remote Help is Intune-integrated, identity-aware, RBAC-controlled remote assistance."
-        }, {
-            "q": "A company wants easier deployment and maintenance for supported third-party Win32 apps. Which feature helps most?",
-            "choices": ["Enterprise App Catalog", "Settings Catalog", "Cloud PKI", "Windows Autopilot"],
-            "a": 0,
-            "why": "Enterprise App Catalog provides managed catalog applications for supported third-party software."
-        }, {
-            "q": "An unenrolled mobile device protected by MAM needs per-app access to internal resources. Which capability fits?",
-            "choices": ["Microsoft Tunnel for MAM", "Remote Help", "Autopatch", "Fresh Start"],
-            "a": 0,
-            "why": "Tunnel for MAM provides secure per-app access for supported MAM-protected devices without full enrollment."
-        }, {
-            "q": "An Intune admin wants to remotely request new policy evaluation on a managed device. Which action should be used?",
-            "choices": ["Sync", "Retire", "Delete", "Wipe"],
-            "a": 0,
-            "why": "Sync requests the device to check in for pending policies and applications."
-        }, {
-            "q": "A departing employee keeps their personal phone, but company management and corporate data should be removed. Which action is best?",
-            "choices": ["Retire", "Wipe", "Delete only", "Autopilot Reset"],
-            "a": 0,
-            "why": "Retire removes organizational management/data while preserving personal content where supported."
-        }, {
-            "q": "A lost corporate device must be erased completely. Which action is appropriate?",
-            "choices": ["Wipe", "Retire", "Delete", "Sync"],
-            "a": 0,
-            "why": "Wipe is the destructive reset/factory-reset action."
-        }, {
-            "q": "A stale Intune object should be removed, but the physical device does not need to be reset. Which action fits?",
-            "choices": ["Delete", "Wipe", "Retire", "Fresh Start"],
-            "a": 0,
-            "why": "Delete removes the Intune record and is not equivalent to resetting the endpoint."
-        }, {
-            "q": "A support engineer wants near-real-time endpoint information without starting a remote session. Which feature is most appropriate?",
-            "choices": ["Device query", "Remote Help", "Endpoint Analytics only", "Update ring"],
-            "a": 0,
-            "why": "Device query uses KQL-style queries for supported near-real-time endpoint investigation."
-        }, {
-            "q": "A company wants to onboard managed Windows devices into Defender for Endpoint using Intune. Which policy family is most direct?",
-            "choices": ["Endpoint detection and response policy", "App protection policy", "Update ring", "Scope tag"],
-            "a": 0,
-            "why": "EDR policy is the direct Intune policy family for Defender for Endpoint onboarding/configuration."
-        }, {
-            "q": "Security wants to block Office processes from performing a known risky behavior. Which feature is most appropriate?",
-            "choices": ["ASR rules", "App configuration", "Remote Help", "Windows LAPS"],
-            "a": 0,
-            "why": "ASR rules are designed to block specific risky behaviors commonly abused by attackers."
-        }, {
-            "q": "A company wants to define which applications and code are trusted to run. Which capability should be used?",
-            "choices": ["App Control for Business", "Controlled Folder Access", "BitLocker", "Conditional Access"],
-            "a": 0,
-            "why": "App Control for Business controls which applications/code are trusted to execute."
-        }, {
-            "q": "A user retrieved a BitLocker recovery key during support. What should an admin do afterward for better security?",
-            "choices": ["Rotate the recovery key", "Delete the device", "Disable BitLocker", "Retire the device"],
-            "a": 0,
-            "why": "Rotating the recovery key invalidates the previously exposed recovery material."
-        }, {
-            "q": "You need to control restart deadlines and update user experience without pinning a Windows feature version. Which policy should be used?",
-            "choices": ["Update ring", "Feature update policy", "Quality expedite policy", "Security baseline"],
-            "a": 0,
-            "why": "Update rings control deferrals, deadlines, restart behavior, and update UX."
-        }, {
-            "q": "Devices must remain on a specific Windows release while continuing to receive monthly security updates. Which policy is key?",
-            "choices": ["Feature update policy", "Update ring only", "Retire", "App configuration"],
-            "a": 0,
-            "why": "Feature update policies target a specific Windows release while quality updates continue."
-        }, {
-            "q": "A critical monthly security fix should deploy immediately, bypassing normal deferrals. Which feature should be used?",
+            "q": "An urgent zero-day fix is released, but the normal update ring defers quality updates for seven days. What should the endpoint team use?",
             "choices": ["Expedited quality update", "Feature update policy", "Delivery Optimization", "Autopilot Reset"],
             "a": 0,
-            "why": "Expedite policies are designed for urgent quality/security update deployment."
+            "why": "Expedited quality updates are intended to accelerate urgent security/quality fixes beyond normal deferral timing."
         }, {
-            "q": "A branch office needs to reduce bandwidth consumed by Windows update downloads. Which technology should be configured?",
-            "choices": ["Delivery Optimization", "Cloud Kerberos trust", "LAPS", "Remote Help"],
+            "q": "A branch office with a constrained WAN link is downloading the same Microsoft update hundreds of times. What should be optimized?",
+            "choices": ["Delivery Optimization", "Scope tags", "Windows LAPS", "Conditional Access"],
             "a": 0,
-            "why": "Delivery Optimization uses supported peer/cache delivery methods to reduce repeated WAN downloads."
+            "why": "Delivery Optimization reduces repeated WAN downloads by using supported peer/cache delivery methods."
         }, {
-            "q": "A Win32 app should install only on devices that meet a specific OS version. Which rule controls eligibility?",
-            "choices": ["Requirement rule", "Detection rule", "Dependency", "Supersedence"],
+            "q": "A security baseline is already configuring Microsoft Defender Firewall. A new Settings Catalog profile attempts to configure the same firewall setting differently. What should the administrator expect?",
+            "choices": ["A policy conflict that must be reconciled", "The newest profile always wins", "The baseline is automatically deleted", "Conditional Access resolves it"],
             "a": 0,
-            "why": "Requirement rules determine whether the device is eligible to install the app."
+            "why": "Overlapping policy sources can conflict; enterprise policy design should minimize duplicate ownership of the same setting."
         }, {
-            "q": "Intune should determine whether a Win32 app is already installed before attempting installation. Which rule is used?",
-            "choices": ["Detection rule", "Requirement rule", "Dependency", "Assignment filter"],
+            "q": "A company wants help desk staff to remotely view user screens but not take control or elevate UAC prompts. How should Remote Help be delegated?",
+            "choices": ["Grant only the required Remote Help RBAC permissions", "Give Help Desk users Global Administrator", "Use Windows LAPS instead", "Disable RBAC for Remote Help"],
             "a": 0,
-            "why": "Detection rules determine whether the app is already present and successfully installed."
+            "why": "Remote Help permissions are granular. Enterprise least-privilege design grants only the view/control/elevation capabilities required."
         }, {
-            "q": "App A must be present before App B installs. Which Win32 feature should be configured?",
-            "choices": ["Dependency", "Supersedence", "Detection", "Available assignment"],
+            "q": "A support engineer needs to inspect a registry value on a corporate Windows device without interrupting the user with a remote-control session. Which feature is the best fit?",
+            "choices": ["Device query", "Remote Help full control", "Wipe", "Autopilot Reset"],
             "a": 0,
-            "why": "Dependencies define prerequisite applications."
+            "why": "Device query is designed for near-real-time investigation of supported endpoint properties without a full remote session."
         }, {
-            "q": "App v2 should replace App v1 and optionally remove the old version. Which feature should be used?",
-            "choices": ["Supersedence", "Dependency", "Requirement", "Scope tag"],
+            "q": "Device query works for most laptops but fails for a corporate Entra-joined laptop behind a restrictive network. Which dependency should be investigated?",
+            "choices": ["Windows Push Notification Services (WNS) connectivity", "APNs certificate", "Apple Business Manager token", "Windows LAPS"],
             "a": 0,
-            "why": "Supersedence defines replacement/update relationships between Win32 apps."
+            "why": "Device query relies on WNS to notify supported Windows devices and return real-time results."
         }, {
-            "q": "A user should be able to choose an app from Company Portal instead of having it installed automatically. Which assignment intent fits?",
-            "choices": ["Available", "Required", "Uninstall", "Dependency"],
+            "q": "A company wants to automatically detect when a required Windows service is stopped and restart it every day if needed. Which Intune feature is most appropriate?",
+            "choices": ["Remediations", "Custom compliance only", "Endpoint Analytics only", "App Protection Policy"],
             "a": 0,
-            "why": "Available assignments let users install apps on demand from Company Portal."
+            "why": "Remediations combines detection and corrective PowerShell scripts on a schedule, which fits recurring endpoint repair."
         }, {
-            "q": "A BYOD user needs company data protected in Outlook, including copy/paste restrictions, without full device enrollment. Which feature fits?",
-            "choices": ["App Protection Policy (MAM)", "Settings Catalog", "Security baseline", "Update ring"],
+            "q": "Security wants to report whether a custom registry setting exists but does not want Intune to change it automatically. What should be considered?",
+            "choices": ["Custom compliance", "Remediations", "Remote Help", "Autopatch"],
             "a": 0,
-            "why": "APP/MAM protects organizational data inside supported apps, including unenrolled BYOD devices."
+            "why": "Custom compliance evaluates organization-specific state; Remediations is for automated correction."
         }, {
-            "q": "A personal phone should lose only organizational app data after an employee leaves. Which action is appropriate?",
-            "choices": ["Selective wipe", "Factory wipe", "Delete Intune record only", "Autopilot Reset"],
+            "q": "An operations team needs a non-interactive nightly export of managed-device inventory through Microsoft Graph. Which authentication pattern is most appropriate?",
+            "choices": ["Application permissions with a service identity", "Delegated permissions requiring an admin to sign in nightly", "Windows LAPS", "Remote Help"],
             "a": 0,
-            "why": "Selective wipe removes corporate app data while preserving personal device content."
+            "why": "Unattended automation normally uses app-only/application permissions with least-privilege scopes and appropriate consent."
         }, {
-            "q": "A mobile app needs server URLs preconfigured on enrolled devices. Which policy type is appropriate?",
-            "choices": ["App configuration policy for managed devices", "App Protection Policy only", "Conditional Access", "Windows LAPS"],
+            "q": "A Graph automation successfully gets an access token but receives 403 responses when attempting remote actions. What should be reviewed?",
+            "choices": ["Graph permissions, admin consent, and Intune RBAC", "Device update rings", "APNs certificate", "BitLocker algorithm"],
             "a": 0,
-            "why": "Managed-device app configuration delivers app settings through the MDM channel."
+            "why": "Authentication does not guarantee authorization. The operation still requires the necessary Graph scopes/roles and Intune permissions."
         }, {
-            "q": "A PowerShell automation runs without a signed-in user. Which Microsoft Graph permission model should it use?",
-            "choices": ["Application permissions", "Delegated permissions", "Conditional Access only", "Scope tags"],
+            "q": "A fleet of laptops shows increasing startup times and application crashes after a new software rollout. Which service should the endpoint team use to identify the trend across devices?",
+            "choices": ["Endpoint Analytics", "Conditional Access", "Windows LAPS", "Cloud PKI"],
             "a": 0,
-            "why": "Application permissions support app/service identities for non-interactive automation."
+            "why": "Endpoint Analytics provides fleet-level user-experience metrics such as startup performance and application reliability."
         }, {
-            "q": "A signed-in administrator runs a Graph script interactively. Which permission model is being used?",
-            "choices": ["Delegated permissions", "Application permissions", "MAM", "Security baseline"],
+            "q": "Executives report poor battery life on a specific laptop model. The endpoint team wants fleet-level battery and resource insight. Which capability is most relevant?",
+            "choices": ["Advanced Analytics", "Scope groups", "Compliance policy", "Autopilot self-deploying mode"],
             "a": 0,
-            "why": "Delegated permissions act within the authority of the signed-in user."
+            "why": "Advanced Analytics includes deeper device health and performance insights such as battery and resource performance."
+        }, {
+            "q": "A new Win32 application is being deployed to 5,000 devices. The installer requires .NET Desktop Runtime first. How should the package relationship be configured?",
+            "choices": ["Configure the runtime as a Win32 dependency", "Use supersedence", "Use a scope tag", "Use a compliance policy"],
+            "a": 0,
+            "why": "Dependencies ensure prerequisites install before the main Win32 application."
+        }, {
+            "q": "A company is replacing an old VPN client with a new version and wants Intune to remove the old package during deployment. Which Win32 feature should be configured?",
+            "choices": ["Supersedence", "Dependency", "Requirement rule", "Available assignment"],
+            "a": 0,
+            "why": "Supersedence supports controlled replacement of older Win32 applications and can optionally uninstall the superseded app."
+        }, {
+            "q": "A Win32 application is installed correctly, but Intune repeatedly reports installation failure because the detection script checks the wrong registry path. What should be corrected?",
+            "choices": ["The detection rule", "The requirement rule", "The update ring", "The scope tag"],
+            "a": 0,
+            "why": "Detection rules determine whether Intune considers the application installed. Incorrect detection creates false failures or reinstall loops."
+        }, {
+            "q": "A finance application should install only on Windows 11 x64 devices with at least 8 GB of RAM. Where should these prerequisites be configured?",
+            "choices": ["Win32 requirement rules", "Win32 detection rules", "App Protection Policy", "Conditional Access"],
+            "a": 0,
+            "why": "Requirement rules determine device eligibility before Intune attempts the installation."
+        }, {
+            "q": "A company wants employees to install an approved optional application from Company Portal while keeping the app centrally managed. Which assignment intent should be used?",
+            "choices": ["Available for enrolled devices", "Required", "Uninstall", "Dependency"],
+            "a": 0,
+            "why": "Available assignment makes an app user-selectable in Company Portal without forcing installation."
+        }, {
+            "q": "A line-of-business app must be installed automatically on all corporate call-center devices. Which assignment intent is appropriate?",
+            "choices": ["Required", "Available", "Uninstall", "Scope tag"],
+            "a": 0,
+            "why": "Required assignment installs the application automatically on targeted devices/users."
+        }, {
+            "q": "A mobile BYOD policy must prevent corporate Outlook data from being copied into personal messaging apps. Which control should be configured?",
+            "choices": ["App Protection Policy data-transfer restrictions", "Device wipe", "Update ring", "Windows LAPS"],
+            "a": 0,
+            "why": "MAM/App Protection controls movement of organizational data between managed and unmanaged apps."
+        }, {
+            "q": "A former employee's personal iPhone is not enrolled in MDM but contains corporate Outlook data protected by MAM. How should IT remove only the corporate data?",
+            "choices": ["Selective wipe of managed app data", "Full device wipe", "Autopilot Reset", "Delete the Entra user only"],
+            "a": 0,
+            "why": "Selective wipe removes organizational app data while leaving personal content intact."
+        }, {
+            "q": "A managed Outlook deployment succeeds, but users still have to manually enter a required organizational configuration value. What should be added?",
+            "choices": ["App configuration policy", "Security baseline", "Update ring", "Device cleanup rule"],
+            "a": 0,
+            "why": "App configuration policies preconfigure supported application settings independently of app installation."
+        }, {
+            "q": "A company wants corporate-owned iPhones to be supervised and automatically enrolled before users receive them. Which ecosystem integration should be used?",
+            "choices": ["Apple Business Manager with Automated Device Enrollment", "Company Portal BYOD enrollment", "Windows Autopilot", "Managed Google Play"],
+            "a": 0,
+            "why": "ABM + ADE is the standard enterprise zero-touch route for organization-owned Apple devices."
+        }, {
+            "q": "Apple enrollment begins failing across the entire tenant shortly after an annual renewal date. What should administrators check first?",
+            "choices": ["The Apple MDM Push certificate validity", "Windows update rings", "MDE machine risk", "Device query permissions"],
+            "a": 0,
+            "why": "An expired or incorrectly renewed APNs certificate can disrupt Apple MDM communication at broad scale."
+        }, {
+            "q": "A company-owned Android phone is used by one employee for work and personal apps. Which Android Enterprise model is the best fit?",
+            "choices": ["Corporate-owned work profile (COPE)", "Dedicated device", "Personally owned work profile", "Fully managed with no personal use"],
+            "a": 0,
+            "why": "COPE is designed for company ownership while allowing a separate personal experience."
+        }, {
+            "q": "A retail company needs Android tablets locked to a point-of-sale application with no assigned individual user. Which enrollment model fits?",
+            "choices": ["Dedicated device", "COPE", "Personally owned work profile", "Entra registered"],
+            "a": 0,
+            "why": "Dedicated Android enrollment is built for shared or single-purpose kiosk devices."
+        }, {
+            "q": "A company wants every locally managed administrator password to be unique and automatically rotated. Which feature should be deployed?",
+            "choices": ["Windows LAPS", "Endpoint Privilege Management", "Remote Help", "Conditional Access"],
+            "a": 0,
+            "why": "Windows LAPS manages unique rotating local administrator passwords at enterprise scale."
+        }, {
+            "q": "A company does not want developers to have permanent local admin rights, but approved development tools occasionally require elevation. Which control best matches the requirement?",
+            "choices": ["Endpoint Privilege Management", "Windows LAPS", "Compliance policy", "BitLocker"],
+            "a": 0,
+            "why": "EPM supports least-privilege elevation for approved tasks while users remain standard users."
+        }, {
+            "q": "An enterprise certificate-based Wi-Fi rollout is failing because devices receive an identity certificate but do not trust the issuing CA. What is missing?",
+            "choices": ["A trusted root/intermediate certificate profile", "A feature update policy", "A scope tag", "Remote Help"],
+            "a": 0,
+            "why": "Certificate authentication requires both a valid identity certificate and trust in the issuing CA chain."
+        }, {
+            "q": "An organization wants to remove dependence on its on-premises CA for supported Intune certificate scenarios. Which Microsoft capability should be evaluated?",
+            "choices": ["Microsoft Cloud PKI", "Windows LAPS", "Delivery Optimization", "Endpoint Analytics"],
+            "a": 0,
+            "why": "Cloud PKI provides cloud-hosted certificate authority capabilities for supported Intune-managed certificate workflows."
+        }, {
+            "q": "A security team needs to test an ASR rule without unexpectedly blocking a business-critical macro workflow. What is the best first step?",
+            "choices": ["Pilot the rule in Audit or Warn mode where supported", "Enable Block for All devices immediately", "Disable Defender Antivirus", "Use Wipe on affected devices"],
+            "a": 0,
+            "why": "Enterprise security rollout should measure impact in a pilot/audit state before broad blocking enforcement."
+        }, {
+            "q": "A legitimate engineering executable is blocked after App Control for Business is deployed. What should the endpoint team do?",
+            "choices": ["Review App Control policy and logs, then create an appropriate trusted allow rule if justified", "Disable all application control tenant-wide", "Remove BitLocker", "Switch the device to BYOD"],
+            "a": 0,
+            "why": "The enterprise response is to investigate policy evidence and make a controlled allow decision, not remove the whole security control."
+        }, {
+            "q": "A company wants to reduce the risk of ransomware modifying protected user folders. Which Defender capability directly addresses this?",
+            "choices": ["Controlled Folder Access", "Windows LAPS", "Scope tags", "Autopilot Reset"],
+            "a": 0,
+            "why": "Controlled Folder Access helps prevent untrusted applications from changing protected folders."
+        }, {
+            "q": "A BitLocker recovery key was viewed during a help desk incident and may have been exposed. What should the administrator do after recovery is complete?",
+            "choices": ["Rotate the BitLocker recovery key", "Disable BitLocker", "Delete the Intune device record", "Reinstall Office"],
+            "a": 0,
+            "why": "Rotating the recovery key invalidates the exposed recovery secret while retaining encryption."
+        }, {
+            "q": "A company wants Macs to use full-disk encryption and escrow recovery information centrally. Which technology should be managed through Intune?",
+            "choices": ["FileVault", "BitLocker", "Windows LAPS", "App Control for Business"],
+            "a": 0,
+            "why": "FileVault is the macOS full-disk encryption technology supported for centralized management and recovery-key escrow."
+        }, {
+            "q": "An endpoint team wants to remotely support users with organization-authenticated sessions and record RBAC-controlled support activity. Which tool should be standardized?",
+            "choices": ["Remote Help", "Consumer Quick Assist only", "Windows LAPS", "Device query only"],
+            "a": 0,
+            "why": "Remote Help is built for enterprise support with Entra authentication, Intune RBAC, compliance context, and auditing."
+        }, {
+            "q": "A device is marked Pending for a newly assigned configuration profile. The device has not checked in for several hours. What should the administrator do before redesigning the policy?",
+            "choices": ["Trigger/await a device sync and confirm assignment", "Delete the policy", "Wipe the device", "Disable Conditional Access"],
+            "a": 0,
+            "why": "Pending commonly means the endpoint has not evaluated the assignment yet. Check-in and targeting should be verified first."
+        }, {
+            "q": "A policy deployment fails on one user but succeeds for the rest of the department. What is the best enterprise troubleshooting starting point?",
+            "choices": ["Inspect that user's/device's assignments, exclusions, filters, and status", "Rebuild every policy in the tenant", "Disable MDM enrollment for everyone", "Change all devices to personal ownership"],
+            "a": 0,
+            "why": "Troubleshooting should start with scope. A single-user failure points to targeting, state, or local evidence rather than a global service redesign."
+        }, {
+            "q": "Hundreds of unrelated endpoints start reporting the same Intune error at the same time with no recent internal change. What should be checked early in the investigation?",
+            "choices": ["Microsoft 365/Intune service health", "Windows LAPS policy", "One user's Company Portal cache", "A single device's BIOS"],
+            "a": 0,
+            "why": "A broad simultaneous failure may be a service incident. Checking service health prevents unnecessary production changes."
+        }, {
+            "q": "A company wants to retire devices that have not checked in for a long period, but it does not want active endpoints affected. What operational practice is most appropriate?",
+            "choices": ["Use device cleanup governance based on validated stale-device criteria", "Wipe every device older than one year", "Delete all noncompliant devices daily", "Disable enrollment"],
+            "a": 0,
+            "why": "Enterprise cleanup should use deliberate stale-device criteria and validation, not destructive blanket actions."
+        }, {
+            "q": "A new endpoint policy is ready for production after a successful pilot. What should the team preserve for enterprise change control?",
+            "choices": ["Document scope, expected result, rollback, validation, and change record", "Only a screenshot of the policy name", "No documentation once testing passes", "The admin's personal notes only"],
+            "a": 0,
+            "why": "Production endpoint changes should be traceable with scope, validation, rollback, and change documentation."
+        }, {
+            "q": "A security team wants to know whether a device is high risk in Defender and automatically restrict access if it becomes risky. Which end-to-end design is correct?",
+            "choices": ["MDE risk signal \u2192 Intune compliance \u2192 Conditional Access", "Update ring \u2192 Remote Help \u2192 LAPS", "Autopilot \u2192 Delivery Optimization \u2192 Scope tag", "App configuration \u2192 Device query \u2192 Wipe"],
+            "a": 0,
+            "why": "Defender supplies the risk signal, compliance evaluates it, and Conditional Access enforces the resource-access decision."
+        }, {
+            "q": "A company needs an application deployment that behaves differently for corporate and personal devices even though both are in the same broad group. Which feature can refine the assignment?",
+            "choices": ["Assignment filters", "Scope tags", "Security baselines", "Remote Help"],
+            "a": 0,
+            "why": "Assignment filters can include or exclude devices at assignment time based on supported properties such as ownership."
+        }, {
+            "q": "A help desk team wants a repeatable method for resolving endpoint tickets without immediately remote-controlling every device. What is the most mature workflow?",
+            "choices": ["Use device query/diagnostics first, then Remote Help only when interaction is needed", "Always request full-control Remote Help first", "Wipe the device after two failed checks", "Give users local admin rights"],
+            "a": 0,
+            "why": "Enterprise support minimizes user disruption by using telemetry and diagnostics first, escalating to remote control when necessary."
+        }, {
+            "q": "An endpoint engineering team is preparing for a broad Intune change and wants to minimize production risk. Which combination best reflects mature enterprise practice?",
+            "choices": ["Pilot group, monitoring, documented rollback, staged expansion", "All devices assignment with no rollback", "Immediate production rollout after reading documentation", "Disable reporting to reduce noise"],
+            "a": 0,
+            "why": "Pilot testing, observability, rollback planning, and staged deployment are standard controls for safe enterprise endpoint changes."
         }];
 
         (function() {
@@ -3856,6 +3851,7 @@
         let scenarioDeck = [...scenarios];
         let scenarioIndex = 0;
         let selectedChoice = null;
+        const letters = ['A', 'B', 'C', 'D'];
 
         const scenarioQuestion = document.getElementById('scenarioQuestion');
         const scenarioChoices = document.getElementById('scenarioChoices');
@@ -3864,39 +3860,50 @@
         const scenarioAnswer = document.getElementById('scenarioAnswer');
         const scenarioCounter = document.getElementById('scenarioCounter');
         const scenarioMeterFill = document.getElementById('scenarioMeterFill');
+        const revealScenario = document.getElementById('revealScenario');
 
         function renderScenario() {
             const s = scenarioDeck[scenarioIndex];
             selectedChoice = null;
             scenarioQuestion.textContent = s.q;
             scenarioChoices.innerHTML = '';
-            const letters = ['A', 'B', 'C', 'D'];
+
             s.choices.forEach((choice, idx) => {
                 const btn = document.createElement('button');
+                btn.type = 'button';
                 btn.className = 'scenario-choice';
-                btn.innerHTML = `<span class="choice-letter">${letters[idx]}</span><span>${choice}</span>`;
+                btn.innerHTML = `<span class="choice-letter">${letters[idx]}.</span><span>${choice}</span>`;
                 btn.onclick = () => {
                     selectedChoice = idx;
-                    [...scenarioChoices.children].forEach(x => x.classList.remove('selected'));
+                    [...scenarioChoices.children].forEach(x => x.classList.remove('selected', 'correct', 'incorrect'));
                     btn.classList.add('selected');
+                    scenarioAnswer.classList.remove('show');
+                    revealScenario.textContent = 'Check answer';
                 };
                 scenarioChoices.appendChild(btn);
             });
+
             scenarioBestAnswer.textContent = letters[s.a] + '. ' + s.choices[s.a];
             scenarioWhy.textContent = s.why;
             scenarioAnswer.classList.remove('show');
-            document.getElementById('revealScenario').textContent = 'Reveal answer';
+            revealScenario.textContent = 'Check answer';
             scenarioCounter.textContent = (scenarioIndex + 1) + ' / ' + scenarioDeck.length;
             scenarioMeterFill.style.width = ((scenarioIndex + 1) / scenarioDeck.length * 100) + '%';
         }
 
         function gradeScenario() {
             const s = scenarioDeck[scenarioIndex];
+            if (selectedChoice === null) {
+                revealScenario.textContent = 'Choose an answer first';
+                return;
+            }
             [...scenarioChoices.children].forEach((btn, idx) => {
-                btn.classList.remove('correct', 'incorrect');
+                btn.classList.remove('selected');
                 if (idx === s.a) btn.classList.add('correct');
-                if (selectedChoice !== null && idx === selectedChoice && idx !== s.a) btn.classList.add('incorrect');
+                if (idx === selectedChoice && idx !== s.a) btn.classList.add('incorrect');
             });
+            scenarioAnswer.classList.add('show');
+            revealScenario.textContent = selectedChoice === s.a ? 'Correct ✓' : 'Review answer';
         }
 
         function moveScenario(step) {
@@ -3904,13 +3911,7 @@
             renderScenario();
         }
 
-        document.getElementById('revealScenario').onclick = () => {
-            const show = !scenarioAnswer.classList.contains('show');
-            scenarioAnswer.classList.toggle('show', show);
-            if (show) gradeScenario();
-            document.getElementById('revealScenario').textContent = show ? 'Hide answer' : 'Reveal answer';
-        };
-
+        revealScenario.onclick = gradeScenario;
         document.getElementById('prevScenario').onclick = () => moveScenario(-1);
         document.getElementById('nextScenario').onclick = () => moveScenario(1);
         document.getElementById('prevScenarioBottom').onclick = () => moveScenario(-1);
@@ -3936,35 +3937,6 @@
             if (e.key === 'ArrowLeft') moveScenario(-1);
         });
 
-        renderScenario();
-
-        }
-        document.getElementById('revealScenario').onclick = () => {
-            const show = !scenarioAnswer.classList.contains('show');
-            scenarioAnswer.classList.toggle('show', show);
-            document.getElementById('revealScenario').textContent = show ? 'Hide answer' : 'Reveal answer';
-        };
-        document.getElementById('prevScenario').onclick = () => moveScenario(-1);
-        document.getElementById('nextScenario').onclick = () => moveScenario(1);
-        document.getElementById('prevScenarioBottom').onclick = () => moveScenario(-1);
-        document.getElementById('nextScenarioBottom').onclick = () => moveScenario(1);
-        document.getElementById('shuffleScenarios').onclick = () => {
-            for (let i = scenarioDeck.length - 1; i > 0; i--) {
-                const j = Math.floor(Math.random() * (i + 1));
-                [scenarioDeck[i], scenarioDeck[j]] = [scenarioDeck[j], scenarioDeck[i]];
-            }
-            scenarioIndex = 0;
-            renderScenario();
-        };
-        document.getElementById('restartScenarios').onclick = () => {
-            scenarioDeck = [...scenarios];
-            scenarioIndex = 0;
-            renderScenario();
-        };
-        document.addEventListener('keydown', (e) => {
-            if (e.key === 'ArrowRight') moveScenario(1);
-            if (e.key === 'ArrowLeft') moveScenario(-1);
-        });
         renderScenario();
 
         const sb = document.getElementById('sidebar'),
