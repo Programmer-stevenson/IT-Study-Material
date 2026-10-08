@@ -5,7 +5,7 @@ Paths below are relative to the repository root. This table includes the origina
 | Original filename | Current path |
 | --- | --- |
 | `AZ-900-Flashcards.html` | [azure/az-900-azure-fundamentals-flashcards.html](./azure/az-900-azure-fundamentals-flashcards.html) |
-| `az-900-study-guide.html` | [azure/az-900-azure-fundamentals-study-guide.html](./azure/az-900-azure-fundamentals-study-guide.html) |
+| `az-900-study-guide.html` | [azure/az-900-azure-fundamentals-study-guide.html](./azure/az-900-azure-fundamentals-study-guide.html) 
 | `ccna-fundamentals-quiz.html` | [networking/ccna-network-fundamentals-quiz-01.html](./networking/ccna-network-fundamentals-quiz-01.html) |
 | `ccna-fundamentals-test2.html` | [networking/ccna-network-fundamentals-quiz-02-scenarios.html](./networking/ccna-network-fundamentals-quiz-02-scenarios.html) |
 | `ccna-troubleshooting-lab.html` | [networking/ccna-guided-troubleshooting-lab-04-scenarios.html](./networking/ccna-guided-troubleshooting-lab-04-scenarios.html) |
@@ -18,3 +18,4 @@ Paths below are relative to the repository root. This table includes the origina
 | `palo-alto-study-guide (1).html` | [network-security/palo-alto-ngfw-pan-os-study-guide-and-labs.html](./network-security/palo-alto-ngfw-pan-os-study-guide-and-labs.html) |
 | `security+-interactive-study.html` | [networking/security+-interactive-study.html](./networking/security+-interactive-study.html) |
 | `linux+-study.html` | [it-administration/linux+-study.html](./it-administration/linux+-study.html) |
+| `SysAdmin_Roadmap.html` | [it-administration/SysAdmin_Roadmap.html](./it-administration/SysAdmin_Roadmap.html) |
