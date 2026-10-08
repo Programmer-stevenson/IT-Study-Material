@@ -19,3 +19,6 @@ Paths below are relative to the repository root. This table includes the origina
 | `security+-interactive-study.html` | [networking/security+-interactive-study.html](./networking/security+-interactive-study.html) |
 | `linux+-study.html` | [it-administration/linux+-study.html](./it-administration/linux+-study.html) |
 | `SysAdmin_Roadmap.html` | [it-administration/SysAdmin_Roadmap.html](./it-administration/SysAdmin_Roadmap.html) |
+
+| `sys-design.html` | [it-administration/sys-design.html](./it-administration/sys-design.html) |
+
